@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SinkModel {
-    public final static String PARTITION_BY_KEY = "__key";
+    public final static String PARTITION_BY_KEY = "__KEY";
     String topic;
     String partitionBy;
     TimestampModel timestamp;
