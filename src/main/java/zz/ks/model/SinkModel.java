@@ -7,15 +7,17 @@ public class SinkModel {
     public final static String PARTITION_BY_KEY = "__KEY";
     String topic;
     String partitionBy;
-    TimestampModel timestamp;
 
     @JsonCreator
     public SinkModel(@JsonProperty("topic") String topic,
-                     @JsonProperty("partitionBy") String partitionBy,
-                     @JsonProperty("timestamp") TimestampModel timestamp) {
+                     @JsonProperty("partitionBy") String partitionBy) {
         this.topic = topic;
-        this.partitionBy = partitionBy;
-        this.timestamp = timestamp;
+
+        if (partitionBy == null) {
+            this.partitionBy = PARTITION_BY_KEY;
+        } else {
+            this.partitionBy = partitionBy;
+        }
     }
 
     @JsonProperty
@@ -28,19 +30,16 @@ public class SinkModel {
         return partitionBy;
     }
 
-    @JsonProperty
-    public TimestampModel getTimestamp() {
-        return timestamp;
-    }
+
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{")
                 .append("topic: ").append(topic).append(", ")
-                .append("partitionBy: ").append(partitionBy).append(", ")
-                .append("timestamp: ").append(timestamp)
+                .append("partitionBy: ").append(partitionBy)
                 .append("}");
 
-        return builder.toString();    }
+        return builder.toString();
+    }
 }

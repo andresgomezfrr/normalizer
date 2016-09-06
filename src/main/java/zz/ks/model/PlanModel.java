@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import zz.ks.exceptions.PlanBuilderException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PlanModel {
@@ -47,6 +50,7 @@ public class PlanModel {
     public void validate() throws PlanBuilderException {
         validateInputs();
         validateStreams();
+        validateTimestamper();
         validateSinks();
     }
 
@@ -71,6 +75,19 @@ public class PlanModel {
         }
     }
 
+    private void validateTimestamper() throws PlanBuilderException {
+        for (Map.Entry<String, StreamModel> stream : streams.entrySet()) {
+            Set<String> dimensions = stream.getValue().getMappers().stream().map(mapper -> mapper.as).collect(Collectors.toSet());
+            TimestamperModel timestamper = stream.getValue().getTimestamper();
+
+            if (!dimensions.contains(timestamper.getTimestampDim()) && !timestamper.getFormat().equals("generate")) {
+                throw new PlanBuilderException(String.format("Stream[%s]:" +
+                                " Timestamp dimension [%s] is not on the message. Available dimensions %s",
+                        stream.getKey(), timestamper.getTimestampDim(), dimensions));
+            }
+        }
+    }
+
     private void validateSinks() throws PlanBuilderException {
         for (Map.Entry<String, StreamModel> stream : streams.entrySet()) {
             Set<String> dimensions = stream.getValue().getMappers().stream().map(mapper -> mapper.as).collect(Collectors.toSet());
@@ -81,14 +98,7 @@ public class PlanModel {
                                     " PartitionBy dimension [%s] is not on the message. Available dimensions %s",
                             stream.getKey(), sink.getPartitionBy(), dimensions));
                 }
-
-                if (!dimensions.contains(sink.getTimestamp().getTimestampDim())) {
-                    throw new PlanBuilderException(String.format("Stream[%s]:" +
-                                    " Timestamp dimension [%s] is not on the message. Available dimensions %s",
-                            stream.getKey(), sink.getTimestamp().getTimestampDim(), dimensions));
-                }
             }
         }
-
     }
 }

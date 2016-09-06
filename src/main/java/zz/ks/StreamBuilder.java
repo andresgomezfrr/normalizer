@@ -4,12 +4,8 @@ import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.kafka.streams.processor.StreamPartitioner;
 import zz.ks.exceptions.PlanBuilderException;
-import zz.ks.model.MapperModel;
-import zz.ks.model.PlanModel;
-import zz.ks.model.SinkModel;
-import zz.ks.model.StreamModel;
+import zz.ks.model.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +25,7 @@ public class StreamBuilder {
         KStreamBuilder builder = new KStreamBuilder();
         createInputs(builder, model);
         addMappers(model);
+        addTimestampter(model);
         addSinks(model);
 
         return builder;
@@ -69,25 +66,48 @@ public class StreamBuilder {
                 return new KeyValue<>(key, newEvent);
             });
 
-            mapKStream.print();
             kStreams.put(streams.getKey(), mapKStream);
+        }
+    }
+
+    private void addTimestampter(PlanModel model) {
+        for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
+            KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
+
+            // Transform timestamp
+            kStream = kStream.map((key, value) -> {
+                TimestamperModel timestamperModel = streams.getValue().getTimestamper();
+                String timestampDim = timestamperModel.getTimestampDim();
+
+                Map<String, Object> newEvent = new HashMap<>(value);
+                newEvent.put(timestampDim, timestamperModel.generateTimestamp(value.get(timestampDim)));
+                return new KeyValue<>(key, newEvent);
+            });
+
+            kStreams.put(streams.getKey(), kStream);
         }
     }
 
     private void addSinks(PlanModel model) {
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
             List<SinkModel> sinks = streams.getValue().getSinks();
-            KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
 
             for (SinkModel sink : sinks) {
+                KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
+
+                // Repartition stream before send it
+                if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
+                    kStream = kStream.map(
+                            (key, value) ->
+                                    new KeyValue<>((String) value.get(sink.getPartitionBy()), value)
+                    );
+                }
+
+                // Send stream
                 kStream.to(
-                        (key, value, numPartitions) -> {
-                            if (sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
-                                return Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions;
-                            } else {
-                                return Utils.abs(Utils.murmur2(((String) value.get(sink.getPartitionBy())).getBytes())) % numPartitions;
-                            }
-                        }, sink.getTopic());
+                        (key, value, numPartitions) ->
+                                Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions, sink.getTopic()
+                );
             }
         }
     }
