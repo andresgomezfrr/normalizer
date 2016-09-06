@@ -4,6 +4,7 @@ import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
+import org.apache.kafka.streams.kstream.ValueMapper;
 import zz.ks.exceptions.PlanBuilderException;
 import zz.ks.model.*;
 
@@ -49,7 +50,7 @@ public class StreamBuilder {
             List<MapperModel>  mappers = streams.getValue().getMappers();
 
             if(mappers != null && !mappers.isEmpty()) {
-                KStream<String, Map<String, Object>> mapKStream = kStream.map((key, value) -> {
+                KStream<String, Map<String, Object>> mapKStream = kStream.mapValues((value) -> {
                     Map<String, Object> newEvent = new HashMap<>();
 
                     for (MapperModel mapper : mappers) {
@@ -65,7 +66,7 @@ public class StreamBuilder {
                         if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
                     }
 
-                    return new KeyValue<>(key, newEvent);
+                    return newEvent;
                 });
 
                 kStreams.put(streams.getKey(), mapKStream);
@@ -78,14 +79,15 @@ public class StreamBuilder {
             KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
 
             // Transform timestamp
-            kStream = kStream.map((key, value) -> {
+            kStream = kStream.mapValues((value) -> {
                 TimestamperModel timestamperModel = streams.getValue().getTimestamper();
                 String timestampDim = timestamperModel.getTimestampDim();
 
                 Map<String, Object> newEvent = new HashMap<>(value);
                 newEvent.put(timestampDim, timestamperModel.generateTimestamp(value.get(timestampDim)));
-                return new KeyValue<>(key, newEvent);
+                return newEvent;
             });
+
 
             kStreams.put(streams.getKey(), kStream);
         }
