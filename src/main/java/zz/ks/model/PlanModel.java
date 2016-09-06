@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import zz.ks.exceptions.PlanBuilderException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlanModel {
     Map<String, List<String>> inputs;
@@ -48,6 +47,7 @@ public class PlanModel {
     public void validate() throws PlanBuilderException {
         validateInputs();
         validateStreams();
+        validateSinks();
     }
 
     private void validateInputs() throws PlanBuilderException {
@@ -55,7 +55,7 @@ public class PlanModel {
             for (String stream : streams) {
                 if (definedStreams.contains(stream)) {
                     definedStreams.clear();
-                    throw new PlanBuilderException("Stream [" + stream + "] is duplicated");
+                    throw new PlanBuilderException(String.format("Stream[%s]: Duplicated", stream));
                 } else {
                     definedStreams.add(stream);
                 }
@@ -64,10 +64,31 @@ public class PlanModel {
     }
 
     private void validateStreams() throws PlanBuilderException {
-        for(String stream : streams.keySet()) {
-            if(!definedStreams.contains(stream)) {
-                throw new PlanBuilderException("Stream [" + stream + "] is not defined on inputs: "+ inputs);
+        for (String stream : streams.keySet()) {
+            if (!definedStreams.contains(stream)) {
+                throw new PlanBuilderException(String.format("Stream[%s]: Not defined on inputs. Available inputs %s", stream, inputs));
             }
         }
+    }
+
+    private void validateSinks() throws PlanBuilderException {
+        for (Map.Entry<String, StreamModel> stream : streams.entrySet()) {
+            Set<String> dimensions = stream.getValue().getMappers().stream().map(mapper -> mapper.as).collect(Collectors.toSet());
+
+            for (SinkModel sink : stream.getValue().getSinks()) {
+                if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY) && !dimensions.contains(sink.getPartitionBy())) {
+                    throw new PlanBuilderException(String.format("Stream[%s]:" +
+                                    " PartitionBy dimension [%s] is not on the message. Available dimensions %s",
+                            stream.getKey(), sink.getPartitionBy(), dimensions));
+                }
+
+                if (!dimensions.contains(sink.getTimestamp().getTimestampDim())) {
+                    throw new PlanBuilderException(String.format("Stream[%s]:" +
+                                    " Timestamp dimension [%s] is not on the message. Available dimensions %s",
+                            stream.getKey(), sink.getTimestamp().getTimestampDim(), dimensions));
+                }
+            }
+        }
+
     }
 }
