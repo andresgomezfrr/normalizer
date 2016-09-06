@@ -3,17 +3,16 @@ package zz.ks.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
-public class OutputModel {
-    public String topic;
-    public String partitionBy;
-    public TimestampModel timestamp;
+public class SinkModel {
+    public final static String PARTITION_BY_KEY = "__key";
+    String topic;
+    String partitionBy;
+    TimestampModel timestamp;
 
     @JsonCreator
-    public OutputModel(@JsonProperty("topic") String topic,
-                       @JsonProperty("partitionBy") String partitionBy,
-                       @JsonProperty("timestamp") TimestampModel timestamp) {
+    public SinkModel(@JsonProperty("topic") String topic,
+                     @JsonProperty("partitionBy") String partitionBy,
+                     @JsonProperty("timestamp") TimestampModel timestamp) {
         this.topic = topic;
         this.partitionBy = partitionBy;
         this.timestamp = timestamp;

@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class StreamModel {
-    public List<MapperModel> mappers;
-    List<OutputModel> outputs;
+    List<MapperModel> mappers;
+    List<SinkModel> sinks;
 
     @JsonCreator
     public StreamModel(
             @JsonProperty("mappers") List<MapperModel> mappers,
-            @JsonProperty("outputs") List<OutputModel> outputs) {
+            @JsonProperty("sinks") List<SinkModel> sinks) {
         this.mappers = mappers;
-        this.outputs = outputs;
+        this.sinks = sinks;
     }
 
     @JsonProperty
@@ -22,13 +22,17 @@ public class StreamModel {
         return mappers;
     }
 
+    @JsonProperty
+    public List<SinkModel> getSinks() {
+        return sinks;
+    }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{")
                 .append("mappers: ").append(mappers).append(", ")
-                .append("outputs: ").append(outputs)
+                .append("sinks: ").append(sinks)
                 .append("}");
 
         return builder.toString();
