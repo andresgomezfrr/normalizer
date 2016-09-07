@@ -78,18 +78,20 @@ public class StreamBuilder {
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
             KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
 
-            // Transform timestamp
-            kStream = kStream.mapValues((value) -> {
-                TimestamperModel timestamperModel = streams.getValue().getTimestamper();
-                String timestampDim = timestamperModel.getTimestampDim();
+            TimestamperModel timestamperModel = streams.getValue().getTimestamper();
 
-                Map<String, Object> newEvent = new HashMap<>(value);
-                newEvent.put(timestampDim, timestamperModel.generateTimestamp(value.get(timestampDim)));
-                return newEvent;
-            });
+            if(timestamperModel != null) {
+                // Transform timestamp
+                KStream<String, Map<String, Object>> kStreamTimestampered = kStream.mapValues((value) -> {
+                    String timestampDim = timestamperModel.getTimestampDim();
 
+                    Map<String, Object> newEvent = new HashMap<>(value);
+                    newEvent.put(timestampDim, timestamperModel.generateTimestamp(value.get(timestampDim)));
+                    return newEvent;
+                });
 
-            kStreams.put(streams.getKey(), kStream);
+                kStreams.put(streams.getKey(), kStreamTimestampered);
+            }
         }
     }
 
