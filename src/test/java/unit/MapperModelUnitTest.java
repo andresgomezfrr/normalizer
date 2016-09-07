@@ -3,11 +3,9 @@ package unit;
 import org.junit.Test;
 import rb.ks.model.MapperModel;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 public class MapperModelUnitTest {
