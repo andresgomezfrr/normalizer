@@ -1,4 +1,4 @@
-package zz.ks.serializers;
+package rb.ks.serializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Deserializer;

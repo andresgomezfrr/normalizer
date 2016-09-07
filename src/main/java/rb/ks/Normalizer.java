@@ -1,12 +1,12 @@
-package zz.ks;
+package rb.ks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
-import zz.ks.exceptions.PlanBuilderException;
-import zz.ks.model.PlanModel;
-import zz.ks.serializers.JsonSerde;
+import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.model.PlanModel;
+import rb.ks.serializers.JsonSerde;
 
 import java.io.IOException;
 import java.util.Properties;

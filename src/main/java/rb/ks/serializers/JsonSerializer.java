@@ -1,4 +1,4 @@
-package zz.ks.serializers;
+package rb.ks.serializers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

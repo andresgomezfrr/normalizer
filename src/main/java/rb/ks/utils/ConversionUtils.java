@@ -1,4 +1,4 @@
-package zz.ks.utils;
+package rb.ks.utils;
 
 public class ConversionUtils {
     public static Long toLong(Object l) {
