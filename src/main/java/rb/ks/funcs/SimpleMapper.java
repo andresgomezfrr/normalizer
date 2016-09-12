@@ -35,6 +35,7 @@ public class SimpleMapper extends MapperFunction {
                     if (newValue != null) newEvent.put(mapper.as, newValue);
                 }
             }
+
             return new KeyValue<>(key, newEvent);
         } else {
             return new KeyValue<>(key, null);
