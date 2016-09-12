@@ -2,6 +2,7 @@ package rb.ks.funcs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.streams.KeyValue;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import rb.ks.StreamBuilder;
@@ -167,5 +168,10 @@ public class SimpleMapperUnitTest {
         assertNotNull(myFunc);
         assertEquals("[ {dimPath: [A, B, C], as: X}  {dimPath: [Y, W, Z], as: Q} " +
                 " {dimPath: [Y, W, P], as: P}  {dimPath: [timestamp], as: timestamp} ]", myFunc.toString());
+    }
+
+    @AfterClass
+    public static void stopTest(){
+        streamBuilder.close();
     }
 }

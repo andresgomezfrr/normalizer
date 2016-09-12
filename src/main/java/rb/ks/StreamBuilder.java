@@ -50,6 +50,11 @@ public class StreamBuilder {
         return usedStores;
     }
 
+    public void close(){
+        streamFunctions.forEach((stream, functions) -> functions.forEach((name, fucntion) -> fucntion.stop()));
+        clean();
+    }
+
     private void createInputs(KStreamBuilder builder, PlanModel model) {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
