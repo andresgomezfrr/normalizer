@@ -1,18 +1,25 @@
 package rb.ks;
 
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
+import org.apache.kafka.streams.processor.StateStoreSupplier;
+import org.apache.kafka.streams.state.Stores;
 import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.funcs.FlatMapperFunction;
+import rb.ks.funcs.Function;
+import rb.ks.funcs.MapperFunction;
+import rb.ks.funcs.MapperStoreFunction;
 import rb.ks.model.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StreamBuilder {
     Map<String, KStream<String, Map<String, Object>>> kStreams = new HashMap<>();
+    Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
+    Set<String> usedStores = new HashSet<>();
 
     public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
         // Validate the model
@@ -24,7 +31,7 @@ public class StreamBuilder {
         //Create new build
         KStreamBuilder builder = new KStreamBuilder();
         createInputs(builder, model);
-        addMappers(model);
+        createFuncs(builder, model);
         addTimestampter(model);
         addSinks(model);
 
@@ -35,6 +42,19 @@ public class StreamBuilder {
         return kStreams.get(streamName);
     }
 
+    public Map<String, Function> getFunctions(String streamName) {
+        return streamFunctions.get(streamName);
+    }
+
+    public Set<String> usedStores() {
+        return usedStores;
+    }
+
+    public void close(){
+        streamFunctions.forEach((stream, functions) -> functions.forEach((name, fucntion) -> fucntion.stop()));
+        clean();
+    }
+
     private void createInputs(KStreamBuilder builder, PlanModel model) {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
@@ -43,32 +63,61 @@ public class StreamBuilder {
         }
     }
 
-    private void addMappers(PlanModel model) {
+    private void createFuncs(KStreamBuilder builder, PlanModel model) {
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
-            KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
-            List<MapperModel>  mappers = streams.getValue().getMappers();
+            List<FunctionModel> funcModels = streams.getValue().getFuncs();
 
-            if(mappers != null && !mappers.isEmpty()) {
-                KStream<String, Map<String, Object>> mapKStream = kStream.mapValues((value) -> {
-                    Map<String, Object> newEvent = new HashMap<>();
+            if (funcModels != null) {
+                for (FunctionModel funcModel : funcModels) {
+                    KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
 
-                    for (MapperModel mapper : mappers) {
-                        Integer depth = mapper.dimPath.size() - 1;
+                    String name = funcModel.getName();
+                    String className = funcModel.getClassName();
+                    Map<String, Object> properties = funcModel.getProperties();
+                    List<String> stores = funcModel.getStores();
+                    if (stores != null) {
+                        properties.put("__STORES", stores);
+                        stores.forEach(store -> {
+                            if (!usedStores.contains(store)) {
+                                StateStoreSupplier storeSupplier = Stores.create("store")
+                                        .withKeys(Serdes.String())
+                                        .withValues(Serdes.Long())
+                                        .persistent()
+                                        .build();
 
-                        Map<String, Object> levelPath = new HashMap<>(value);
-                        for (Integer level = 0; level < depth; level++) {
-                            if (levelPath != null) {
-                                levelPath = (Map<String, Object>) levelPath.get(mapper.dimPath.get(level));
+                                builder.addStateStore(storeSupplier);
+                                usedStores.add(store);
                             }
-                        }
-
-                        if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
+                        });
                     }
 
-                    return newEvent;
-                });
+                    try {
+                        Class funcClass = Class.forName(className);
+                        Function func = (Function) funcClass.newInstance();
+                        func.init(properties);
 
-                kStreams.put(streams.getKey(), mapKStream);
+                        if (func instanceof MapperFunction) {
+                            kStream = kStream.map((MapperFunction) func);
+                        } else if (func instanceof FlatMapperFunction) {
+                            kStream = kStream.flatMap((FlatMapperFunction) func);
+                        } else if (func instanceof MapperStoreFunction) {
+                            kStream = kStream.transform(() ->
+                                    (MapperStoreFunction) func, stores.toArray(new String[stores.size()])
+                            );
+                        }
+
+                        Map<String, Function> functions = streamFunctions.get(streams.getKey());
+                        if (functions == null) functions = new HashMap<>();
+                        functions.put(name, func);
+
+                        streamFunctions.put(streams.getKey(), functions);
+                        kStreams.put(streams.getKey(), kStream);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -79,7 +128,7 @@ public class StreamBuilder {
 
             TimestamperModel timestamperModel = streams.getValue().getTimestamper();
 
-            if(timestamperModel != null) {
+            if (timestamperModel != null) {
                 // Transform timestamp
                 KStream<String, Map<String, Object>> kStreamTimestampered = kStream.mapValues((value) -> {
                     String timestampDim = timestamperModel.getTimestampDim();
@@ -104,8 +153,15 @@ public class StreamBuilder {
                 // Repartition stream before send it
                 if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
                     kStream = kStream.map(
-                            (key, value) ->
-                                    new KeyValue<>(value.get(sink.getPartitionBy()).toString(), value)
+                            (key, value) -> {
+                                Object newKey = value.get(sink.getPartitionBy());
+                                if (newKey != null)
+                                    return new KeyValue<>(newKey.toString(), value);
+                                else {
+                                    // TODO: Logger the new partition key is not valid!
+                                    return new KeyValue<>(key, value);
+                                }
+                            }
                     );
                 }
 
