@@ -1,9 +1,8 @@
-package unit;
+package rb.ks.model;
 
 import org.junit.Test;
 
 import rb.ks.exceptions.PlanBuilderException;
-import rb.ks.model.*;
 
 import java.util.*;
 

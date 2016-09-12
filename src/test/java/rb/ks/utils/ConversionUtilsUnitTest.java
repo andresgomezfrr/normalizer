@@ -1,4 +1,4 @@
-package unit;
+package rb.ks.utils;
 
 import org.junit.Test;
 import rb.ks.utils.ConversionUtils;
