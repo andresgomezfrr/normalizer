@@ -70,7 +70,7 @@ public class PlanModelUnitTest {
         }
     }
 
-    @Test
+   /* @Test
     public void avoidNullParameters() {
         PlanModel planModelObject = new PlanModel(null, null);
 
@@ -85,6 +85,6 @@ public class PlanModelUnitTest {
         } catch (PlanBuilderException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 }
