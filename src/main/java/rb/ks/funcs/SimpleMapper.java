@@ -1,6 +1,9 @@
 package rb.ks.funcs;
 
 import org.apache.kafka.streams.KeyValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rb.ks.StreamBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,12 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 public class SimpleMapper extends MapperFunction {
+    private static final Logger log = LoggerFactory.getLogger(SimpleMapper.class);
     List<MapperModel> mappers = new ArrayList<>();
 
     @Override
     public void prepare(Map<String, Object> properties) {
         List<Map<String, Object>> maps = (List<Map<String, Object>>) properties.get("maps");
         maps.forEach(map -> mappers.add(new MapperModel((List<String>) map.get("dimPath"), (String) map.get("as"))));
+        log.info("Prepared SimpleMapper with {}", toString());
     }
 
     @Override
