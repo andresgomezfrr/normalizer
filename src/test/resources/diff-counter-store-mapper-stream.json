@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"diffCounterMapper",
-          "className":"rb.ks.funcs.DiffCounterStoreMapper",
+          "className":"rb.ks.funcs.impl.DiffCounterStoreMapper",
           "properties": {
             "counters": ["X"]
           },
