@@ -66,4 +66,9 @@ public class JqFlatMapperUnitTest {
 
         assertTrue(result.isEmpty());
     }
+
+    @Test
+    public void toStringTest() {
+        assertEquals(" {jqQuery: {ids:[.ids|split(\",\")[]|tonumber|.+100],name}} ", jqFlatMapper.toString());
+    }
 }
