@@ -17,9 +17,9 @@ public class SplitterFlatMapper extends FlatMapperFunction {
 
     @Override
     public void prepare(Map<String, Object> properties) {
-        Map<String, Object> splitterMap = (Map<String, Object>) properties.get("splitter");
+        //Map<String, Object> splitterMap = (Map<String, Object>) properties.get("dimensions");
 
-        splitter = new SplitterModel((List<String>) splitterMap.get("dimensions"), "60");
+        splitter = new SplitterModel((List<String>) properties.get("dimensions"), "60");
     }
 
     @Override
