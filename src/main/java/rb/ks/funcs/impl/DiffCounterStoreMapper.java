@@ -1,7 +1,8 @@
-package rb.ks.funcs;
+package rb.ks.funcs.impl;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.state.KeyValueStore;
+import rb.ks.funcs.MapperStoreFunction;
 
 import java.util.HashMap;
 import java.util.List;
