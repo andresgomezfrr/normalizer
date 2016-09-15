@@ -33,23 +33,26 @@ public class JqFlatMapper extends FlatMapperFunction {
 
     @Override
     public Iterable<KeyValue<String, Map<String, Object>>> process(String key, Map<String, Object> value) {
-        JsonNode node = MAPPER.convertValue(value, JsonNode.class);
         List<KeyValue<String, Map<String, Object>>> result = new ArrayList<>();
 
-        try {
-            List<JsonNode> resultQuery = query.apply(node);
+        if (value != null) {
+            JsonNode node = MAPPER.convertValue(value, JsonNode.class);
+            try {
+                List<JsonNode> resultQuery = query.apply(node);
 
-            for(JsonNode r : resultQuery){
-                Map<String, Object> map = MAPPER.convertValue(r, Map.class);
-                result.add(new KeyValue<>(key, map));
+                for (JsonNode r : resultQuery) {
+                    Map<String, Object> map = MAPPER.convertValue(r, Map.class);
+                    result.add(new KeyValue<>(key, map));
+                }
+            } catch (JsonQueryException e) {
+                log.error("Error applying query " + jqQuery + " to message " + value, e);
             }
-        } catch (JsonQueryException e) {
-            log.error("Error applying query " + jqQuery + " to message " + value, e);
         }
 
         return result;
     }
 
     @Override
-    public void stop() {}
+    public void stop() {
+    }
 }
