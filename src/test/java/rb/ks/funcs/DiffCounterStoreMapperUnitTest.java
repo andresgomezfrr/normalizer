@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DiffCounterStoreMapperUnitTest {
     static StreamBuilder streamBuilder = new StreamBuilder();

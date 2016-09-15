@@ -1,0 +1,27 @@
+{
+    "inputs":{
+      "input1":["stream1"]
+    },
+    "streams":{
+      "stream1":{
+          "funcs":[
+                {
+                  "name":"myMapper",
+                  "className":"rb.ks.funcs.SimpleMapper",
+                  "properties": {
+                    "maps": [
+                      {"dimPath":["A","B","C"], "as":"X"},
+                      {"dimPath":["Y","W","Z"], "as":"Q"}, 
+                      {"dimPath":["Y","W","P"]}, 
+                      {"dimPath":["timestamp"]}
+                    ]
+                  }
+                }
+          ],
+          "timestamper":{"dimension":"timestamp", "format":"iso"},
+          "sinks":[
+              {"topic":"output1", "partitionBy":"X"}
+          ]
+      }
+    }
+}
