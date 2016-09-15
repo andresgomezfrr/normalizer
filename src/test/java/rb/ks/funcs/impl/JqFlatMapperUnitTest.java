@@ -64,5 +64,6 @@ public class JqFlatMapperUnitTest {
         List<KeyValue<String, Map<String, Object>>> result =
                 (List<KeyValue<String, Map<String, Object>>>) jqFlatMapper.process(key, null);
 
+        assertTrue(result.isEmpty());
     }
 }

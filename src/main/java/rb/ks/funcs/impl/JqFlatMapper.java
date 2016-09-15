@@ -53,6 +53,5 @@ public class JqFlatMapper extends FlatMapperFunction {
     }
 
     @Override
-    public void stop() {
-    }
+    public void stop() { }
 }
