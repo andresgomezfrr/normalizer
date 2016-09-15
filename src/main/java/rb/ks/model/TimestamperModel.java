@@ -60,6 +60,7 @@ public class TimestamperModel {
                     break;
             }
         } else {
+            timestamp = System.currentTimeMillis() / 1000L;
             log.warn("Timestamp is null!!");
         }
 

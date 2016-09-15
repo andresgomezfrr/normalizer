@@ -1,0 +1,23 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"diffCounterMapper",
+          "className":"rb.ks.funcs.DiffCounterStoreMapper",
+          "properties": {
+            "counters": ["X"]
+          },
+          "stores":["counter-store"]
+        }
+      ],
+      "timestamper":{"dimension":"timestamp", "format":"sec"},
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}

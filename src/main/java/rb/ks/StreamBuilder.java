@@ -15,6 +15,7 @@ import rb.ks.funcs.Function;
 import rb.ks.funcs.MapperFunction;
 import rb.ks.funcs.MapperStoreFunction;
 import rb.ks.model.*;
+import rb.ks.serializers.JsonSerde;
 
 import java.util.*;
 
@@ -83,9 +84,9 @@ public class StreamBuilder {
                         properties.put("__STORES", stores);
                         stores.forEach(store -> {
                             if (!usedStores.contains(store)) {
-                                StateStoreSupplier storeSupplier = Stores.create("store")
+                                StateStoreSupplier storeSupplier = Stores.create(store)
                                         .withKeys(Serdes.String())
-                                        .withValues(Serdes.Long())
+                                        .withValues(new JsonSerde())
                                         .persistent()
                                         .build();
 

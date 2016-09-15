@@ -24,7 +24,7 @@ public class SimpleMapper extends MapperFunction {
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
         Map<String, Object> newEvent = new HashMap<>();
-        if(value != null) {
+        if (value != null) {
             for (MapperModel mapper : mappers) {
                 Integer depth = mapper.dimPath.size() - 1;
 
@@ -35,8 +35,12 @@ public class SimpleMapper extends MapperFunction {
                     }
                 }
 
-                if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
+                if (levelPath != null) {
+                    Object newValue = levelPath.get(mapper.dimPath.get(depth));
+                    if (newValue != null) newEvent.put(mapper.as, newValue);
+                }
             }
+
             return new KeyValue<>(key, newEvent);
         } else {
             return new KeyValue<>(key, null);
@@ -63,12 +67,12 @@ public class SimpleMapper extends MapperFunction {
         String as;
 
         MapperModel(List<String> dimPath,
-                           String as) {
+                    String as) {
             this.dimPath = dimPath;
 
-            if (as != null ) {
+            if (as != null) {
                 this.as = as;
-            } else if(dimPath != null) {
+            } else if (dimPath != null) {
                 this.as = dimPath.get(dimPath.size() - 1);
             }
         }
