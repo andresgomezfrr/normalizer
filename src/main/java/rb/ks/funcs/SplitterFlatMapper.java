@@ -5,9 +5,11 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Seconds;
 import rb.ks.constants.Dimension;
-import rb.ks.funcs.FlatMapperFunction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SplitterFlatMapper extends FlatMapperFunction {
 
@@ -15,7 +17,6 @@ public class SplitterFlatMapper extends FlatMapperFunction {
 
     @Override
     public void prepare(Map<String, Object> properties) {
-        // Get all splitters definitions
         Map<String, Object> splitterMap = (Map<String, Object>) properties.get("splitter");
 
         splitter = new SplitterModel((List<String>) splitterMap.get("dimensions"), "60");
@@ -34,19 +35,16 @@ public class SplitterFlatMapper extends FlatMapperFunction {
             DateTime this_end = packet_start;
 
             long totalDiff = Seconds.secondsBetween(packet_start, packet_end).getSeconds();
-            //long data_count = 0;
 
             Map<String, Long> data_map = new HashMap<>();
             Map<String, Long> data_count = new HashMap<>();
             for (String dimension : splitter.dimensions) {
-                //long data = 0;
 
                 try {
                     if (value.containsKey(dimension)) {
                         data_map.put(dimension, Long.parseLong(value.get(dimension).toString()));
                         data_count.put(dimension, 0L);
                     }
-                    //data = ;
                 } catch (NumberFormatException e) {
                     // TODO add log warning
                     return generatedPackets;
