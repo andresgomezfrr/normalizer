@@ -21,6 +21,12 @@
             <version>2.9.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.thisptr</groupId>
+            <artifactId>jackson-jq</artifactId>
+            <version>0.0.5</version>
+        </dependency>
+
         <!-- Testing -->
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
         <dependency>
