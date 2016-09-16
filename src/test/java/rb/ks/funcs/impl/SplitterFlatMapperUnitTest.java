@@ -33,7 +33,7 @@ public class SplitterFlatMapperUnitTest {
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("splitter-mapper.json").getFile());
+        File file = new File(classLoader.getResource("splitter-flat-mapper.json").getFile());
 
         ObjectMapper objectMapper = new ObjectMapper();
         PlanModel model = objectMapper.readValue(file, PlanModel.class);
