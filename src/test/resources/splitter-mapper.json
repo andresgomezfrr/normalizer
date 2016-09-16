@@ -6,19 +6,8 @@
     "stream1":{
       "funcs":[
         {
-          "name":"myMapper",
-          "className":"rb.ks.funcs.SimpleMapper",
-          "properties": {
-            "maps": [
-              {"dimPath":["A","B","C"], "as":"X"},
-              {"dimPath":["Y","W","Z"], "as":"Q"},
-              {"dimPath":["timestamp"]}
-            ]
-          }
-        },
-        {
           "name":"mySplitterFlatMapper",
-          "className":"rb.ks.funcs.SplitterFlatMapper",
+          "className":"rb.ks.funcs.impl.SplitterFlatMapper",
           "properties": {
             "dimensions": ["A", "B", "C", "D"]
           }
