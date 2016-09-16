@@ -24,13 +24,10 @@ public class StreamBuilder {
     Set<String> usedStores = new HashSet<>();
 
     public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
-        // Validate the model
         model.validate();
 
-        // Cleaning last build
         clean();
 
-        //Create new build
         KStreamBuilder builder = new KStreamBuilder();
         createInputs(builder, model);
         createFuncs(builder, model);
@@ -77,6 +74,7 @@ public class StreamBuilder {
                     String className = funcModel.getClassName();
                     Map<String, Object> properties = funcModel.getProperties();
                     List<String> stores = funcModel.getStores();
+
                     if (stores != null) {
                         properties.put("__STORES", stores);
                         stores.forEach(store -> {
@@ -133,7 +131,6 @@ public class StreamBuilder {
             TimestamperModel timestamperModel = streams.getValue().getTimestamper();
 
             if (timestamperModel != null) {
-                // Transform timestamp
                 KStream<String, Map<String, Object>> kStreamTimestampered = kStream.mapValues((value) -> {
                     String timestampDim = timestamperModel.getTimestampDim();
 
@@ -154,7 +151,6 @@ public class StreamBuilder {
             for (SinkModel sink : sinks) {
                 KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
 
-                // Repartition stream before send it
                 if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
                     kStream = kStream.map(
                             (key, value) -> {
@@ -170,7 +166,6 @@ public class StreamBuilder {
                     );
                 }
 
-                // Send stream
                 kStream.to(
                         (key, value, numPartitions) ->
                                 Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions, sink.getTopic()
