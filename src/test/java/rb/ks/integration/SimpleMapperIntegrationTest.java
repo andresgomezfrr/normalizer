@@ -13,6 +13,7 @@ import org.apache.kafka.streams.integration.utils.IntegrationTestUtils;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.mockito.Mockito;
 import rb.ks.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
@@ -20,17 +21,20 @@ import rb.ks.serializers.JsonDeserializer;
 import rb.ks.serializers.JsonSerde;
 import rb.ks.serializers.JsonSerializer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
 
 public class SimpleMapperIntegrationTest {
 
     @ClassRule
     public static final EmbeddedSingleNodeKafkaCluster CLUSTER = new EmbeddedSingleNodeKafkaCluster();
+
     private static final int REPLICATION_FACTOR = 1;
 
     @BeforeClass
@@ -43,25 +47,9 @@ public class SimpleMapperIntegrationTest {
     }
 
     @Test
-    public void shouldWorkTest() throws InterruptedException {
-
-        String json = "{\n" +
-                "  \"inputs\":{\n" +
-                "    \"input1\":[\"stream1\"]\n" +
-                "  },\n" +
-                "  \"streams\":{\n" +
-                "    \"stream1\":{\n" +
-                "        \"mappers\":[\n" +
-                "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"X\"},\n" +
-                "                    {\"dimPath\":[\"timestamp\"]}\n" +
-                "                  ],\n" +
-                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"iso\"},\n" +
-                "        \"sinks\":[\n" +
-                "            {\"topic\":\"output1\", \"partitionBy\":\"X\"}\n" +
-                "        ]\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+    public void simpleMapperShouldWork() throws InterruptedException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("simple-mapper-integration.json").getFile());
 
         Properties streamsConfiguration = new Properties();
 
@@ -78,28 +66,34 @@ public class SimpleMapperIntegrationTest {
         PlanModel model = null;
 
         try {
-            model = objectMapper.readValue(json, PlanModel.class);
+            model = Mockito.spy(objectMapper.readValue(file, PlanModel.class));
         } catch (IOException e) {
             fail("Exception : " + e.getMessage());
         }
 
-        StreamBuilder streamBuilder = new StreamBuilder();
+        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder());
 
         KafkaStreams streams = null;
+
         try {
             streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
         } catch (PlanBuilderException e) {
             fail("Exception : " + e.getMessage());
         }
 
+        // Get inputs?
+        Mockito.verify(model).getInputs();
+        // Call getStreams method three times? (addSinks, addTimeStamper, createFuncs)
+        Mockito.verify(model, times(3)).getStreams();
+
         streams.start();
 
-        String json2 = "{\"A\":{\"B\":{\"C\":\"PEPE\"}},\"timestamp\":\"2016-09-08T06:33:46.000Z\"}";
+        String jsonData = "{\"A\":{\"B\":{\"C\":\"VALUE\"}},\"timestamp\":\"2016-09-08T06:33:46.000Z\"}";
 
         KeyValue<String, Map<String, Object>> kvStream1 = null;
 
         try {
-            kvStream1 = new KeyValue<>("PEPE", objectMapper.readValue(json2, Map.class));
+            kvStream1 = new KeyValue<>("KEY_A", objectMapper.readValue(jsonData, Map.class));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,10 +128,15 @@ public class SimpleMapperIntegrationTest {
         consumerConfigB.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfigB.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        List<KeyValue<String, Map>> receivedMessagesFromStream1 = IntegrationTestUtils.readKeyValues("topic1", consumerConfigA, 1);
+        Map<String, Object> expectedData = new HashMap<>();
+        expectedData.put("X", "VALUE");
+        expectedData.put("timestamp", 1473316426);
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfigA,"output1", 1);
+        KeyValue<String, Map<String, Object>> expectedDataKv = new KeyValue<>("VALUE", expectedData);
 
+        List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfigA, "output1", 1);
+
+        assertEquals(receivedMessagesFromOutput1, Collections.singletonList(expectedDataKv));
     }
 
 }

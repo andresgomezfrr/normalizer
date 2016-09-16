@@ -1,6 +1,9 @@
-package rb.ks.funcs;
+package rb.ks.funcs.impl;
 
 import org.apache.kafka.streams.KeyValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rb.ks.funcs.MapperFunction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,18 +11,20 @@ import java.util.List;
 import java.util.Map;
 
 public class SimpleMapper extends MapperFunction {
+    private static final Logger log = LoggerFactory.getLogger(SimpleMapper.class);
     List<MapperModel> mappers = new ArrayList<>();
 
     @Override
     public void prepare(Map<String, Object> properties) {
         List<Map<String, Object>> maps = (List<Map<String, Object>>) properties.get("maps");
         maps.forEach(map -> mappers.add(new MapperModel((List<String>) map.get("dimPath"), (String) map.get("as"))));
+        log.info("Prepared SimpleMapper with {}", toString());
     }
 
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
         Map<String, Object> newEvent = new HashMap<>();
-        if(value != null) {
+        if (value != null) {
             for (MapperModel mapper : mappers) {
                 Integer depth = mapper.dimPath.size() - 1;
 
@@ -30,8 +35,12 @@ public class SimpleMapper extends MapperFunction {
                     }
                 }
 
-                if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
+                if (levelPath != null) {
+                    Object newValue = levelPath.get(mapper.dimPath.get(depth));
+                    if (newValue != null) newEvent.put(mapper.as, newValue);
+                }
             }
+
             return new KeyValue<>(key, newEvent);
         } else {
             return new KeyValue<>(key, null);
@@ -58,12 +67,12 @@ public class SimpleMapper extends MapperFunction {
         String as;
 
         MapperModel(List<String> dimPath,
-                           String as) {
+                    String as) {
             this.dimPath = dimPath;
 
-            if (as != null ) {
+            if (as != null) {
                 this.as = as;
-            } else if(dimPath != null) {
+            } else if (dimPath != null) {
                 this.as = dimPath.get(dimPath.size() - 1);
             }
         }
