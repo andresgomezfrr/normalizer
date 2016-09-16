@@ -11,16 +11,13 @@ import rb.ks.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.funcs.FlatMapperFunction;
 import rb.ks.funcs.Function;
-import rb.ks.funcs.impl.SplitterFlatMapper;
 import rb.ks.model.PlanModel;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SplitterFlatMapperUnitTest {
 
