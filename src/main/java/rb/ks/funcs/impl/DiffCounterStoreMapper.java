@@ -14,27 +14,43 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     List<String> counterFields;
     KeyValueStore<String, Map<String, Long>> storeCounter;
     Boolean sendIfZero;
+    String timestamp;
 
     @Override
     public void prepare(Map<String, Object> properties) {
         counterFields = (List<String>) properties.get("counters");
         storeCounter = getStore("counter-store");
         sendIfZero = (Boolean) properties.get("sendIfZero");
+        timestamp = String.valueOf(properties.get("timestamp"));
+
         if (sendIfZero == null) sendIfZero = true;
+
+        timestamp = timestamp != null ? timestamp : "timestamp";
     }
 
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
         Map<String, Long> newCounters = new HashMap<>();
+        Map<String, Long> newTimestamp = new HashMap<>();
 
         for (String counterField : counterFields) {
             Long counter = toLong(value.remove(counterField));
             if (counter != null) newCounters.put(counterField, counter);
         }
 
+        Long timestamp = toLong(value.remove(this.timestamp));
+
+        if(timestamp != null) {
+            newTimestamp.put(this.timestamp, timestamp);
+        } else {
+            timestamp = System.currentTimeMillis()/1000;
+            newTimestamp.put(this.timestamp, timestamp);
+        }
+
         Map<String, Long> counters = storeCounter.get(key);
 
         if (counters != null) {
+
             for (Map.Entry<String, Long> counter : newCounters.entrySet()) {
                 Long lastValue = toLong(counters.get(counter.getKey()));
                 if (lastValue != null) {
@@ -43,12 +59,24 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 }
             }
 
+            Long lastTimestamp = counters.get(this.timestamp);
+
+            if(lastTimestamp != null) {
+                value.put("last_timestamp", lastTimestamp);
+                value.put(this.timestamp, timestamp);
+            }
+
             counters.putAll(newCounters);
+            counters.putAll(newTimestamp);
+
         } else {
+            value.put(this.timestamp, timestamp);
             counters = newCounters;
+            counters.putAll(newTimestamp);
         }
 
         storeCounter.put(key, counters);
+
         return new KeyValue<>(key, value);
     }
 
@@ -63,7 +91,8 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
         builder.append(" {")
                 .append("counters: ").append(counterFields).append(", ")
                 .append("sendIfZero: ").append(sendIfZero).append(", ")
-                .append("stores: ").append(storeCounter.name())
+                .append("stores: ").append(storeCounter.name()).append(", ")
+                .append("timestamp: ").append(timestamp)
                 .append("} ");
 
         return builder.toString();
