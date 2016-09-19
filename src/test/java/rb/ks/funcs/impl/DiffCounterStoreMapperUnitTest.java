@@ -55,23 +55,28 @@ public class DiffCounterStoreMapperUnitTest {
         message1.put("B", "VALUE-B");
         message1.put("C", 1234567890L);
         message1.put("X", 1000L);
+        message1.put("time", 1122334455L);
 
         Map<String, Object> message2 = new HashMap<>();
         message2.put("A", "VALUE-A");
         message2.put("B", "VALUE-B");
         message2.put("C", 1234567890L);
         message2.put("X", 2500L);
+        message2.put("time", 1122334555L);
 
         Map<String, Object> expected1 = new HashMap<>();
         expected1.put("A", "VALUE-A");
         expected1.put("B", "VALUE-B");
         expected1.put("C", 1234567890L);
+        expected1.put("time", 1122334455L);
 
         Map<String, Object> expected2 = new HashMap<>();
         expected2.put("A", "VALUE-A");
         expected2.put("B", "VALUE-B");
         expected2.put("C", 1234567890L);
         expected2.put("X", 1500L);
+        expected2.put("time", 1122334555L);
+        expected2.put("last_timestamp", 1122334455L);
 
         KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
         assertEquals(key1, result1.key);
@@ -92,23 +97,28 @@ public class DiffCounterStoreMapperUnitTest {
         message1.put("B", "VALUE-B");
         message1.put("C", 1234567890L);
         message1.put("X", 1000L);
+        message1.put("time", 1122334455L);
 
         Map<String, Object> message2 = new HashMap<>();
         message2.put("A", "VALUE-A");
         message2.put("B", "VALUE-B");
         message2.put("C", 1234567890L);
         message2.put("X", 1000L);
+        message2.put("time", 1122334655L);
 
         Map<String, Object> expected1 = new HashMap<>();
         expected1.put("A", "VALUE-A");
         expected1.put("B", "VALUE-B");
         expected1.put("C", 1234567890L);
+        expected1.put("time", 1122334455L);
 
         Map<String, Object> expected2 = new HashMap<>();
         expected2.put("A", "VALUE-A");
         expected2.put("B", "VALUE-B");
         expected2.put("C", 1234567890L);
         expected2.put("X", 0L);
+        expected2.put("time", 1122334655L);
+        expected2.put("last_timestamp", 1122334455L);
 
         KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
         assertEquals(key1, result1.key);
@@ -129,22 +139,28 @@ public class DiffCounterStoreMapperUnitTest {
         message1.put("B", "VALUE-B");
         message1.put("C", 1234567890L);
         message1.put("X", 1000L);
+        message1.put("time", 1122334455L);
 
         Map<String, Object> message2 = new HashMap<>();
         message2.put("A", "VALUE-A");
         message2.put("B", "VALUE-B");
         message2.put("C", 1234567890L);
         message2.put("X", 1000L);
+        message2.put("time", 1122334555L);
 
         Map<String, Object> expected1 = new HashMap<>();
         expected1.put("A", "VALUE-A");
         expected1.put("B", "VALUE-B");
         expected1.put("C", 1234567890L);
+        expected1.put("time", 1122334455L);
+
 
         Map<String, Object> expected2 = new HashMap<>();
         expected2.put("A", "VALUE-A");
         expected2.put("B", "VALUE-B");
         expected2.put("C", 1234567890L);
+        expected2.put("time", 1122334555L);
+        expected2.put("last_timestamp", 1122334455L);
 
         KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
         assertEquals(key1, result1.key);
@@ -165,23 +181,28 @@ public class DiffCounterStoreMapperUnitTest {
         message1.put("B", "VALUE-B");
         message1.put("C", 1234567890L);
         message1.put("X", 1000L);
+        message1.put("time", 1122334455L);
 
         Map<String, Object> message2 = new HashMap<>();
         message2.put("A", "VALUE-A");
         message2.put("B", "VALUE-B");
         message2.put("C", 1234567890L);
         message2.put("X", 1000L);
+        message2.put("time", 1122334655L);
 
         Map<String, Object> expected1 = new HashMap<>();
         expected1.put("A", "VALUE-A");
         expected1.put("B", "VALUE-B");
         expected1.put("C", 1234567890L);
+        expected1.put("time", 1122334455L);
 
         Map<String, Object> expected2 = new HashMap<>();
         expected2.put("A", "VALUE-A");
         expected2.put("B", "VALUE-B");
         expected2.put("C", 1234567890L);
         expected2.put("X", 1500L);
+        expected2.put("time", 1122334655L);
+        expected2.put("last_timestamp", 1122334455L);
 
         KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
         assertEquals(key1, result1.key);
@@ -201,33 +222,41 @@ public class DiffCounterStoreMapperUnitTest {
         message1.put("B", "VALUE-B");
         message1.put("C", 1234567890L);
         message1.put("X", 2500L);
+        message1.put("time", 1122334455L);
 
         Map<String, Object> message2 = new HashMap<>();
         message2.put("A", "VALUE-A");
         message2.put("B", "VALUE-B");
         message2.put("C", 1234567890L);
+        message2.put("time", 1122334655L);
 
         Map<String, Object> message3 = new HashMap<>();
         message3.put("A", "VALUE-A");
         message3.put("B", "VALUE-B");
         message3.put("C", 1234567890L);
         message3.put("X", 4000L);
+        message3.put("time", 1122334855L);
 
         Map<String, Object> expected1 = new HashMap<>();
         expected1.put("A", "VALUE-A");
         expected1.put("B", "VALUE-B");
         expected1.put("C", 1234567890L);
+        expected1.put("time", 1122334455L);
 
         Map<String, Object> expected2 = new HashMap<>();
         expected2.put("A", "VALUE-A");
         expected2.put("B", "VALUE-B");
         expected2.put("C", 1234567890L);
+        expected2.put("time", 1122334655L);
+        expected2.put("last_timestamp", 1122334455L);
 
         Map<String, Object> expected3 = new HashMap<>();
         expected3.put("A", "VALUE-A");
         expected3.put("B", "VALUE-B");
         expected3.put("C", 1234567890L);
         expected3.put("X", 1500L);
+        expected3.put("time", 1122334855L);
+        expected3.put("last_timestamp", 1122334655L);
 
         KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
         assertEquals(key1, result1.key);
@@ -243,9 +272,125 @@ public class DiffCounterStoreMapperUnitTest {
     }
 
     @Test
+    public void processMessageWithSecondNullTimestamp() {
+        String key1 = randomKey();
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("A", "VALUE-A");
+        message1.put("B", "VALUE-B");
+        message1.put("C", 1234567890L);
+        message1.put("X", 2500L);
+        message1.put("time", 1122334455L);
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("A", "VALUE-A");
+        message2.put("B", "VALUE-B");
+        message2.put("C", 1234567890L);
+
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put("A", "VALUE-A");
+        expected1.put("B", "VALUE-B");
+        expected1.put("C", 1234567890L);
+        expected1.put("time", 1122334455L);
+
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put("A", "VALUE-A");
+        expected2.put("B", "VALUE-B");
+        expected2.put("C", 1234567890L);
+        expected2.put("last_timestamp", 1122334455L);
+        expected2.put("time", System.currentTimeMillis()/1000);
+
+
+        KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
+        assertEquals(key1, result1.key);
+        assertEquals(expected1, result1.value);
+
+        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key1, message2);
+        assertEquals(key1, result2.key);
+        assertEquals(expected2, result2.value);
+    }
+
+    @Test
+    public void processMessageWithoutTimestamp() {
+        String key1 = randomKey();
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("A", "VALUE-A");
+        message1.put("B", "VALUE-B");
+        message1.put("C", 1234567890L);
+        message1.put("X", 2500L);
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("A", "VALUE-A");
+        message2.put("B", "VALUE-B");
+        message2.put("C", 1234567890L);
+
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put("A", "VALUE-A");
+        expected1.put("B", "VALUE-B");
+        expected1.put("C", 1234567890L);
+        expected1.put("time", System.currentTimeMillis()/1000);
+
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put("A", "VALUE-A");
+        expected2.put("B", "VALUE-B");
+        expected2.put("C", 1234567890L);
+        expected2.put("last_timestamp", System.currentTimeMillis()/1000);
+        expected2.put("time", System.currentTimeMillis()/1000);
+
+
+        KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
+        assertEquals(key1, result1.key);
+        assertEquals(expected1, result1.value);
+
+        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key1, message2);
+        assertEquals(key1, result2.key);
+        assertEquals(expected2, result2.value);
+    }
+
+    @Test
+    public void processMessageWithFirstNullTimestamp() {
+        String key1 = randomKey();
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("A", "VALUE-A");
+        message1.put("B", "VALUE-B");
+        message1.put("C", 1234567890L);
+        message1.put("X", 2500L);
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("A", "VALUE-A");
+        message2.put("B", "VALUE-B");
+        message2.put("C", 1234567890L);
+        message2.put("time", System.currentTimeMillis()/1000 + 100);
+
+        Map<String, Object> expected1 = new HashMap<>();
+        expected1.put("A", "VALUE-A");
+        expected1.put("B", "VALUE-B");
+        expected1.put("C", 1234567890L);
+        expected1.put("time", System.currentTimeMillis()/1000);
+
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put("A", "VALUE-A");
+        expected2.put("B", "VALUE-B");
+        expected2.put("C", 1234567890L);
+        expected2.put("last_timestamp", System.currentTimeMillis()/1000);
+        expected2.put("time", System.currentTimeMillis()/1000 + 100);
+
+
+        KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
+        assertEquals(key1, result1.key);
+        assertEquals(expected1, result1.value);
+
+        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key1, message2);
+        assertEquals(key1, result2.key);
+        assertEquals(expected2, result2.value);
+    }
+
+    @Test
     public void toStringTest(){
         assertNotNull(diffCounterStoreMapper);
-        assertEquals(" {counters: [X], sendIfZero: true, stores: mock-key-value-store} ",
+        assertEquals(" {counters: [X], sendIfZero: true, stores: mock-key-value-store, timestamp: time} ",
                 diffCounterStoreMapper.toString());
     }
 
