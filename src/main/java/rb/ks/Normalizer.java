@@ -18,31 +18,34 @@ public class Normalizer {
     private static final Logger log = LoggerFactory.getLogger(Normalizer.class);
 
     public static void main(String[] args) throws IOException, PlanBuilderException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("stream.json").getFile());
+        if(args.length == 5) {
+            File file = new File(args[0]);
 
-        Properties streamsConfiguration = new Properties();
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "ks-normalizer");
-        streamsConfiguration.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
-        streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        streamsConfiguration.put(StreamsConfig.KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        streamsConfiguration.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, JsonSerde.class.getName());
-        streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
+            Properties streamsConfiguration = new Properties();
+            streamsConfiguration.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, args[1]);
+            streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, args[2]);
+            streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, args[3]);
+            streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, args[4]);
+            streamsConfiguration.put(StreamsConfig.KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+            streamsConfiguration.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, JsonSerde.class.getName());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        PlanModel model = objectMapper.readValue(file, PlanModel.class);
-        System.out.println(model.toString());
-        StreamBuilder streamBuilder = new StreamBuilder();
+            ObjectMapper objectMapper = new ObjectMapper();
+            PlanModel model = objectMapper.readValue(file, PlanModel.class);
+            System.out.println(model.toString());
+            StreamBuilder streamBuilder = new StreamBuilder();
 
-        KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
-        streams.start();
+            KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
+            streams.start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            streamBuilder.close();
-            streams.close();
-        }));
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                streamBuilder.close();
+                streams.close();
+            }));
 
 
-        log.info("Started Normalizer with conf {}", streamsConfiguration);
+            log.info("Started Normalizer with conf {}", streamsConfiguration);
+        } else {
+            log.error("Execute: java -cp ${JAR_PATH} rb.ks.Normalizer <config_file> <zookeeper_connect> <bootstrap_servers> <application_id> <threads>");
+        }
     }
 }
