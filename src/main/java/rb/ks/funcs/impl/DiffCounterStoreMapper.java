@@ -25,7 +25,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
 
         if (sendIfZero == null) sendIfZero = true;
 
-        timestamp = timestamp == null ? timestamp : "timestamp";
+        timestamp = timestamp != null ? timestamp : "timestamp";
     }
 
     @Override
@@ -37,9 +37,18 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             if (counter != null) newCounters.put(counterField, counter);
         }
 
+        Long timestampAfterValue = toLong(value.remove(timestamp));
+
+        if(timestampAfterValue != null) {
+            newCounters.put(timestamp, timestampAfterValue);
+        } else {
+            newCounters.put(timestamp, System.currentTimeMillis()/1000);
+        }
+
         Map<String, Long> counters = storeCounter.get(key);
 
         if (counters != null) {
+
             for (Map.Entry<String, Long> counter : newCounters.entrySet()) {
                 Long lastValue = toLong(counters.get(counter.getKey()));
                 if (lastValue != null) {
@@ -48,16 +57,23 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 }
             }
 
+            Long timestampBeforeValue = counters.get(timestamp);
+
+            if(timestampBeforeValue != null) {
+                value.put("timestamp_before", timestampBeforeValue);
+                value.put("timestamp_after", timestampAfterValue);
+            } else {
+                value.put("timestamp_before", timestampAfterValue);
+                value.put("timestamp_after", System.currentTimeMillis()/1000);
+            }
+
             counters.putAll(newCounters);
+
         } else {
             counters = newCounters;
         }
 
         storeCounter.put(key, counters);
-
-        if(!value.containsKey(timestamp)) {
-            value.put(timestamp, System.currentTimeMillis()/1000);
-        }
 
         return new KeyValue<>(key, value);
     }
