@@ -14,13 +14,18 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     List<String> counterFields;
     KeyValueStore<String, Map<String, Long>> storeCounter;
     Boolean sendIfZero;
+    String timestamp;
 
     @Override
     public void prepare(Map<String, Object> properties) {
         counterFields = (List<String>) properties.get("counters");
         storeCounter = getStore("counter-store");
         sendIfZero = (Boolean) properties.get("sendIfZero");
+        timestamp = String.valueOf(properties.get("timestamp"));
+
         if (sendIfZero == null) sendIfZero = true;
+
+        timestamp = timestamp == null ? timestamp : "timestamp";
     }
 
     @Override
@@ -49,6 +54,11 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
         }
 
         storeCounter.put(key, counters);
+
+        if(!value.containsKey(timestamp)) {
+            value.put(timestamp, System.currentTimeMillis()/1000);
+        }
+
         return new KeyValue<>(key, value);
     }
 
@@ -63,7 +73,8 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
         builder.append(" {")
                 .append("counters: ").append(counterFields).append(", ")
                 .append("sendIfZero: ").append(sendIfZero).append(", ")
-                .append("stores: ").append(storeCounter.name())
+                .append("stores: ").append(storeCounter.name()).append(", ")
+                .append("tiemstamp: ").append(timestamp)
                 .append("} ");
 
         return builder.toString();
