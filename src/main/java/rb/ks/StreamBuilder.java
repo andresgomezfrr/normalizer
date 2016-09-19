@@ -147,9 +147,14 @@ public class StreamBuilder {
                 if (timestamperModel != null) {
                     KStream<String, Map<String, Object>> kStreamTimestampered = kStream.mapValues((value) -> {
                         String timestampDim = timestamperModel.getTimestampDim();
-                        Map<String, Object> newEvent = new HashMap<>(value);
-                        newEvent.put(timestampDim, timestamperModel.generateTimestamp(value.get(timestampDim)));
-                        return newEvent;
+                        Object newTimestamp = timestamperModel.generateTimestamp(value.get(timestampDim));
+                        if(newTimestamp != null) {
+                            Map<String, Object> newEvent = new HashMap<>(value);
+                            newEvent.put(timestampDim, newTimestamp);
+                            return newEvent;
+                        } else {
+                            return value;
+                        }
                     });
 
                     kStreams.put(streams.getKey(), kStreamTimestampered);
