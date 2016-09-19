@@ -22,9 +22,9 @@ public class StreamBuilder {
     Map<String, KStream<String, Map<String, Object>>> kStreams = new HashMap<>();
     Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
     Set<String> usedStores = new HashSet<>();
-    List<String> processedFuncs = new ArrayList<>();
-    List<String> processedTimestamper = new ArrayList<>();
-    List<String> processedSinks = new ArrayList<>();
+    Set<String> processedFuncs = new HashSet<>();
+    Set<String> processedTimestamper = new HashSet<>();
+    Set<String> processedSinks = new HashSet<>();
     Boolean newStream = false;
 
     public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
@@ -77,59 +77,60 @@ public class StreamBuilder {
                 if (funcModels != null) {
                     for (FunctionModel funcModel : funcModels) {
                         KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
-                        String name = funcModel.getName();
-                        String className = funcModel.getClassName();
-                        Map<String, Object> properties = funcModel.getProperties();
-                        List<String> stores = funcModel.getStores();
+                        if (kStream != null) {
+                            String name = funcModel.getName();
+                            String className = funcModel.getClassName();
+                            Map<String, Object> properties = funcModel.getProperties();
+                            List<String> stores = funcModel.getStores();
 
-                        if (stores != null) {
-                            properties.put("__STORES", stores);
-                            stores.forEach(store -> {
-                                if (!usedStores.contains(store)) {
-                                    StateStoreSupplier storeSupplier = Stores.create(store)
-                                            .withKeys(Serdes.String())
-                                            .withValues(new JsonSerde())
-                                            .persistent()
-                                            .build();
+                            if (stores != null) {
+                                properties.put("__STORES", stores);
+                                stores.forEach(store -> {
+                                    if (!usedStores.contains(store)) {
+                                        StateStoreSupplier storeSupplier = Stores.create(store)
+                                                .withKeys(Serdes.String())
+                                                .withValues(new JsonSerde())
+                                                .persistent()
+                                                .build();
 
-                                    builder.addStateStore(storeSupplier);
-                                    usedStores.add(store);
-                                }
-                            });
-                        }
-
-                        try {
-                            Function func = makeFunction(className, properties);
-                            if (func instanceof MapperFunction) {
-                                kStream = kStream.map((MapperFunction) func);
-                            } else if (func instanceof FlatMapperFunction) {
-                                kStream = kStream.flatMap((FlatMapperFunction) func);
-                            } else if (func instanceof MapperStoreFunction) {
-                                kStream = kStream.transform(() ->
-                                        (MapperStoreFunction) func, stores.toArray(new String[stores.size()])
-                                );
-                            } else if (func instanceof FilterFunc) {
-                                kStream = kStream.filter((FilterFunc) func);
+                                        builder.addStateStore(storeSupplier);
+                                        usedStores.add(store);
+                                    }
+                                });
                             }
 
-                            Map<String, Function> functions = streamFunctions.get(streams.getKey());
-                            if (functions == null) functions = new HashMap<>();
-                            functions.put(name, func);
+                            try {
+                                Function func = makeFunction(className, properties);
+                                if (func instanceof MapperFunction) {
+                                    kStream = kStream.map((MapperFunction) func);
+                                } else if (func instanceof FlatMapperFunction) {
+                                    kStream = kStream.flatMap((FlatMapperFunction) func);
+                                } else if (func instanceof MapperStoreFunction) {
+                                    kStream = kStream.transform(() ->
+                                            (MapperStoreFunction) func, stores.toArray(new String[stores.size()])
+                                    );
+                                } else if (func instanceof FilterFunc) {
+                                    kStream = kStream.filter((FilterFunc) func);
+                                }
 
-                            log.info("Added function {} to stream {}", name, streams.getKey());
-                            streamFunctions.put(streams.getKey(), functions);
-                            kStreams.put(streams.getKey(), kStream);
-                        } catch (ClassNotFoundException e) {
-                            log.error("Couldn't find the class associated with the function {}", className);
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            log.error("Couldn't create the instance associated with the function " + className, e);
+                                Map<String, Function> functions = streamFunctions.get(streams.getKey());
+                                if (functions == null) functions = new HashMap<>();
+                                functions.put(name, func);
+
+                                log.info("Added function {} to stream {}", name, streams.getKey());
+                                streamFunctions.put(streams.getKey(), functions);
+                                kStreams.put(streams.getKey(), kStream);
+                            } catch (ClassNotFoundException e) {
+                                log.error("Couldn't find the class associated with the function {}", className);
+                            } catch (InstantiationException | IllegalAccessException e) {
+                                log.error("Couldn't create the instance associated with the function " + className, e);
+                            }
+                            processedFuncs.add(streams.getKey());
+                        } else {
+                            log.info("Stream {} is to the next iteration.", streams.getKey());
                         }
-
                     }
                 }
-                processedFuncs.add(streams.getKey());
-            } else {
-                log.info("Stream {} is to the next iteration.", streams.getKey());
             }
         }
     }
