@@ -100,9 +100,7 @@ public class StreamBuilder {
                         }
 
                         try {
-                            Class funcClass = Class.forName(className);
-                            Function func = (Function) funcClass.newInstance();
-                            func.init(properties);
+                            Function func = makeFunction(className, properties);
 
                             if (func instanceof MapperFunction) {
                                 kStream = kStream.map((MapperFunction) func);
@@ -123,9 +121,9 @@ public class StreamBuilder {
                             streamFunctions.put(streams.getKey(), functions);
                             kStreams.put(streams.getKey(), kStream);
                         } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                            log.error("Couldn't find the class associated with the function {}", className);
                         } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
+                            log.error("Couldn't create the instance associated with the function " + className, e);
                         }
 
                         processedFuncs.add(streams.getKey());
@@ -183,6 +181,19 @@ public class StreamBuilder {
                             );
                         }
 
+                        FunctionModel filterModel = sink.getFilter();
+                        if(filterModel != null){
+                            String className = filterModel.getClassName();
+                            try {
+                                FilterFunc filter = (FilterFunc) makeFunction(className, filterModel.getProperties());
+                                kStream = kStream.filter(filter);
+                            } catch (ClassNotFoundException e) {
+                                log.error("Couldn't find the class associated with the function {}", className);
+                            } catch (InstantiationException | IllegalAccessException e) {
+                                log.error("Couldn't create the instance associated with the function " + className, e);
+                            }
+                        }
+
                         if (sink.getType().equals(SinkModel.KAFKA_TYPE)) {
                             kStream.to(
                                     (key, value, numPartitions) ->
@@ -205,5 +216,13 @@ public class StreamBuilder {
 
     private void clean() {
         kStreams.clear();
+    }
+
+    private Function makeFunction(String className, Map<String, Object> properties)
+            throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+        Class funcClass = Class.forName(className);
+        Function func = (Function) funcClass.newInstance();
+        func.init(properties);
+        return func;
     }
 }
