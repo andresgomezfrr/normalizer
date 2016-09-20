@@ -4,7 +4,8 @@ import org.apache.kafka.streams.KeyValue;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Seconds;
-import rb.ks.constants.Dimension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rb.ks.funcs.FlatMapperFunction;
 
 import java.util.ArrayList;
@@ -13,24 +14,27 @@ import java.util.List;
 import java.util.Map;
 
 public class SplitterFlatMapper extends FlatMapperFunction {
+    private static final Logger log = LoggerFactory.getLogger(SplitterFlatMapper.class);
 
     SplitterModel splitter;
 
     @Override
     public void prepare(Map<String, Object> properties) {
-        //Map<String, Object> splitterMap = (Map<String, Object>) properties.get("dimensions");
-
-        splitter = new SplitterModel((List<String>) properties.get("dimensions"), "60");
+        splitter = new SplitterModel(
+                (List<String>) properties.get("dimensions"),
+                (String) properties.get("timestampDim"),
+                (String) properties.get("firstTimestampDim"),
+                "60");
     }
 
     @Override
     public Iterable<KeyValue<String, Map<String, Object>>> process(String key, Map<String, Object> value) {
         List<KeyValue<String, Map<String, Object>>> generatedPackets = new ArrayList<>();
 
-        if (value.containsKey(Dimension.FIRST_SWITCHED) && value.containsKey(Dimension.TIMESTAMP)) {
+        if (value.containsKey(splitter.getFirstTimestampDim()) && value.containsKey(splitter.getTimestampDim())) {
 
-            DateTime packet_start = new DateTime(Long.parseLong(value.get(Dimension.FIRST_SWITCHED).toString()) * 1000, DateTimeZone.UTC);
-            DateTime packet_end = new DateTime(Long.parseLong(value.get(Dimension.TIMESTAMP).toString()) * 1000, DateTimeZone.UTC);
+            DateTime packet_start = new DateTime(Long.parseLong(value.get(splitter.getFirstTimestampDim()).toString()) * 1000, DateTimeZone.UTC);
+            DateTime packet_end = new DateTime(Long.parseLong(value.get(splitter.getTimestampDim()).toString()) * 1000, DateTimeZone.UTC);
 
             DateTime this_start;
             DateTime this_end = packet_start;
@@ -39,7 +43,7 @@ public class SplitterFlatMapper extends FlatMapperFunction {
 
             Map<String, Long> data_map = new HashMap<>();
             Map<String, Long> data_count = new HashMap<>();
-            for (String dimension : splitter.dimensions) {
+            for (String dimension : splitter.getDimensions()) {
 
                 try {
                     if (value.containsKey(dimension)) {
@@ -47,34 +51,28 @@ public class SplitterFlatMapper extends FlatMapperFunction {
                         data_count.put(dimension, 0L);
                     }
                 } catch (NumberFormatException e) {
-                    // TODO add log warning
+                    log.warn(e.getMessage(), e);
                     return generatedPackets;
                 }
 
             }
 
-
             do {
                 long diff, this_data;
 
                 this_start = this_end;
-                this_end = this_start.plusSeconds(splitter.interval - this_start.getSecondOfMinute());
+                this_end = this_start.plusSeconds(splitter.getInterval() - this_start.getSecondOfMinute());
                 if (this_end.isAfter(packet_end)) this_end = packet_end;
                 diff = Seconds.secondsBetween(this_start, this_end).getSeconds();
 
                 Map<String, Object> to_send = new HashMap<>();
                 to_send.putAll(value);
-                to_send.put(Dimension.TIMESTAMP, this_start.getMillis() / 1000);
-                to_send.remove(Dimension.FIRST_SWITCHED);
+                to_send.put(splitter.getTimestampDim(), this_start.getMillis() / 1000);
+                to_send.remove(splitter.getFirstTimestampDim());
 
                 for (Map.Entry<String, Long> entry : data_map.entrySet()) {
-
-                    this_data = 0;
-
-                    if (totalDiff == 0)
-                        this_data = entry.getValue();
-                    else
-                        this_data = (long) Math.ceil(entry.getValue() * diff / totalDiff);
+                    if (totalDiff == 0) this_data = entry.getValue();
+                    else this_data = (long) Math.ceil(entry.getValue() * diff / totalDiff);
 
                     Long data_dimension = data_count.get(entry.getKey());
                     data_dimension += this_data;
@@ -97,40 +95,33 @@ public class SplitterFlatMapper extends FlatMapperFunction {
                 }
             }
 
-        } else if (value.containsKey(Dimension.TIMESTAMP)) {
+        } else if (value.containsKey(splitter.getTimestampDim())) {
             try {
-                for (String dimension : splitter.dimensions) {
+                for (String dimension : splitter.getDimensions()) {
                     if (value.containsKey(dimension)) {
                         Long data = Long.parseLong(value.get(dimension).toString());
                         value.put(dimension, data);
-                    }/* else {
-                        // TODO add log warn
-                        return generatedPackets;
-                    }*/
+                    }
                 }
 
                 generatedPackets.add(new KeyValue<>(key, value));
 
             } catch (NumberFormatException e) {
-                // TODO add log warn
+                log.warn(e.getMessage(), e);
                 return generatedPackets;
             }
         } else {
 
             try {
-                for (String dimension : splitter.dimensions) {
+                for (String dimension : splitter.getDimensions()) {
                     if (value.containsKey(dimension)) {
                         Long data = Long.parseLong(value.get(dimension).toString());
                         value.put(dimension, data);
-                        // TODO add log warn
-                    }/* else {
-                        // TODO add log warn
-                        return generatedPackets;
-                    }*/
+                    }
                 }
                 generatedPackets.add(new KeyValue<>(key, value));
             } catch (NumberFormatException e) {
-                // TODO add log warn
+                log.warn(e.getMessage(), e);
                 return generatedPackets;
             }
         }
@@ -159,13 +150,13 @@ public class SplitterFlatMapper extends FlatMapperFunction {
     public class SplitterModel {
         List<String> dimensions;
         Integer interval;
-        Long first_switch;
-        Long timestamp;
+        String firstTimestampDim = "last_timestamp";
+        String timestampDim = "timestamp";
 
-        SplitterModel(List<String> dimensions, String interval) {
+        SplitterModel(List<String> dimensions, String timestamp, String firstTimestamp, String interval) {
             this.dimensions = dimensions;
-            this.first_switch = first_switch;
-            this.timestamp = timestamp;
+            if(firstTimestamp != null) this.firstTimestampDim = firstTimestamp;
+            if(timestamp != null) this.timestampDim = timestamp;
             this.interval = interval != null ? Integer.valueOf(interval) : 60;
         }
 
@@ -177,12 +168,12 @@ public class SplitterFlatMapper extends FlatMapperFunction {
             return interval;
         }
 
-        public Long getFirstSwitch() {
-            return first_switch;
+        public String getFirstTimestampDim() {
+            return firstTimestampDim;
         }
 
-        public Long getTimestamp() {
-            return timestamp;
+        public String getTimestampDim() {
+            return timestampDim;
         }
 
         @Override
@@ -190,6 +181,8 @@ public class SplitterFlatMapper extends FlatMapperFunction {
             StringBuilder builder = new StringBuilder();
             builder.append(" {")
                     .append("dimensions: ").append(dimensions).append(", ")
+                    .append("timestampDim: ").append(timestampDim).append(", ")
+                    .append("firstTimestampDim: ").append(firstTimestampDim).append(", ")
                     .append("interval: ").append(interval)
                     .append("} ");
 
