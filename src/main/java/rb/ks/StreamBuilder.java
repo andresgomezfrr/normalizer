@@ -6,6 +6,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
+import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,12 @@ import rb.ks.serializers.JsonSerde;
 import java.util.*;
 
 public class StreamBuilder {
+    String appId;
+
+    public StreamBuilder(String appId) {
+        this.appId = appId;
+    }
+
     private static final Logger log = LoggerFactory.getLogger(StreamBuilder.class);
 
     private Map<String, KStream<String, Map<String, Object>>> kStreams = new HashMap<>();
@@ -187,12 +194,25 @@ public class StreamBuilder {
                             String newStreamName = sink.getTopic();
                             if(!kStreams.containsKey(newStreamName)) {
                                 addedNewStream = true;
-                                KStream<String, Map<String, Object>> newBranch = kStream.branch((key, value) -> true)[0];
+                                KStream<String, Map<String, Object>> newBranch;
+
+                                if(sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
+                                    newBranch = kStream.branch((key, value) -> true)[0];
+                                } else {
+                                    newBranch = kStream.through(
+                                            (key, value, numPartitions) ->
+                                                    Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions,
+                                            String.format("%s:%s-to-%s", appId, streams.getKey(), newStreamName)
+                                    );
+                                }
+
                                 kStreams.put(newStreamName, newBranch);
                                 log.info("Creating stream [{}]", sink.getTopic());
                                 generatedStreams.add(sink.getTopic());
                             } else {
-                                throw new TryToDoLoopException("Loop from [" + streams.getKey() + "] to [" + newStreamName + "]");
+                                throw new TryToDoLoopException(
+                                        "Loop from [" + streams.getKey() + "] to [" + newStreamName + "]"
+                                );
                             }
                         }
                     }

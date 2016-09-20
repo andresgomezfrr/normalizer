@@ -19,7 +19,7 @@ import java.util.Properties;
 public class Normalizer {
     private static final Logger log = LoggerFactory.getLogger(Normalizer.class);
 
-    public static void main(String[] args) throws IOException, PlanBuilderException, TryToDoLoopException {
+    public static void main(String[] args) throws IOException, PlanBuilderException {
         if(args.length == 5) {
             File file = new File(args[0]);
 
@@ -35,7 +35,7 @@ public class Normalizer {
             PlanModel model = objectMapper.readValue(file, PlanModel.class);
             log.info("Execution plan: {}", model.printExecutionPlan());
             log.info("-------- TOPOLOGY BUILD START --------");
-            StreamBuilder streamBuilder = new StreamBuilder();
+            StreamBuilder streamBuilder = new StreamBuilder(args[3]);
             KStreamBuilder builder = streamBuilder.builder(model);
             log.info("--------  TOPOLOGY BUILD END  --------");
 
