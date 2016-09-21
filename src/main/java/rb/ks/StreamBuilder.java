@@ -98,7 +98,7 @@ public class StreamBuilder {
                             properties.put("__APP_ID", appId);
 
                             stores = stores.stream()
-                                    .map(store -> String.format("%s:%s", appId, store))
+                                    .map(store -> String.format("%s_%s", appId, store))
                                     .collect(Collectors.toList());
 
                             stores.forEach(store -> {
@@ -209,7 +209,7 @@ public class StreamBuilder {
                                     newBranch = kStream.through(
                                             (key, value, numPartitions) ->
                                                     Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions,
-                                            String.format("%s:%s-to-%s", appId, streams.getKey(), newStreamName)
+                                            String.format("%s_%s_to_%s", appId, streams.getKey(), newStreamName)
                                     );
                                 }
 
