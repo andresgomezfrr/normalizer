@@ -139,18 +139,18 @@ public class DiffCounterStoreMapperIntegrationTest {
         expectedData1.put("interface", "interface_1");
         expectedData1.put("A", "VALUE-A");
         expectedData1.put("B", "VALUE-B");
-        expectedData1.put("C", 1234567890L);
-        expectedData1.put("timestamp", 1122334455L);
+        expectedData1.put("C", 1234567890);
+        expectedData1.put("time", 1122334455);
 
         Map<String, Object> expectedData2 = new HashMap<>();
-        expectedData1.put("gateway", "gateway_1");
-        expectedData1.put("interface", "interface_1");
-        expectedData1.put("A", "VALUE-A");
-        expectedData1.put("B", "VALUE-B");
-        expectedData1.put("C", 1234567890L);
-        expectedData1.put("X", 0L);
-        expectedData1.put("timestamp", 1122334655L);
-        expectedData1.put("last_timestamp", 1122334455L);
+        expectedData2.put("gateway", "gateway_1");
+        expectedData2.put("interface", "interface_1");
+        expectedData2.put("A", "VALUE-A");
+        expectedData2.put("B", "VALUE-B");
+        expectedData2.put("C", 1234567890);
+        expectedData2.put("X", 0);
+        expectedData2.put("time", 1122334655);
+        expectedData2.put("last_timestamp", 1122334455);
 
 
         KeyValue<String, Map<String, Object>> expectedDataKv1 = new KeyValue<>("KEY_A", expectedData1);
