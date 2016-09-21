@@ -1,0 +1,31 @@
+{
+  "inputs":{
+    "topic1":["stream1"],
+    "topic2":["stream2"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"simple-mapper",
+          "className":"rb.ks.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath":["body","mac"], "as":"new_key"},
+              {"dimPath":["body","message","reps"], "as":"messages"}
+            ]
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"topic2", "type":"kafka", "partitionBy":"new_key"}
+      ]
+    },
+    "stream2":{
+      "sinks":[
+        {"topic":"stream1", "type":"stream"},
+        {"topic":"topic3", "type":"kafka"}
+      ]
+    }
+  }
+}

@@ -19,8 +19,8 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class JqFlatMapperUnitTest {
-    static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
-    static JqFlatMapper jqFlatMapper;
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
+    private static JqFlatMapper jqFlatMapper;
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
