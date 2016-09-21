@@ -13,7 +13,6 @@
                 }
               }
         ],
-        "timestamper":{"dimension":"timestamp", "format":"generate"},
         "sinks":[
           {"topic":"stream3", "type":"stream", "partitionBy":"name"},
           {"topic":"stream2", "type":"stream", "partitionBy":"name"},
@@ -30,7 +29,6 @@
           }
         }
       ],
-      "timestamper":{"dimension":"timestamp", "format":"generate"},
       "sinks":[
         {"topic":"output", "type":"kafka", "partitionBy":"id"}
       ]
@@ -45,7 +43,6 @@
           }
         }
       ],
-      "timestamper":{"dimension":"timestamp", "format":"generate"},
       "sinks":[
         {"topic":"output", "type":"kafka", "partitionBy":"name"}
       ]

@@ -64,7 +64,7 @@ public class PlanModelUnitTest {
             planModelObject.validate();
             assertNotNull(planModelObject.getDefinedStreams());
         } catch (PlanBuilderException e) {
-            assertEquals(e.getMessage(), "Stream[notValidStream]: Not defined on inputs. Available inputs {topic1=[stream1, stream2]}");
+            assertEquals("Stream[notValidStream]: Not defined on inputs. Available definedStreams [stream1, stream2]", e.getMessage());
         }
     }
 }

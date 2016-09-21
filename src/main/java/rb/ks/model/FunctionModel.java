@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 public class FunctionModel {
-    String className;
-    Map<String, Object> properties;
-    List<String> stores;
-    String name;
+    private String className;
+    private Map<String, Object> properties;
+    private List<String> stores;
+    private String name;
 
     @JsonCreator
     public FunctionModel(@JsonProperty("name") String name,
@@ -18,6 +18,7 @@ public class FunctionModel {
                          @JsonProperty("properties") Map<String, Object> properties,
                          @JsonProperty("stores") List<String> stores) {
         this.name = name;
+        if(name == null) this.name = className;
         this.className = className;
         this.properties = properties;
         this.stores = stores;
