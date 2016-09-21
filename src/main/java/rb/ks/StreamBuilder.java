@@ -17,6 +17,7 @@ import rb.ks.model.*;
 import rb.ks.serializers.JsonSerde;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StreamBuilder {
     String appId;
@@ -94,9 +95,15 @@ public class StreamBuilder {
 
                         if (stores != null) {
                             properties.put("__STORES", stores);
+                            properties.put("__APP_ID", appId);
+
+                            stores = stores.stream()
+                                    .map(store -> String.format("%s:%s", appId, store))
+                                    .collect(Collectors.toList());
+
                             stores.forEach(store -> {
                                 if (!usedStores.contains(store)) {
-                                    StateStoreSupplier storeSupplier = Stores.create(String.format("%s:%s", appId, store))
+                                    StateStoreSupplier storeSupplier = Stores.create(store)
                                             .withKeys(Serdes.String())
                                             .withValues(new JsonSerde())
                                             .persistent()

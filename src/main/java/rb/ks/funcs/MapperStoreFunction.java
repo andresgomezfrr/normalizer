@@ -19,16 +19,20 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
     private Map<String, Object> properties;
     private Map<String, KeyValueStore> stores = new HashMap<>();
     private List<String> availableStores;
+    private String appId;
 
     @Override
     public void init(Map<String, Object> properties) {
         this.availableStores = (List<String>) properties.get("__STORES");
+        this.appId = (String) properties.get("__APP_ID");
         this.properties = properties;
     }
 
     @Override
     public void init(ProcessorContext context) {
-        availableStores.forEach((storeName) -> stores.put(storeName, (KeyValueStore) context.getStateStore(storeName)));
+        availableStores.forEach((storeName) ->
+                stores.put(storeName, (KeyValueStore) context.getStateStore(String.format("%s:%s", appId, storeName)))
+        );
         prepare(properties);
         log.info("   with {}", toString());
     }
