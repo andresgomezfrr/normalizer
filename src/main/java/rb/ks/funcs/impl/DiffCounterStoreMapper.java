@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static rb.ks.utils.Constants.*;
 import static rb.ks.utils.ConversionUtils.toLong;
 
 public class DiffCounterStoreMapper extends MapperStoreFunction {
@@ -39,7 +40,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
 
             for (String keyElement : keys) {
 
-                if(keyElement.equals("__KEY"))
+                if(keyElement.equals(__KEY))
                     definedKey += key;
                 else if (value.containsKey(keyElement))
                     definedKey += value.get(keyElement).toString();
@@ -113,7 +114,8 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 .append("counters: ").append(counterFields).append(", ")
                 .append("sendIfZero: ").append(sendIfZero).append(", ")
                 .append("stores: ").append(storeCounter.name()).append(", ")
-                .append("timestamp: ").append(timestamp)
+                .append("timestamp: ").append(timestamp).append(", ")
+                .append("keys: ").append(keys)
                 .append("} ");
 
         return builder.toString();
