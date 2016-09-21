@@ -7,7 +7,6 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rb.ks.funcs.impl.SimpleMapper;
 
 import java.util.HashMap;
 import java.util.List;
