@@ -6,18 +6,22 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
-import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.funcs.*;
-import rb.ks.model.*;
+import rb.ks.model.FunctionModel;
+import rb.ks.model.PlanModel;
+import rb.ks.model.SinkModel;
+import rb.ks.model.StreamModel;
 import rb.ks.serializers.JsonSerde;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static rb.ks.utils.Constants.*;
 
 public class StreamBuilder {
     String appId;
@@ -35,7 +39,7 @@ public class StreamBuilder {
     private Set<String> addedSinksToStreams = new HashSet<>();
     private Boolean addedNewStream = true;
 
-    public KStreamBuilder builder(PlanModel model) throws PlanBuilderException, TryToDoLoopException {
+    public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
         model.validate();
 
         clean();
@@ -43,7 +47,7 @@ public class StreamBuilder {
         KStreamBuilder builder = new KStreamBuilder();
         createInputStreams(builder, model);
 
-        for(int iteration = 0; addedNewStream; iteration++) {
+        for (int iteration = 0; addedNewStream; iteration++) {
             log.info("*** Iteration [{}]", iteration);
             addedNewStream = false;
             addFuncsToStreams(builder, model);
@@ -94,8 +98,8 @@ public class StreamBuilder {
                         List<String> stores = funcModel.getStores();
 
                         if (stores != null) {
-                            properties.put("__STORES", stores);
-                            properties.put("__APP_ID", appId);
+                            properties.put(__STORES, stores);
+                            properties.put(__APP_ID, appId);
 
                             stores = stores.stream()
                                     .map(store -> String.format("%s_%s", appId, store))
@@ -127,7 +131,13 @@ public class StreamBuilder {
                                         (MapperStoreFunction) func, stores.toArray(new String[stores.size()])
                                 );
                             } else if (func instanceof FilterFunc) {
-                                kStream = kStream.filter((FilterFunc) func);
+                                FilterFunc filterFunc = (FilterFunc) func;
+                                if (filterFunc.match()) {
+                                    kStream = kStream.filter(filterFunc);
+                                } else {
+                                    kStream = kStream.filterNot(filterFunc);
+                                }
+
                             }
 
                             Map<String, Function> functions = streamFunctions.get(streams.getKey());
@@ -199,11 +209,11 @@ public class StreamBuilder {
                             );
                         } else if (sink.getType().equals(SinkModel.STREAM_TYPE)) {
                             String newStreamName = sink.getTopic();
-                            if(!kStreams.containsKey(newStreamName)) {
+                            if (!kStreams.containsKey(newStreamName)) {
                                 addedNewStream = true;
                                 KStream<String, Map<String, Object>> newBranch;
 
-                                if(sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
+                                if (sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
                                     newBranch = kStream.branch((key, value) -> true)[0];
                                 } else {
                                     newBranch = kStream.through(
