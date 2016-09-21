@@ -16,7 +16,7 @@ public class ContainsDimensionFilter extends FilterFunc {
     @Override
     public Boolean process(String key, Map<String, Object> value) {
         if(value == null) return false;
-        else return dimensions.stream().map(value::containsKey).reduce((x,y) -> x ? y : x).orElseGet(() -> Boolean.FALSE);
+        else return dimensions.stream().map(value::containsKey).reduce((x,y) -> x && y).orElseGet(() -> Boolean.FALSE);
     }
 
     @Override
