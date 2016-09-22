@@ -59,8 +59,15 @@ public class PlanModel {
         streams.entrySet().forEach(entry -> {
             builder.append("\n");
 
-            List<String> funcNames = entry.getValue().getFuncs().stream()
-                    .map(FunctionModel::getName).collect(Collectors.toList());
+            builder.append("FROM ").append(entry.getKey()).append("\n");
+
+            List<FunctionModel> funcs = entry.getValue().getFuncs();
+            if(funcs != null) {
+                List<String> funcNames = funcs.stream()
+                        .map(FunctionModel::getName).collect(Collectors.toList());
+                builder.append("   TRANSFORM USING ").append(funcNames).append("\n");
+
+            }
 
             List<SinkModel> kafkaTopics = entry.getValue().getSinks().stream()
                     .filter(sink -> sink.getType().equals(SinkModel.KAFKA_TYPE))
@@ -70,8 +77,6 @@ public class PlanModel {
                     .filter(sink -> sink.getType().equals(SinkModel.STREAM_TYPE))
                     .collect(Collectors.toList());
 
-            builder.append("FROM ").append(entry.getKey()).append("\n")
-                    .append("   TRANSFORM USING ").append(funcNames).append("\n");
 
             kafkaTopics.forEach(sink -> {
                 builder.append("   SEND TO KAFKA ").append(sink.getTopic())
