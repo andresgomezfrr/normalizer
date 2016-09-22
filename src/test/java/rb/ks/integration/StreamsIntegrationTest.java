@@ -10,6 +10,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.integration.utils.EmbeddedSingleNodeKafkaCluster;
 import org.apache.kafka.streams.integration.utils.IntegrationTestUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -184,6 +185,15 @@ public class StreamsIntegrationTest {
 
         assertEquals(kvExcepted2, result2);
 
+        streams.close();
+        streamBuilder.close();
+
     }
+
+    @AfterClass
+    public static void stop(){
+        CLUSTER.stop();
+    }
+
 
 }
