@@ -16,7 +16,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import rb.ks.StreamBuilder;
+import rb.ks.builder.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonDeserializer;

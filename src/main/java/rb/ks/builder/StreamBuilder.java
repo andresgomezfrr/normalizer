@@ -1,4 +1,4 @@
-package rb.ks;
+package rb.ks.builder;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Utils;
@@ -21,7 +21,8 @@ import rb.ks.serializers.JsonSerde;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static rb.ks.utils.Constants.*;
+import static rb.ks.utils.Constants.__APP_ID;
+import static rb.ks.utils.Constants.__STORES;
 
 public class StreamBuilder {
     String appId;
