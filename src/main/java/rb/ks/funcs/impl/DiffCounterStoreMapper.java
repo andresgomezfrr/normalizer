@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static rb.ks.utils.Constants.*;
+import static rb.ks.utils.Constants.__KEY;
 import static rb.ks.utils.ConversionUtils.toLong;
 
 public class DiffCounterStoreMapper extends MapperStoreFunction {
