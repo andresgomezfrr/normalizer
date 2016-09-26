@@ -7,11 +7,11 @@ import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.builder.Builder;
+import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,7 +20,7 @@ import static java.util.Collections.singleton;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 
-public class KafkaBootstraper extends Thread implements Bootstraper {
+public class KafkaBootstraper extends ThreadBootstraper {
     private static final Logger log = LoggerFactory.getLogger(KafkaBootstraper.class);
     public final static String BOOTSTRAP_TOPIC = "__normalizer_bootstrap";
     AtomicBoolean closed = new AtomicBoolean(false);
@@ -30,11 +30,11 @@ public class KafkaBootstraper extends Thread implements Bootstraper {
     Builder builder;
 
     @Override
-    public void init(Builder builder, Map<String, String> properties) throws IOException, PlanBuilderException {
+    public void init(Builder builder, Config config) throws IOException, PlanBuilderException {
         this.builder = builder;
         Properties consumerConfig = new Properties();
-        appId = properties.get(APPLICATION_ID_CONFIG);
-        consumerConfig.put(BOOTSTRAP_SERVERS_CONFIG, properties.get(BOOTSTRAP_SERVERS_CONFIG));
+        appId = config.get(APPLICATION_ID_CONFIG);
+        consumerConfig.put(BOOTSTRAP_SERVERS_CONFIG, config.get(BOOTSTRAP_SERVERS_CONFIG));
         consumerConfig.put(AUTO_OFFSET_RESET_CONFIG, "earliest");
         consumerConfig.put(ENABLE_AUTO_COMMIT_CONFIG, "false");
         consumerConfig.put(KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
