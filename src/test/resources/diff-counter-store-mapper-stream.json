@@ -11,7 +11,8 @@
           "properties": {
             "counters": ["X"],
             "timestamp": "time",
-            "keys": ["gateway", "interface"]
+            "keys": ["gateway", "interface"],
+            "firsttimeview": true
           },
           "stores":["counter-store"]
         }
