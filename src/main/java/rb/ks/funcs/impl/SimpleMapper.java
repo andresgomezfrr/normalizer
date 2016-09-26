@@ -7,21 +7,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SimpleMapper extends MapperFunction {
-    List<MapperModel> mappers = new ArrayList<>();
+    List<MapperModel> mappers;
 
     @Override
     public void prepare(Map<String, Object> properties) {
         List<Map<String, Object>> maps = (List<Map<String, Object>>) properties.get("maps");
-        maps.forEach(map -> mappers.add(new MapperModel((List<String>) map.get("dimPath"), (String) map.get("as"))));
+        mappers = maps.stream()
+                .map(map -> new MapperModel((List<String>) map.get("dimPath"), (String) map.get("as")))
+                .collect(Collectors.toList());
     }
 
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
         Map<String, Object> newEvent = new HashMap<>();
-        if (value != null) {
-            for (MapperModel mapper : mappers) {
+
+        if (value != null && mappers != null) {
+            mappers.forEach(mapper -> {
                 Integer depth = mapper.dimPath.size() - 1;
 
                 Map<String, Object> levelPath = new HashMap<>(value);
@@ -35,7 +39,7 @@ public class SimpleMapper extends MapperFunction {
                     Object newValue = levelPath.get(mapper.dimPath.get(depth));
                     if (newValue != null) newEvent.put(mapper.as, newValue);
                 }
-            }
+            });
 
             return new KeyValue<>(key, newEvent);
         } else {
