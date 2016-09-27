@@ -32,7 +32,7 @@ public class Builder {
 
         Class bootstraperClass = Class.forName(config.get(BOOTSTRAPER_CLASSNAME));
         threadBootstraper = (ThreadBootstraper) bootstraperClass.newInstance();
-        threadBootstraper.init(this, config);
+        threadBootstraper.init(this, config.clone());
         threadBootstraper.start();
     }
 
