@@ -79,7 +79,7 @@ public class StreamsIntegrationTest {
             fail("Exception : " + e.getMessage());
         }
 
-        StreamBuilder streamBuilder = new StreamBuilder(appId);
+        StreamBuilder streamBuilder = new StreamBuilder(appId, null);
 
         KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
 

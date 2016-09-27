@@ -5,6 +5,7 @@ import org.junit.Test;
 import rb.ks.builder.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.exceptions.TryToDoLoopException;
+import rb.ks.metrics.MetricsManager;
 import rb.ks.model.PlanModel;
 
 import java.io.File;
@@ -19,7 +20,7 @@ public class StreamBuilderTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         PlanModel model = objectMapper.readValue(file, PlanModel.class);
-        StreamBuilder streamBuilder = new StreamBuilder("APP-ID-1");
+        StreamBuilder streamBuilder = new StreamBuilder("APP-ID-1", null);
         streamBuilder.builder(model);
 
         streamBuilder.close();

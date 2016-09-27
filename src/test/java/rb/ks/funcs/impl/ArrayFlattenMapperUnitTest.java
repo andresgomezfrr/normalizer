@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 public class ArrayFlattenMapperUnitTest {
 
-    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1", null);
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
