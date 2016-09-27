@@ -75,6 +75,7 @@ public class KafkaBootstraper extends ThreadBootstraper {
 
     @Override
     public void run() {
+        currentThread().setName("KafkaBootstraper");
 
         while (!closed.get()) {
             log.debug("Searching stream configuration with app id [{}]", appId);
@@ -87,6 +88,7 @@ public class KafkaBootstraper extends ThreadBootstraper {
                 }
             } catch (WakeupException e) {
                 if (!closed.get()) throw e;
+                log.info("Closing restore consumer ...");
                 restoreConsumer.close();
             } catch (PlanBuilderException e) {
                 log.error("The stream config isn't valid, try again!", e);
