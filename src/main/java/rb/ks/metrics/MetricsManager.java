@@ -29,31 +29,35 @@ public class MetricsManager extends Thread {
     Long interval;
 
     public MetricsManager(Config config) {
-        this.config = config;
-        this.interval = ConversionUtils.toLong(config.getOrDefault(METRIC_INTERVAL, 60000L));
-        List<String> listenersClass = config.get(METRIC_LISTENERS);
-        if (listenersClass != null) {
-            for (String listenerClassName : listenersClass) {
-                try {
-                    Class listenerClass = Class.forName(listenerClassName);
-                    MetricListener metricListener = (MetricListener) listenerClass.newInstance();
-                    metricListener.init(config.clone());
-                    listeners.add(metricListener);
-                } catch (ClassNotFoundException e) {
-                    log.error("Couldn't find the class associated with the metric listener {}", listenerClassName);
-                } catch (InstantiationException | IllegalAccessException e) {
-                    log.error("Couldn't create the instance associated with the metric listener " + listenerClassName, e);
+        if (config.getOrDefault(METRIC_ENABLE, false)) {
+            this.config = config;
+            this.interval = ConversionUtils.toLong(config.getOrDefault(METRIC_INTERVAL, 60000L));
+            List<String> listenersClass = config.get(METRIC_LISTENERS);
+            if (listenersClass != null) {
+                for (String listenerClassName : listenersClass) {
+                    try {
+                        Class listenerClass = Class.forName(listenerClassName);
+                        MetricListener metricListener = (MetricListener) listenerClass.newInstance();
+                        metricListener.init(config.clone());
+                        listeners.add(metricListener);
+                    } catch (ClassNotFoundException e) {
+                        log.error("Couldn't find the class associated with the metric listener {}", listenerClassName);
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        log.error("Couldn't create the instance associated with the metric listener " + listenerClassName, e);
+                    }
                 }
             }
-        }
 
-        registerMetrics();
-        log.info("Start MetricsManager with listeners {}",
-                listeners.stream()
-                        .map(MetricListener::name).collect(Collectors.toList()));
+            registerMetrics();
+            log.info("Start MetricsManager with listeners {}",
+                    listeners.stream()
+                            .map(MetricListener::name).collect(Collectors.toList()));
 
-        if (listeners.isEmpty()) {
-            log.warn("Stop MetricsManager because doesn't have listeners!!");
+            if (listeners.isEmpty()) {
+                log.warn("Stop MetricsManager because doesn't have listeners!!");
+                running.set(false);
+            }
+        } else {
             running.set(false);
         }
     }
@@ -87,20 +91,28 @@ public class MetricsManager extends Thread {
     }
 
     public void registerMetric(String metricName, Metric metric) {
-        if (!registredMetrics.contains(metricName)) {
-            registry.register(metricName, metric);
-            registredMetrics.add(metricName);
+        if (running.get()) {
+            if (!registredMetrics.contains(metricName)) {
+                registry.register(metricName, metric);
+                registredMetrics.add(metricName);
+            } else {
+                log.warn("The metric with name [{}] is duplicated!", metric);
+            }
         } else {
-            log.warn("The metric with name [{}] is duplicated!", metric);
+            log.warn("You try to register metric but system is disabled!!");
         }
     }
 
     public void removeMetric(String metricName) {
-        if (registredMetrics.contains(metricName)) {
-            registry.remove(metricName);
-            registredMetrics.remove(metricName);
+        if (running.get()) {
+            if (registredMetrics.contains(metricName)) {
+                registry.remove(metricName);
+                registredMetrics.remove(metricName);
+            } else {
+                log.warn("Try to delete unregister metric [{}]", metricName);
+            }
         } else {
-            log.warn("Try to delete unregister metric [{}]", metricName);
+            log.warn("You try to remove metric but system is disabled!!");
         }
     }
 
