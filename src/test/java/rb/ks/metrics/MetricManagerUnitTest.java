@@ -60,22 +60,16 @@ public class MetricManagerUnitTest {
 
         MetricsManager metricsManager = new MetricsManager(config);
 
-        assertEquals(6, metricsManager.registredMetrics.size());
+        assertEquals(0, metricsManager.registredMetrics.size());
 
         metricsManager.registerMetric("myCounterMetric", new Counter());
         metricsManager.registerMetric("myTimerMetric", new Timer());
 
-        assertEquals(8, metricsManager.registredMetrics.size());
+        assertEquals(2, metricsManager.registredMetrics.size());
 
         Set<String> expectedMetrics = new HashSet<>();
         expectedMetrics.add("myCounterMetric");
         expectedMetrics.add("myTimerMetric");
-        expectedMetrics.add("producer.1.messages_send_per_sec");
-        expectedMetrics.add("producer.1.output_bytes_per_sec");
-        expectedMetrics.add("producer.1.incoming_bytes_per_sec");
-        expectedMetrics.add("consumer.1.max_lag");
-        expectedMetrics.add("consumer.1.output_bytes_per_sec");
-        expectedMetrics.add("consumer.1.incoming_bytes_per_sec");
 
         assertEquals(expectedMetrics, metricsManager.registredMetrics);
     }
@@ -94,25 +88,19 @@ public class MetricManagerUnitTest {
 
         MetricsManager metricsManager = new MetricsManager(config);
 
-        assertEquals(6, metricsManager.registredMetrics.size());
+        assertEquals(0, metricsManager.registredMetrics.size());
 
         metricsManager.registerMetric("myCounterMetric", new Counter());
         metricsManager.registerMetric("myTimerMetric", new Timer());
 
-        assertEquals(8, metricsManager.registredMetrics.size());
+        assertEquals(2, metricsManager.registredMetrics.size());
 
         metricsManager.removeMetric("myCounterMetric");
-        metricsManager.removeMetric("myTimerMetric");
 
-        assertEquals(6, metricsManager.registredMetrics.size());
+        assertEquals(1, metricsManager.registredMetrics.size());
 
         Set<String> expectedMetrics = new HashSet<>();
-        expectedMetrics.add("producer.1.messages_send_per_sec");
-        expectedMetrics.add("producer.1.output_bytes_per_sec");
-        expectedMetrics.add("producer.1.incoming_bytes_per_sec");
-        expectedMetrics.add("consumer.1.max_lag");
-        expectedMetrics.add("consumer.1.output_bytes_per_sec");
-        expectedMetrics.add("consumer.1.incoming_bytes_per_sec");
+        expectedMetrics.add("myTimerMetric");
 
         assertEquals(expectedMetrics, metricsManager.registredMetrics);
     }
@@ -132,7 +120,12 @@ public class MetricManagerUnitTest {
 
         MetricsManager metricsManager = new MetricsManager(config);
 
-        assertEquals(6, metricsManager.registredMetrics.size());
+        assertEquals(0, metricsManager.registredMetrics.size());
+
+        metricsManager.registerMetric("myCounterMetric", new Counter());
+        metricsManager.registerMetric("myTimerMetric", new Timer());
+
+        assertEquals(2, metricsManager.registredMetrics.size());
 
         metricsManager.clean();
 
