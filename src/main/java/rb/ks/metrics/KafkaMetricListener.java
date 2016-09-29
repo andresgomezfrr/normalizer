@@ -35,7 +35,8 @@ public class KafkaMetricListener implements MetricListener {
         metric.put("value", metricValue);
         metric.put("app_id", appId);
 
-        kafkaProducer.send(new ProducerRecord<>(topic, appId, metric));
+        if(metricValue != null)
+            kafkaProducer.send(new ProducerRecord<>(topic, appId, metric));
     }
 
     @Override
