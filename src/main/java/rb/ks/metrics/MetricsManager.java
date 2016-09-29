@@ -38,9 +38,9 @@ public class MetricsManager extends Thread {
     public MetricsManager(Config config) {
         if (config.getOrDefault(METRIC_ENABLE, false)) {
             this.config = config;
-            this.interval = ConversionUtils.toLong(config.getOrDefault(METRIC_INTERVAL, 60000L));
-            this.app_id = config.get(APPLICATION_ID_CONFIG);
-            this.num_threads = config.get(StreamsConfig.NUM_STREAM_THREADS_CONFIG);
+            interval = ConversionUtils.toLong(config.getOrDefault(METRIC_INTERVAL, 60000L));
+            app_id = config.get(APPLICATION_ID_CONFIG);
+            num_threads = config.getOrDefault(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
             List<String> listenersClass = config.get(METRIC_LISTENERS);
             if (listenersClass != null) {
                 for (String listenerClassName : listenersClass) {
@@ -88,7 +88,7 @@ public class MetricsManager extends Thread {
         registerAll("memory", new MemoryUsageGaugeSet());
         registerAll("threads", new ThreadStatesGaugeSet());
 
-        for (int i = 1; i <= this.config.<Integer>getOrDefault(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1); i++) {
+        for (int i = 1; i <= num_threads; i++) {
             try {
 
                 // PRODUCER
@@ -122,6 +122,11 @@ public class MetricsManager extends Thread {
                         new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-consumer"), "incoming-byte-rate"));
+
+                registerMetric("consumer." + i + ".records_per_sec",
+                        new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-fetch-manager-metrics,client-id="
+                                + app_id + "-1-StreamThread-"
+                                + i + "-consumer"), "records-consumed-rate"));
 
             } catch (MalformedObjectNameException e) {
                 log.warn("Metric not found");
