@@ -1,0 +1,11 @@
+{
+  "inputs":{
+    "dummy_topic":["dummy_stream"]
+  },
+  "streams":{
+    "dummy_stream":{
+      "funcs":[],
+      "sinks":[{"topic":"dummy_topic"}]
+    }
+  }
+}
