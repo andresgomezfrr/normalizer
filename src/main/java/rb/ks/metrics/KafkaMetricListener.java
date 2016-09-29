@@ -31,7 +31,7 @@ public class KafkaMetricListener implements MetricListener {
     public void updateMetric(String metricName, Object metricValue) {
         Map<String, Object> metric = new HashMap<>();
         metric.put("timestamp", System.currentTimeMillis() / 1000L);
-        metric.put("metric", metricName);
+        metric.put("monitor", metricName);
         metric.put("value", metricValue);
         metric.put("app_id", appId);
 
