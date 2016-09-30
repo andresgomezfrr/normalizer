@@ -3,6 +3,7 @@ package rb.ks.funcs;
 import org.apache.kafka.streams.kstream.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rb.ks.metrics.MetricsManager;
 import rb.ks.utils.Constants;
 
 import java.util.Map;
@@ -12,9 +13,9 @@ public abstract class FilterFunc implements Function<Boolean>, Predicate<String,
     private Boolean __MATCH = true;
 
     @Override
-    public void init(Map<String, Object> properties) {
+    public void init(Map<String, Object> properties, MetricsManager metricsManager) {
         __MATCH = properties.containsKey(Constants.__MATCH) ? (Boolean) properties.get(Constants.__MATCH) : true;
-        prepare(properties);
+        prepare(properties, metricsManager);
         log.info("   with {}", toString());
     }
 

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import rb.ks.builder.bootstrap.ThreadBootstraper;
 import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.metrics.MetricsManager;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonSerde;
 
@@ -25,23 +26,28 @@ public class Builder {
     StreamBuilder streamBuilder;
     KafkaStreams streams;
     ThreadBootstraper threadBootstraper;
+    MetricsManager metricsManager;
 
     public Builder(Config config) throws Exception {
         this.config = config;
+        metricsManager = new MetricsManager(config.clone());
+        metricsManager.start();
 
-        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG));
+        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG), metricsManager);
 
         Class bootstraperClass = Class.forName(config.get(BOOTSTRAPER_CLASSNAME));
         threadBootstraper = (ThreadBootstraper) bootstraperClass.newInstance();
-        threadBootstraper.init(this, config);
+        threadBootstraper.init(this, config.clone(), metricsManager);
         threadBootstraper.start();
+
     }
 
     public void updateStreamConfig(String streamConfig) throws IOException, PlanBuilderException {
         if (streams != null) {
+            metricsManager.clean();
             streamBuilder.close();
             streams.close();
-            log.info("Stopped Normalizer process.");
+            log.info("Clean Normalizer process");
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -53,12 +59,13 @@ public class Builder {
 
         streams = new KafkaStreams(builder, config.getProperties());
         streams.setUncaughtExceptionHandler((thread, exception) -> {
-            if(!exception.getMessage().contains("Topic not found")) {
+            if (!exception.getMessage().contains("Topic not found")) {
                 log.error(exception.getMessage(), exception);
             } else {
                 log.warn("Creating topics, try execute Normalizer again!");
             }
 
+            metricsManager.interrupt();
             threadBootstraper.interrupt();
             streamBuilder.close();
         });
@@ -68,6 +75,7 @@ public class Builder {
     }
 
     public void close() {
+        metricsManager.interrupt();
         threadBootstraper.interrupt();
         streamBuilder.close();
         if (streams != null) streams.close();

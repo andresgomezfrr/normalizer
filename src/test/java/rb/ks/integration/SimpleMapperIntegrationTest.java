@@ -73,7 +73,7 @@ public class SimpleMapperIntegrationTest {
             fail("Exception : " + e.getMessage());
         }
 
-        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(appId));
+        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(appId, null));
 
         KafkaStreams streams = null;
 

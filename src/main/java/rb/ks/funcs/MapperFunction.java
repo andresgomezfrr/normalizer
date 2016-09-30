@@ -4,6 +4,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rb.ks.metrics.MetricsManager;
 
 import java.util.Map;
 
@@ -13,8 +14,8 @@ public abstract class MapperFunction implements Function<KeyValue<String, Map<St
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void init(Map<String, Object> properties) {
-        prepare(properties);
+    public void init(Map<String, Object> properties, MetricsManager metricsManager) {
+        prepare(properties, metricsManager);
         log.info("   with {}", toString());
     }
 

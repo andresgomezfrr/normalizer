@@ -7,6 +7,7 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rb.ks.metrics.MetricsManager;
 import rb.ks.utils.ConversionUtils;
 
 import java.util.HashMap;
@@ -23,13 +24,15 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
     private List<String> availableStores;
     private String appId;
     private Long windownTimeMs;
+    private MetricsManager metricsManager;
 
     @Override
-    public void init(Map<String, Object> properties) {
+    public void init(Map<String, Object> properties, MetricsManager metricsManager) {
         this.availableStores = (List<String>) properties.get(__STORES);
         this.appId = (String) properties.get(__APP_ID);
         this.windownTimeMs = ConversionUtils.toLong(properties.get(__WINDOW_TIME_MS));
         this.properties = properties;
+        this.metricsManager = metricsManager;
     }
 
     @Override
@@ -38,7 +41,7 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
         availableStores.forEach((storeName) ->
                 stores.put(storeName, (KeyValueStore) context.getStateStore(String.format("%s_%s", appId, storeName)))
         );
-        prepare(properties);
+        prepare(properties, metricsManager);
         log.info("   with {}", toString());
     }
 
