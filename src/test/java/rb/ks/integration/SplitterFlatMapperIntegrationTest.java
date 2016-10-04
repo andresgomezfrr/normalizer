@@ -17,7 +17,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.mockito.Mockito;
 import rb.ks.builder.StreamBuilder;
+import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonDeserializer;
@@ -86,7 +88,10 @@ public class SplitterFlatMapperIntegrationTest {
         DateTime firstswitched2 = formatter.withZoneUTC().parseDateTime("2016-09-07 11:17:21");
         DateTime timestamp2 = formatter.withZoneUTC().parseDateTime("2016-09-07 11:21:37");
 
-        StreamBuilder streamBuilder = new StreamBuilder(appId, null);
+        Config config = new Config();
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "app-id-1");
+
+        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(config, null));
 
         KafkaStreams streams = null;
         try {
