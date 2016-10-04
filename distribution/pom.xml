@@ -32,7 +32,7 @@
                         <descriptor>src/assembly/assembly.xml</descriptor>
                     </descriptors>
 
-                    <finalName>${project.parent.artifactId}-${project.parent.version}.tar.gz</finalName>
+                    <finalName>${project.parent.artifactId}-${project.parent.version}</finalName>
 
                 </configuration>
 
