@@ -14,7 +14,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.mockito.Mockito;
 import rb.ks.builder.StreamBuilder;
+import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonDeserializer;
@@ -79,7 +81,10 @@ public class StreamsIntegrationTest {
             fail("Exception : " + e.getMessage());
         }
 
-        StreamBuilder streamBuilder = new StreamBuilder(appId, null);
+        Config config = new Config();
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "app-id-1");
+
+        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(config, null));
 
         KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
 
