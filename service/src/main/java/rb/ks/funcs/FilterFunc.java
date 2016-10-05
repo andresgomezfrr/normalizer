@@ -9,16 +9,17 @@ import rb.ks.utils.Constants;
 import java.util.Map;
 
 /**
- * Abstract class filter function
+ * This class is used to implement filters, to keep out message from the streams. You can use this function
+ * on the sinks to filter specific messages to other stream or to send to kafka topic
  */
 public abstract class FilterFunc implements Function<Boolean>, Predicate<String, Map<String, Object>> {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private Boolean __MATCH = true;
 
     /**
-     * Initalize filter function
+     * Initialize filter function
      * @param properties Properties for filter function
-     * @param metricsManager MetricsManager object for filter function
+     * @param metricsManager MetricsManager to register custom metrics.
      */
     @Override
     public void init(Map<String, Object> properties, MetricsManager metricsManager) {
