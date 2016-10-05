@@ -27,10 +27,10 @@ public abstract class MapperFunction implements Function<KeyValue<String, Map<St
     }
 
     /**
-     * Process Key-Value Kafka message
+     * Apply mapper function to Key-Value Kafka message
      * @param key The key of Kafka message
      * @param value The value of Kafka message
-     * @return A Key-Value object after apply mapper
+     * @return A Key-Value object after apply mapper function
      */
     @Override
     public KeyValue<String, Map<String, Object>> apply(String key, Map<String, Object> value) {
