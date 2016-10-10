@@ -38,7 +38,7 @@
                         <resource>
                             <targetPath>/</targetPath>
                             <directory>${project.basedir}/../distribution/target</directory>
-                            <include>normalizer-dist.tar.gz</include>
+                            <include>${project.parent.artifactId}-dist.tar.gz</include>
                         </resource>
                     </resources>
 
