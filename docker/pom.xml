@@ -25,7 +25,7 @@
                 <version>0.4.13</version>
 
                 <configuration>
-                    <imageName>ks-normalizer</imageName>
+                    <imageName>ks-${project.parent.artifactId}</imageName>
 
                     <imageTags>
                         <imageTag>${project.version}</imageTag>
@@ -60,8 +60,8 @@
                             <goal>tag</goal>
                         </goals>
                         <configuration>
-                            <image>ks-normalizer:${project.version}</image>
-                            <newName>resources.redborder.lan:5000/ks-normalizer:${project.version}</newName>
+                            <image>ks-${project.parent.artifactId}:${project.version}</image>
+                            <newName>resources.redborder.lan:5000/ks-${project.parent.artifactId}:${project.version}</newName>
                         </configuration>
                     </execution>
 
@@ -72,8 +72,8 @@
                             <goal>tag</goal>
                         </goals>
                         <configuration>
-                            <image>ks-normalizer:latest</image>
-                            <newName>resources.redborder.lan:5000/ks-normalizer:latest</newName>
+                            <image>ks-${project.parent.artifactId}:latest</image>
+                            <newName>resources.redborder.lan:5000/ks-${project.parent.artifactId}:latest</newName>
                         </configuration>
                     </execution>
 
@@ -84,7 +84,7 @@
                             <goal>push</goal>
                         </goals>
                         <configuration>
-                            <imageName>resources.redborder.lan:5000/ks-normalizer:${project.version}</imageName>
+                            <imageName>resources.redborder.lan:5000/ks-${project.parent.artifactId}:${project.version}</imageName>
                         </configuration>
                     </execution>
 
@@ -95,7 +95,7 @@
                             <goal>push</goal>
                         </goals>
                         <configuration>
-                            <imageName>resources.redborder.lan:5000/ks-normalizer:latest</imageName>
+                            <imageName>resources.redborder.lan:5000/ks-${project.parent.artifactId}:latest</imageName>
                         </configuration>
                     </execution>
                 </executions>
