@@ -1,0 +1,11 @@
+machine:
+  java:
+    version: openjdk8
+
+test:
+  override:
+    - sudo mkdir -p /var/log/ks-normalizer/ && sudo chown -R ubuntu:ubuntu /var/log/ks-normalizer/
+    - mvn clean test
+  post:
+    - mvn package -Dmaven.test.skip=true -P dist
+    - cp distribution/target/normalizer-dist.tar.gz $CIRCLE_ARTIFACTS/
