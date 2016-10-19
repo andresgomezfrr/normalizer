@@ -7,7 +7,7 @@
         "funcs":[
               {
                 "name":"jqFlatMapper",
-                "className":"rb.ks.funcs.impl.JqFlatMapper",
+                "className":"zz.ks.funcs.impl.JqFlatMapper",
                 "properties": { 
                   "jqQuery": "{ids:[.ids|split(\",\")[]|tonumber|.+100],name}"
                 }

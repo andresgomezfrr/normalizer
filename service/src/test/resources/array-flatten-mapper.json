@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myArrayFlatMapper",
-          "className":"rb.ks.funcs.impl.ArrayFlattenMapper",
+          "className":"zz.ks.funcs.impl.ArrayFlattenMapper",
           "properties": {
             "flat_dimension": "ARRAY"
           }
