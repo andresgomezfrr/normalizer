@@ -51,6 +51,11 @@ public class MockKeyValueStore<K, V> implements KeyValueStore<K, V> {
     }
 
     @Override
+    public long approximateNumEntries() {
+        return 0;
+    }
+
+    @Override
     public String name() {
         return "mock-key-value-store";
     }
@@ -72,6 +77,11 @@ public class MockKeyValueStore<K, V> implements KeyValueStore<K, V> {
 
     @Override
     public boolean persistent() {
+        return false;
+    }
+
+    @Override
+    public boolean isOpen() {
         return false;
     }
 }

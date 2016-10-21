@@ -41,7 +41,7 @@ public class MetricsManager extends Thread {
             interval = ConversionUtils.toLong(config.getOrDefault(METRIC_INTERVAL, 60000L));
             app_id = config.get(APPLICATION_ID_CONFIG);
             num_threads = config.getOrDefault(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
-            List<String> listenersClass = config.get(METRIC_LISTENERS);
+            List<String> listenersClass = config.getOrDefault(METRIC_LISTENERS, Collections.singletonList("zz.ks.metrics.ConsoleMetricListener"));
             if (listenersClass != null) {
                 for (String listenerClassName : listenersClass) {
                     try {

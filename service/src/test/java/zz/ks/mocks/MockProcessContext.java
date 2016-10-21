@@ -8,6 +8,7 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.processor.TaskId;
 
 import java.io.File;
+import java.util.Map;
 
 public class MockProcessContext implements ProcessorContext {
     @Override
@@ -93,5 +94,15 @@ public class MockProcessContext implements ProcessorContext {
     @Override
     public long timestamp() {
         return 0;
+    }
+
+    @Override
+    public Map<String, Object> appConfigs() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> appConfigsWithPrefix(String s) {
+        return null;
     }
 }
