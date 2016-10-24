@@ -9,6 +9,11 @@
 
     <packaging>pom</packaging>
 
+    <scm>
+        <developerConnection>scm:git:git@github.com:wizzie-io/normalizer.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <modules>
         <module>service</module>
     </modules>
