@@ -70,3 +70,6 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+# Other files
+.DS_Store
+

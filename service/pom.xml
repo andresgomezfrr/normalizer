@@ -13,9 +13,18 @@
         <kafka.version>0.10.1.0</kafka.version>
         <dropwizard.version>3.1.0</dropwizard.version>
         <joda.version>2.9.4</joda.version>
+        <precondition.version>0.1.5</precondition.version>
     </properties>
 
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/com.cookingfox/guava-preconditions -->
+        <dependency>
+            <groupId>com.cookingfox</groupId>
+            <artifactId>guava-preconditions</artifactId>
+            <version>${precondition.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
