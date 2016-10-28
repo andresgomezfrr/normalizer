@@ -255,9 +255,9 @@ public class StreamBuilder {
                                 );
                             }
                         }
+                        addedSinksToStreams.add(streams.getKey());
                     }
                 }
-                addedSinksToStreams.add(streams.getKey());
             }
         }
         generatedStreams.clear();

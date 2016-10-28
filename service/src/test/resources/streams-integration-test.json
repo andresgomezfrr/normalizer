@@ -57,7 +57,16 @@
           }
         }
       ],
-      "sinks": [{"topic": "output2"}]
+      "sinks": [{"topic": "filtered-output", "type":"stream", "filter": {
+        "name": "myFilter3",
+        "className": "zz.ks.funcs.impl.ContainsDimensionFilter",
+        "properties": {
+          "dimensions": ["A"],
+          "__MATCH": false
+        }}}]
+    },
+    "filtered-output": {
+      "sinks": [{"topic":"output2"}]
     }
   }
 }
