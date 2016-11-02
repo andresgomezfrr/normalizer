@@ -7,7 +7,7 @@
 
     <parent>
         <artifactId>normalizer</artifactId>
-        <groupId>zz.ks</groupId>
+        <groupId>zz.ks.normalizer</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
@@ -57,7 +57,7 @@
 
                     <execution>
                         <id>tag-image</id>
-                        <phase>install</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>tag</goal>
                         </goals>
@@ -69,7 +69,7 @@
 
                     <execution>
                         <id>tag-latest-image</id>
-                        <phase>install</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>tag</goal>
                         </goals>
@@ -81,7 +81,7 @@
 
                     <execution>
                         <id>push-image</id>
-                        <phase>install</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
@@ -92,7 +92,7 @@
 
                     <execution>
                         <id>push-latest-image</id>
-                        <phase>install</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
