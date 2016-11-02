@@ -18,10 +18,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.mockito.Mockito;
 import zz.ks.builder.StreamBuilder;
 import zz.ks.builder.config.Config;
 import zz.ks.exceptions.PlanBuilderException;
+import zz.ks.funcs.FlatMapperFunction;
+import zz.ks.funcs.Function;
 import zz.ks.model.PlanModel;
 import zz.ks.serializers.JsonDeserializer;
 import zz.ks.serializers.JsonSerde;
@@ -32,8 +33,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class SplitterFlatMapperIntegrationTest {
     private final static int NUM_BROKERS = 1;
@@ -95,7 +95,7 @@ public class SplitterFlatMapperIntegrationTest {
         Config config = new Config();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "app-id-1");
 
-        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(config, null));
+        StreamBuilder streamBuilder = new StreamBuilder(config, null);
 
         KafkaStreams streams = null;
         try {
@@ -103,6 +103,12 @@ public class SplitterFlatMapperIntegrationTest {
         } catch (PlanBuilderException e) {
             fail("Exception : " + e.getMessage());
         }
+
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function splitterFlatMapper = functions.get("mySplitterFlatMapper");
+
+        assertNotNull(splitterFlatMapper);
+        assertTrue(splitterFlatMapper instanceof FlatMapperFunction);
 
         streams.start();
 

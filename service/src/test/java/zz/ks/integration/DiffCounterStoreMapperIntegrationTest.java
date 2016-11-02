@@ -19,6 +19,8 @@ import org.junit.Test;
 import zz.ks.builder.StreamBuilder;
 import zz.ks.builder.config.Config;
 import zz.ks.exceptions.PlanBuilderException;
+import zz.ks.funcs.Function;
+import zz.ks.funcs.MapperStoreFunction;
 import zz.ks.model.PlanModel;
 import zz.ks.serializers.JsonDeserializer;
 import zz.ks.serializers.JsonSerde;
@@ -29,8 +31,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class DiffCounterStoreMapperIntegrationTest {
     private final static int NUM_BROKERS = 1;
@@ -91,6 +93,17 @@ public class DiffCounterStoreMapperIntegrationTest {
         } catch (PlanBuilderException e) {
             fail("Exception : " + e.getMessage());
         }
+
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function diffCounterMapperFunction = functions.get("diffCounterMapper");
+
+        assertNotNull(diffCounterMapperFunction);
+        assertTrue(diffCounterMapperFunction instanceof MapperStoreFunction);
+
+        Set<String> stores = streamBuilder.usedStores();
+
+        assertEquals(1, stores.size(), 0);
+        assertTrue(stores.contains("app-id-1_counter-store"));
 
         streams.start();
 
