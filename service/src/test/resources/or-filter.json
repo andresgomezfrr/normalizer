@@ -1,0 +1,37 @@
+{
+  "inputs":{
+    "topic1":["stream1", "stream2"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myFilter",
+          "className":"zz.ks.funcs.impl.OrFilter",
+          "properties": {
+            "filters":[
+              {
+                "name":"myFieldFilter",
+                "className":"zz.ks.funcs.impl.FieldFilter",
+                "properties": {
+                  "dimension":"FILTER-DIMENSION",
+                  "value":"FILTER-VALUE"
+                }
+              },
+              {
+                "name":"myContainsFilter",
+                "className":"zz.ks.funcs.impl.ContainsDimensionFilter",
+                "properties": {
+                  "dimensions":["A", "B", "C"]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}
