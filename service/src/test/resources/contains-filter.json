@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myFilter",
-          "className":"zz.ks.funcs.impl.ContainsDimensionFilter",
+          "className":"io.wizzie.ks.funcs.impl.ContainsDimensionFilter",
           "properties": {
               "dimensions":["A", "B", "C"]
           }

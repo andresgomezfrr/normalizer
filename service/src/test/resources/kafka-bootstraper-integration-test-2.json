@@ -7,14 +7,14 @@
       "sinks": [
         {"topic": "splitter-stream", "type": "stream", "filter": {
           "name": "myFilter",
-          "className": "zz.ks.funcs.impl.ContainsDimensionFilter",
+          "className": "io.wizzie.ks.funcs.impl.ContainsDimensionFilter",
           "properties": {
             "dimensions": ["A"]
           }
         }},
         {"topic": "output2", "filter": {
           "name": "myFilter",
-          "className": "zz.ks.funcs.impl.ContainsDimensionFilter",
+          "className": "io.wizzie.ks.funcs.impl.ContainsDimensionFilter",
           "properties": {
             "dimensions": ["A"],
             "__MATCH": false
@@ -25,7 +25,7 @@
       "funcs": [
         {
           "name": "mySplitterFlatMapper",
-          "className": "zz.ks.funcs.impl.SplitterFlatMapper",
+          "className": "io.wizzie.ks.funcs.impl.SplitterFlatMapper",
           "properties": {
             "dimensions": ["A"]
           }
