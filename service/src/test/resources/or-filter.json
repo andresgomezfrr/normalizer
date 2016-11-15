@@ -7,12 +7,12 @@
       "funcs":[
         {
           "name":"myFilter",
-          "className":"io.wizzie.ks.funcs.impl.OrFilter",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.OrFilter",
           "properties": {
             "filters":[
               {
                 "name":"myFieldFilter",
-                "className":"io.wizzie.ks.funcs.impl.FieldFilter",
+                "className":"io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
                 "properties": {
                   "dimension":"FILTER-DIMENSION",
                   "value":"FILTER-VALUE"
@@ -20,7 +20,7 @@
               },
               {
                 "name":"myContainsFilter",
-                "className":"io.wizzie.ks.funcs.impl.ContainsDimensionFilter",
+                "className":"io.wizzie.ks.normalizer.funcs.impl.ContainsDimensionFilter",
                 "properties": {
                   "dimensions":["A", "B", "C"]
                 }

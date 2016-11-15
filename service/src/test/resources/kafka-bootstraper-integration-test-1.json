@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myMap",
-          "className":"io.wizzie.ks.funcs.impl.SimpleMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {"dimPath":["A","B","C"], "as":"X"},
@@ -17,7 +17,7 @@
         },
         {
           "name":"myDiffCounter",
-          "className":"io.wizzie.ks.funcs.impl.DiffCounterStoreMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.DiffCounterStoreMapper",
           "properties": {
             "counters": ["X"],
             "timestamp": "timestamp",
