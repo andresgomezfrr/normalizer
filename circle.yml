@@ -1,7 +1,4 @@
 machine:
-   pre:
-     - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
-     - sudo chmod 0755 /usr/bin/docker
   services:
     - docker
   java:
@@ -25,8 +22,10 @@ deployment:
   master:
     branch: master
     commands:
+      - docker login -u AWS -p ${AWS_REGISTRY_KEY} -e none ${AWS_REGISTRY_URL}
       - mvn deploy -Dmaven.test.skip=true -P docker
   release:
     tag: /normalizer-.*/
     commands:
+      - docker login -u AWS -p ${AWS_REGISTRY_KEY} -e none ${AWS_REGISTRY_URL}
       - mvn deploy -Dmaven.test.skip=true -P docker
