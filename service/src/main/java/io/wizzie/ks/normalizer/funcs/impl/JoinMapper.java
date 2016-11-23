@@ -19,6 +19,7 @@ public class JoinMapper extends MapperFunction {
     public static final String FROM_DIMENSION = "fromDimension";
     public static final String VALUES = "values";
     public static final String DELIMITIER = "delimitier";
+    public static final String DELETE = "delete";
 
     private final String ERROR_MESSAGE_PATTERN = "%s cannot be null";
 
@@ -49,7 +50,7 @@ public class JoinMapper extends MapperFunction {
             String joined = dimensionsToJoin.stream()
                     .map(m ->
                     {
-                        Object objectValue = value.remove(m.get(FROM_DIMENSION));
+                        Object objectValue = (boolean) m.getOrDefault(DELETE, false) ? value.remove(m.get(FROM_DIMENSION)) : value.get(m.get(FROM_DIMENSION));
                         return (objectValue != null ? objectValue : m.get(OR_DEFAULT)).toString();
                     })
                     .collect(Collectors.joining(delimitier));
