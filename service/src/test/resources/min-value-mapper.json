@@ -1,0 +1,22 @@
+{
+  "inputs":{
+    "input1":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myMinValueMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.MinValueMapper",
+          "properties": {
+            "dimension": "measures",
+            "min_dimension_name": "min_measure"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output1"}
+      ]
+    }
+  }
+}
