@@ -14,10 +14,6 @@ You can find the docs on the [Wiki page](https://github.com/wizzie-io/normalizer
 
 You can get started with Normalizer with this [tutorial](https://github.com/wizzie-io/normalizer/wiki/Getting-Started).
 
-## Limitations
-
-* Currently, normalizer only works with JSON messages that are serialized/desesialized into Java HashMap.
-
 ## Contributing
 
 1. [Fork it](https://github.com/wizzie-io/normalizer/fork)
