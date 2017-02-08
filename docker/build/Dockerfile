@@ -5,15 +5,22 @@ MAINTAINER agomez@wizzie.io
 RUN apt-get update
 RUN apt-get install -y gettext-base
 
-RUN mkdir -p /alloc/var/ /alloc/log/ks-normalizer /app
+RUN mkdir -p /var/log/normalizer
 
-ADD normalizer-dist.tar.gz /alloc/var/
-RUN rm -f /alloc/var/normalizer/config/*
+ADD normalizer-dist.tar.gz /opt/
+RUN rm -f /opt/normalizer/config/*
 
-ADD log4j.xml /alloc/var/normalizer/config/
-ADD config_env.json /alloc/var/normalizer/config/
-ADD normalizer-start.sh /app
+ADD log4j.xml /opt/normalizer/config/
+ADD config_env.json /opt/normalizer/config/
+ADD normalizer-start.sh /bin
 
-CMD /app/normalizer-start.sh
+ENV METRIC_ENABLE true
+ENV METRIC_INTERVAL 60000
+ENV MULTI_ID false
+ENV NUM_STREAM_THREADS 1
+
+ENV JVM_OPTIONS -Xmx512m -Xms512m
+
+CMD /bin/normalizer-start.sh
 
 
