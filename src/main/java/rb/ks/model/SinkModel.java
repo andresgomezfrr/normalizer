@@ -2,9 +2,10 @@ package rb.ks.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import rb.ks.utils.Constants;
 
 public class SinkModel {
-    public final static String PARTITION_BY_KEY = "__KEY";
+    public final static String PARTITION_BY_KEY = Constants.__KEY;
     public final static String KAFKA_TYPE = "kafka";
     public final static String STREAM_TYPE = "stream";
 

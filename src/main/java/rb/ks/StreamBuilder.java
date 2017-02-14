@@ -6,7 +6,6 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
-import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import rb.ks.serializers.JsonSerde;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import static rb.ks.utils.Constants.*;
 
 public class StreamBuilder {
     String appId;
@@ -94,8 +94,8 @@ public class StreamBuilder {
                         List<String> stores = funcModel.getStores();
 
                         if (stores != null) {
-                            properties.put("__STORES", stores);
-                            properties.put("__APP_ID", appId);
+                            properties.put(__STORES, stores);
+                            properties.put(__APP_ID, appId);
 
                             stores = stores.stream()
                                     .map(store -> String.format("%s_%s", appId, store))
