@@ -26,7 +26,7 @@ sections: [
     ['funcs', 'Funcstions'],
     ['metrics', 'Metrics'],
     ['multi-tenant', 'Multi Tenant'],
-    ['internals', 'Internal Topics'],
+    ['internals', 'Internals'],
     ['customize', 'Customize'],
     ['limits', 'Limitations']
 ]
