@@ -9,7 +9,6 @@
 
     <packaging>pom</packaging>
 
-
     <modules>
         <module>service</module>
     </modules>
