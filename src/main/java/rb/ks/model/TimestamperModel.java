@@ -12,7 +12,7 @@ public class TimestamperModel {
     private static final Logger log = LoggerFactory.getLogger(TimestamperModel.class);
 
     String timestampDim = "timestamp";
-    String format = "generate";
+    String format = "none";
     DateTimeFormatter patternFormat = new DateTimeFormatterBuilder()
             .appendPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
             .appendTimeZoneOffset("Z", true, 2, 4)
@@ -53,14 +53,12 @@ public class TimestamperModel {
                 case "iso":
                     timestamp = patternFormat.parseDateTime((String) time).getMillis() / 1000L;
                     break;
+                case "none":
+                    break;
                 default:
-                    log.warn("Log format not valid, used 'generate'");
-                    timestamp = System.currentTimeMillis() / 1000L;
+                    log.warn("Log format not valid, used 'none'");
                     break;
             }
-        } else {
-            timestamp = System.currentTimeMillis() / 1000L;
-            log.warn("Timestamp is null!!");
         }
 
         return timestamp;
