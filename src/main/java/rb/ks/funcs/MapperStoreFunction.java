@@ -31,7 +31,7 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
     @Override
     public void init(ProcessorContext context) {
         availableStores.forEach((storeName) ->
-                stores.put(storeName, (KeyValueStore) context.getStateStore(String.format("%s:%s", appId, storeName)))
+                stores.put(storeName, (KeyValueStore) context.getStateStore(String.format("%s_%s", appId, storeName)))
         );
         prepare(properties);
         log.info("   with {}", toString());
