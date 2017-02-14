@@ -1,8 +1,8 @@
 ---
 layout: page
-title:  Getting Started
+title: "Getting Started"
 category: getting
-order: 0
+date: 2017-02-14 12:16:55
 ---
 
 On this page, we can to try a stream example using a real Kafka cluster and the normalizer jar artifact. We are going to suppose that you have built the normalizer distribution how we explain on the [Building]() section.
@@ -43,7 +43,7 @@ First of all, we need define a stream for launch a normalizer application.
                   "properties": {
                     "flat_dimension": "messages"
                   }
-                }         
+                }
           ],
           "sinks":[
               {"topic":"output", "type":"kafka"}
@@ -52,7 +52,7 @@ First of all, we need define a stream for launch a normalizer application.
     }
 }
 ```
-Once that we are defined us stream we inject messages 
+Once that we are defined us stream we inject messages
 #### Phase 0: Input messages
 ```json
 {
@@ -96,7 +96,7 @@ On this example we read the Kafka topic `mytopic` and mapped it to the stream `m
 }
 ```
 
-Later, we process the `partitionedStream` using another function that is called `flattenMessages` on this case we do a flatten on the messages that is an JSON ARRAY. 
+Later, we process the `partitionedStream` using another function that is called `flattenMessages` on this case we do a flatten on the messages that is an JSON ARRAY.
 
 #### Phase 2: Output messages
 ```json
@@ -108,7 +108,7 @@ Finally the result will be send to Kafka again into a topic that is called `outp
 
 ### Execution
 
-On the first time we need to have a running Kafka cluster and the descompressed normalizer distribution. 
+On the first time we need to have a running Kafka cluster and the descompressed normalizer distribution.
 
 #### Config file
 
@@ -172,3 +172,4 @@ and you must see the output message on the console-consumer:
 ```
 
 This is the end of the tutorial!! Congratulations! ;)
+
