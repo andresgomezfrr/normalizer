@@ -17,7 +17,7 @@ import java.util.Map;
 import static rb.ks.utils.Constants.*;
 
 /**
- * Abstract class for mapper function with Key-Value store
+ * This class is used to do a mapper process, but it offers a key value store to operate with multiples states
  */
 public abstract class MapperStoreFunction implements Function<KeyValue<String, Map<String, Object>>>,
         Transformer<String, Map<String, Object>, KeyValue<String, Map<String, Object>>> {
@@ -105,6 +105,11 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
         return (KeyValueStore<String, V>) stores.get(storeName);
     }
 
+    /**
+     * This method allow implement window calls
+     * @param timestamp where the window must be called
+     * @return A messages that are added to the current stream
+     */
     public abstract KeyValue<String, Map<String, Object>> window(long timestamp);
 
 }
