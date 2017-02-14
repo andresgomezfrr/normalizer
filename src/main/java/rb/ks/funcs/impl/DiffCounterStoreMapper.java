@@ -38,6 +38,8 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
 
         if (keys != null && !keys.isEmpty()) {
 
+            definedKey = "";
+
             for (String keyElement : keys) {
 
                 if(keyElement.equals(__KEY))
