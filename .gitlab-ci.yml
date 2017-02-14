@@ -6,4 +6,4 @@ rspec:
   script:
     - mvn clean package
   tags:
-    - awesome
+    - java
