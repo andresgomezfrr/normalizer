@@ -18,7 +18,8 @@ public interface Function<R> {
     void init(Map<String, Object> properties, MetricsManager metricsManager);
 
     /**
-     * Prepare function
+     * Initialize function, this method is implemented by the users to for example:
+     * initiate variables, load config, open DB connections.
      * @param properties Properties for function
      * @param metricsManager MetricsManager object for function
      */
@@ -33,7 +34,7 @@ public interface Function<R> {
     R process(String key, Map<String, Object> value);
 
     /**
-     * Stop function
+     * Stop function, this method is implemented by the users to for example: close DB connection
      */
     void stop();
 }

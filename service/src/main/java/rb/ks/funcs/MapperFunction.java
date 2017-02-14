@@ -9,7 +9,7 @@ import rb.ks.metrics.MetricsManager;
 import java.util.Map;
 
 /**
- * Abstract class mapper function
+ * This class is used implement mapper process where you can transform one message into other
  */
 public abstract class MapperFunction implements Function<KeyValue<String, Map<String, Object>>>,
         KeyValueMapper<String, Map<String, Object>, KeyValue<String, Map<String, Object>>> {

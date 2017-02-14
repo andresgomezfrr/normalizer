@@ -9,7 +9,7 @@ import rb.ks.metrics.MetricsManager;
 import java.util.Map;
 
 /**
- * Abstract class for flat mapper functions
+ * This class is used to implement flat-mapper process where you can generate zero or more messages from one message
  */
 public abstract class FlatMapperFunction implements Function<Iterable<KeyValue<String, Map<String, Object>>>>,
         KeyValueMapper<String, Map<String, Object>, Iterable<KeyValue<String, Map<String, Object>>>> {
