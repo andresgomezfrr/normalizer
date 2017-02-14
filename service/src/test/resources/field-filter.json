@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myFilter",
-          "className":"zz.ks.funcs.impl.FieldFilter",
+          "className":"io.wizzie.ks.funcs.impl.FieldFilter",
           "properties": {
               "dimension":"FILTER-DIMENSION",
               "value":"FILTER-VALUE"
@@ -15,7 +15,7 @@
         },
         {
           "name":"myFilterKey",
-          "className":"zz.ks.funcs.impl.FieldFilter",
+          "className":"io.wizzie.ks.funcs.impl.FieldFilter",
           "properties": {
             "dimension":"__KEY",
             "value":"FILTER-kEY"

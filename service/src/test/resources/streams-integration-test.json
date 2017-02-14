@@ -8,14 +8,14 @@
       "sinks": [
         {"topic": "mapper-stream", "type": "stream", "filter": {
         "name": "myFilter",
-        "className": "zz.ks.funcs.impl.ContainsDimensionFilter",
+        "className": "io.wizzie.ks.funcs.impl.ContainsDimensionFilter",
         "properties": {
           "dimensions": ["A"]
         }
       }},
         {"topic": "diff-splitter-stream", "type": "stream", "filter": {
           "name": "myFilter",
-          "className": "zz.ks.funcs.impl.ContainsDimensionFilter",
+          "className": "io.wizzie.ks.funcs.impl.ContainsDimensionFilter",
           "properties": {
             "dimensions": ["A"],
             "__MATCH": false
@@ -26,7 +26,7 @@
       "funcs": [
         {
           "name": "myMapper",
-          "className": "zz.ks.funcs.impl.SimpleMapper",
+          "className": "io.wizzie.ks.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {"dimPath": ["A", "B"], "as": "X"},
@@ -42,7 +42,7 @@
       "funcs": [
         {
           "name": "myDiffCounter",
-          "className": "zz.ks.funcs.impl.DiffCounterStoreMapper",
+          "className": "io.wizzie.ks.funcs.impl.DiffCounterStoreMapper",
           "properties": {
             "counters": ["D"],
             "timestamp": "timestamp"
@@ -51,7 +51,7 @@
         },
         {
           "name": "mySplitter",
-          "className": "zz.ks.funcs.impl.SplitterFlatMapper",
+          "className": "io.wizzie.ks.funcs.impl.SplitterFlatMapper",
           "properties": {
             "dimensions": ["D"]
           }
@@ -59,7 +59,7 @@
       ],
       "sinks": [{"topic": "filtered-output", "type":"stream", "filter": {
         "name": "myFilter3",
-        "className": "zz.ks.funcs.impl.ContainsDimensionFilter",
+        "className": "io.wizzie.ks.funcs.impl.ContainsDimensionFilter",
         "properties": {
           "dimensions": ["A"],
           "__MATCH": false
