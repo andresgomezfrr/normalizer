@@ -7,16 +7,13 @@ import java.util.List;
 
 public class StreamModel {
     List<FunctionModel> funcs;
-    TimestamperModel timestamper;
     List<SinkModel> sinks;
 
     @JsonCreator
     public StreamModel(
             @JsonProperty("funcs") List<FunctionModel> funcs,
-            @JsonProperty("timestamper") TimestamperModel timestamper,
             @JsonProperty("sinks") List<SinkModel> sinks) {
         this.funcs = funcs;
-        this.timestamper = timestamper;
         this.sinks = sinks;
     }
 
@@ -30,17 +27,12 @@ public class StreamModel {
         return sinks;
     }
 
-    @JsonProperty
-    public TimestamperModel getTimestamper() {
-        return timestamper;
-    }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{")
                 .append("funcs: ").append(funcs).append(", ")
-                .append("timestamper: ").append(timestamper).append(", ")
                 .append("sinks: ").append(sinks)
                 .append("}");
 

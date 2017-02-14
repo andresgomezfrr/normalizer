@@ -23,7 +23,6 @@ public class StreamBuilder {
     Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
     Set<String> usedStores = new HashSet<>();
     Set<String> processedFuncs = new HashSet<>();
-    Set<String> processedTimestamper = new HashSet<>();
     Set<String> processedSinks = new HashSet<>();
     Boolean newStream = false;
 
@@ -38,7 +37,6 @@ public class StreamBuilder {
         do {
             newStream = false;
             createFuncs(builder, model);
-            addTimestampter(model);
             addSinks(model);
         } while (newStream);
 
@@ -130,33 +128,6 @@ public class StreamBuilder {
                             log.info("Stream {} is to the next iteration.", streams.getKey());
                         }
                     }
-                }
-            }
-        }
-    }
-
-    private void addTimestampter(PlanModel model) {
-        for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
-            KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
-            if (kStream != null && !processedTimestamper.contains(streams.getKey())) {
-
-                TimestamperModel timestamperModel = streams.getValue().getTimestamper();
-
-                if (timestamperModel != null) {
-                    KStream<String, Map<String, Object>> kStreamTimestampered = kStream.mapValues((value) -> {
-                        String timestampDim = timestamperModel.getTimestampDim();
-                        Object newTimestamp = timestamperModel.generateTimestamp(value.get(timestampDim));
-                        if(newTimestamp != null) {
-                            Map<String, Object> newEvent = new HashMap<>(value);
-                            newEvent.put(timestampDim, newTimestamp);
-                            return newEvent;
-                        } else {
-                            return value;
-                        }
-                    });
-
-                    kStreams.put(streams.getKey(), kStreamTimestampered);
-                    processedTimestamper.add(streams.getKey());
                 }
             }
         }

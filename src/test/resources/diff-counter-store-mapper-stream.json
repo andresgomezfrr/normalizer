@@ -15,7 +15,6 @@
           "stores":["counter-store"]
         }
       ],
-      "timestamper":{"dimension":"timestamp", "format":"sec"},
       "sinks":[
         {"topic":"output"}
       ]
