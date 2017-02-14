@@ -1,76 +1,61 @@
 package zz.ks;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.kafka.streams.KeyValue;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.kafka.streams.kstream.KeyValueMapper;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StreamsConfig;
 import zz.ks.exceptions.PlanBuilderException;
-import zz.ks.model.MapperModel;
 import zz.ks.model.PlanModel;
-import zz.ks.model.StreamModel;
+import zz.ks.serializers.JsonSerde;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 public class Normalizer {
     public static void main(String[] args) throws IOException, PlanBuilderException {
         String json = "{\n" +
                 "  \"inputs\":{\n" +
-                "    \"topic1\":[\"stream1\", \"stream2\"],\n" +
-                "    \"topic2\":[\"stream3\"]\n" +
+                "    \"topic1\":[\"stream1\", \"stream2\"]\n" +
                 "  },\n" +
                 "  \"streams\":{\n" +
                 "    \"stream1\":{\n" +
                 "        \"mappers\":[\n" +
                 "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"X\"},\n" +
                 "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"Q\"},\n" +
-                "                    {\"dimPath\":[\"timestamp\"], \"as\":\"timestamp\"}\n" +
+                "                    {\"dimPath\":[\"timestamp\"]}\n" +
                 "                  ],\n" +
-                "        \"outputs\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"Q\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"sec\"}}\n" +
+                "        \"sinks\":[\n" +
+                "            {\"topic\":\"output\", \"partitionBy\":\"Q\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"sec\"}},\n" +
+                "            {\"topic\":\"output1\", \"partitionBy\":\"Q\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"sec\"}}\n" +
                 "        ]\n" +
                 "    },\n" +
                 "    \"stream2\":{\n" +
                 "        \"mappers\":[\n" +
-                "                    {\"dimPath\":[\"J\",\"L\",\"P\"], \"as\":\"R\"},\n" +
-                "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"Q\"},\n" +
-                "                    {\"dimPath\":[\"R\", \"time\"], \"as\":\"timestamp\"}\n" +
+                "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"T\"},\n" +
+                "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"R\"},\n" +
+                "                    {\"dimPath\":[\"timestamp\"]}\n" +
                 "                  ],\n" +
-                "        \"outputs\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"X\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"iso\"}}\n" +
+                "        \"sinks\":[\n" +
+                "            {\"topic\":\"output\", \"partitionBy\":\"Q\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"sec\"}}\n" +
                 "        ]\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";
 
+        Properties streamsConfiguration = new Properties();
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "ks-normalizer");
+        streamsConfiguration.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
+        streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        streamsConfiguration.put(StreamsConfig.KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        streamsConfiguration.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, JsonSerde.class.getName());
+        streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         PlanModel model = objectMapper.readValue(json, PlanModel.class);
+        StreamBuilder streamBuilder = new StreamBuilder();
 
-        model.validate();
-
-        KStreamBuilder builder = new KStreamBuilder();
-        Map<String, KStream<String, ObjectNode>> kstreams = new HashMap<>();
-
-        for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
-            String topic = inputs.getKey();
-            KStream<String, ObjectNode> kstream = builder.stream(topic);
-            for (String stream : inputs.getValue()) kstreams.put(stream, kstream);
-        }
-
-
-        for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
-            KStream<String, ObjectNode> kstream = kstreams.get(streams.getKey());
-
-            //TODO: Do the mapper phase.
-
-        }
-
-        System.out.println(kstreams);
+        KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
+        streams.start();
     }
 }
