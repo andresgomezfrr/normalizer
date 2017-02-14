@@ -99,7 +99,7 @@ public class StreamBuilder {
                 if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
                     kStream = kStream.map(
                             (key, value) ->
-                                    new KeyValue<>((String) value.get(sink.getPartitionBy()), value)
+                                    new KeyValue<>(value.get(sink.getPartitionBy()).toString(), value)
                     );
                 }
 
