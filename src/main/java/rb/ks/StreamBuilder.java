@@ -23,7 +23,6 @@ public class StreamBuilder {
     Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
     Set<String> usedStores = new HashSet<>();
     Set<String> processedFuncs = new HashSet<>();
-    Set<String> processedTimestamper = new HashSet<>();
     Set<String> processedSinks = new HashSet<>();
     Boolean newStream = false;
 
