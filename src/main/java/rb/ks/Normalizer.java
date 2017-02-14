@@ -56,5 +56,6 @@ public class Normalizer {
 
         KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
         streams.start();
+
     }
 }
