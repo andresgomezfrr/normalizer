@@ -77,26 +77,33 @@ public class PlanModel {
 
     private void validateTimestamper() throws PlanBuilderException {
         for (Map.Entry<String, StreamModel> stream : streams.entrySet()) {
-            Set<String> dimensions = stream.getValue().getMappers().stream().map(mapper -> mapper.as).collect(Collectors.toSet());
-            TimestamperModel timestamper = stream.getValue().getTimestamper();
+            List<MapperModel> mappers = stream.getValue().getMappers();
 
-            if (!dimensions.contains(timestamper.getTimestampDim()) && !timestamper.getFormat().equals("generate")) {
-                throw new PlanBuilderException(String.format("Stream[%s]:" +
-                                " Timestamp dimension [%s] is not on the message. Available dimensions %s",
-                        stream.getKey(), timestamper.getTimestampDim(), dimensions));
+            if (mappers != null && !mappers.isEmpty()) {
+                Set<String> dimensions = mappers.stream().map(mapper -> mapper.as).collect(Collectors.toSet());
+                TimestamperModel timestamper = stream.getValue().getTimestamper();
+
+                if (!dimensions.contains(timestamper.getTimestampDim()) && !timestamper.getFormat().equals("generate")) {
+                    throw new PlanBuilderException(String.format("Stream[%s]:" +
+                                    " Timestamp dimension [%s] is not on the message. Available dimensions %s",
+                            stream.getKey(), timestamper.getTimestampDim(), dimensions));
+                }
             }
         }
     }
 
     private void validateSinks() throws PlanBuilderException {
         for (Map.Entry<String, StreamModel> stream : streams.entrySet()) {
-            Set<String> dimensions = stream.getValue().getMappers().stream().map(mapper -> mapper.as).collect(Collectors.toSet());
+            List<MapperModel> mappers = stream.getValue().getMappers();
 
-            for (SinkModel sink : stream.getValue().getSinks()) {
-                if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY) && !dimensions.contains(sink.getPartitionBy())) {
-                    throw new PlanBuilderException(String.format("Stream[%s]:" +
-                                    " PartitionBy dimension [%s] is not on the message. Available dimensions %s",
-                            stream.getKey(), sink.getPartitionBy(), dimensions));
+            if (mappers != null && !mappers.isEmpty()) {
+                Set<String> dimensions = stream.getValue().getMappers().stream().map(mapper -> mapper.as).collect(Collectors.toSet());
+                for (SinkModel sink : stream.getValue().getSinks()) {
+                    if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY) && !dimensions.contains(sink.getPartitionBy())) {
+                        throw new PlanBuilderException(String.format("Stream[%s]:" +
+                                        " PartitionBy dimension [%s] is not on the message. Available dimensions %s",
+                                stream.getKey(), sink.getPartitionBy(), dimensions));
+                    }
                 }
             }
         }
