@@ -12,16 +12,10 @@ public class Normalizer {
     public static void main(String[] args) throws Exception {
         if (args.length == 1) {
             Config config = new Config(args[0]);
-
-            MetricsManager metricsManager = new MetricsManager(config.clone());
-            metricsManager.start();
-
-            Builder builder = new Builder(config.clone(), metricsManager);
-
+            Builder builder = new Builder(config.clone());
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 builder.close();
-                metricsManager.interrupt();
                 log.info("Stopped Normalizer process.");
             }));
 
