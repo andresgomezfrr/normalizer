@@ -10,10 +10,7 @@ import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
-import rb.ks.funcs.FlatMapperFunction;
-import rb.ks.funcs.Function;
-import rb.ks.funcs.MapperFunction;
-import rb.ks.funcs.MapperStoreFunction;
+import rb.ks.funcs.*;
 import rb.ks.model.*;
 import rb.ks.serializers.JsonSerde;
 
@@ -109,6 +106,8 @@ public class StreamBuilder {
                             kStream = kStream.transform(() ->
                                     (MapperStoreFunction) func, stores.toArray(new String[stores.size()])
                             );
+                        } else if(func instanceof FilterFunc){
+                            kStream = kStream.filter((FilterFunc) func);
                         }
 
                         Map<String, Function> functions = streamFunctions.get(streams.getKey());
