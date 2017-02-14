@@ -1,4 +1,4 @@
-package rb.ks.funcs;
+package rb.ks.funcs.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.streams.KeyValue;
@@ -7,6 +7,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import rb.ks.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.funcs.Function;
+import rb.ks.funcs.impl.DiffCounterStoreMapper;
 import rb.ks.mocks.MockProcessContext;
 import rb.ks.model.PlanModel;
 
