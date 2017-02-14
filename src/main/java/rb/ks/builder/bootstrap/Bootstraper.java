@@ -1,10 +1,9 @@
 package rb.ks.builder.bootstrap;
 
 import rb.ks.builder.Builder;
-
-import java.util.Map;
+import rb.ks.builder.config.Config;
 
 public interface Bootstraper {
-    void init(Builder builder, Map<String, String> properties) throws Exception;
+    void init(Builder builder, Config config) throws Exception;
     void close();
 }
