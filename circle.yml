@@ -15,4 +15,13 @@ test:
     - cp distribution/target/normalizer-dist.tar.gz $CIRCLE_ARTIFACTS/
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
     - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-    - mvn deploy -Dmaven.test.skip=true -P dist
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - mvn deploy -Dmaven.test.skip=true -P dist
+  release:
+    tag: /normalizer-.*/
+    commands:
+      - mvn deploy -Dmaven.test.skip=true -P dist
