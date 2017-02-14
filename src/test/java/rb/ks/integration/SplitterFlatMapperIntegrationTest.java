@@ -13,6 +13,7 @@ import org.apache.kafka.streams.integration.utils.IntegrationTestUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -234,6 +235,15 @@ public class SplitterFlatMapperIntegrationTest {
 
         assertTrue(expectedMessages.containsAll(result));
 
+        streams.close();
+        streamBuilder.close();
+
     }
+
+    @AfterClass
+    public static void stop(){
+        CLUSTER.stop();
+    }
+
 
 }
