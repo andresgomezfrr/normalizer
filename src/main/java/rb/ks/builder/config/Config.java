@@ -64,7 +64,7 @@ public class Config {
 
     public Config put(String property, Object value) {
         config.put(property, value);
-
+        properties.put(property, value);
         return this;
     }
 
@@ -74,5 +74,12 @@ public class Config {
 
     public static class ConfigProperties {
         public static final String BOOTSTRAPER_CLASSNAME = "bootstraper.classname";
+        public static final String METRIC_ENABLE = "metric.enable";
+        public static final String METRIC_LISTENERS = "metric.listeners";
+        public static final String METRIC_INTERVAL = "metric.interval";
+    }
+
+    public Config clone() {
+        return new Config(new HashMap<>(config));
     }
 }
