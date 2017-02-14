@@ -19,21 +19,23 @@ public class SimpleMapper extends MapperFunction {
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
         Map<String, Object> newEvent = new HashMap<>();
+        if(value != null) {
+            for (MapperModel mapper : mappers) {
+                Integer depth = mapper.dimPath.size() - 1;
 
-        for (MapperModel mapper : mappers) {
-            Integer depth = mapper.dimPath.size() - 1;
-
-            Map<String, Object> levelPath = new HashMap<>(value);
-            for (Integer level = 0; level < depth; level++) {
-                if (levelPath != null) {
-                    levelPath = (Map<String, Object>) levelPath.get(mapper.dimPath.get(level));
+                Map<String, Object> levelPath = new HashMap<>(value);
+                for (Integer level = 0; level < depth; level++) {
+                    if (levelPath != null) {
+                        levelPath = (Map<String, Object>) levelPath.get(mapper.dimPath.get(level));
+                    }
                 }
+
+                if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
             }
-
-            if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
+            return new KeyValue<>(key, newEvent);
+        } else {
+            return new KeyValue<>(key, null);
         }
-
-        return new KeyValue<>(key, newEvent);
     }
 
     @Override
@@ -44,19 +46,14 @@ public class SimpleMapper extends MapperFunction {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("[");
-        mappers.forEach(mapper ->
-                builder.append("{")
-                        .append("dimPath: ").append(mapper.dimPath).append(", ")
-                        .append("as: ").append(mapper.as)
-                        .append("}")
-        );
+        mappers.forEach(mapper -> builder.append(mapper.toString()));
         builder.append("]");
 
         return builder.toString();
     }
 
 
-    private class MapperModel {
+    public class MapperModel {
         List<String> dimPath;
         String as;
 
@@ -82,10 +79,10 @@ public class SimpleMapper extends MapperFunction {
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            builder.append("{")
+            builder.append(" {")
                     .append("dimPath: ").append(dimPath).append(", ")
                     .append("as: ").append(as)
-                    .append("}");
+                    .append("} ");
 
             return builder.toString();
         }
