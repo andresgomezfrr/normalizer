@@ -1,4 +1,4 @@
-package zz.ks.model;
+package rb.ks.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

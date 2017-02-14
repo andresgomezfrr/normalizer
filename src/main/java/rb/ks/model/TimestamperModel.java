@@ -1,10 +1,10 @@
-package zz.ks.model;
+package rb.ks.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
-import zz.ks.utils.ConversionUtils;
+import rb.ks.utils.ConversionUtils;
 
 public class TimestamperModel {
     String timestampDim = "timestamp";

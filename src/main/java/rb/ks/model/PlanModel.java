@@ -1,8 +1,8 @@
-package zz.ks.model;
+package rb.ks.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import zz.ks.exceptions.PlanBuilderException;
+import rb.ks.exceptions.PlanBuilderException;
 
 import java.util.ArrayList;
 import java.util.List;
