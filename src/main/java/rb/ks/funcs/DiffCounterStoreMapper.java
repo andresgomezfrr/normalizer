@@ -12,11 +12,14 @@ import static rb.ks.utils.ConversionUtils.*;
 public class DiffCounterStoreMapper extends MapperStoreFunction {
     List<String> counterFields;
     KeyValueStore<String, Map<String, Long>> storeCounter;
+    Boolean sendIfZero;
 
     @Override
     public void prepare(Map<String, Object> properties) {
         counterFields = (List<String>) properties.get("counters");
         storeCounter = getStore("counter-store");
+        sendIfZero = (Boolean) properties.get("sendIfZero");
+        if (sendIfZero == null) sendIfZero = true;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 Long lastValue = toLong(counters.get(counter.getKey()));
                 if (lastValue != null) {
                     Long diff = counter.getValue() - lastValue;
-                    value.put(counter.getKey(), diff);
+                    if (diff != 0 || sendIfZero) value.put(counter.getKey(), diff);
                 }
             }
 
@@ -50,6 +53,6 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
 
     @Override
     public void stop() {
-        if(counterFields != null) counterFields.clear();
+        if (counterFields != null) counterFields.clear();
     }
 }
