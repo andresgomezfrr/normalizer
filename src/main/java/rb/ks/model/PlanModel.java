@@ -63,10 +63,20 @@ public class PlanModel {
         }
     }
 
+
     private void validateStreams() throws PlanBuilderException {
-        for (String stream : streams.keySet()) {
-            if (!definedStreams.contains(stream)) {
-                throw new PlanBuilderException(String.format("Stream[%s]: Not defined on inputs. Available inputs %s", stream, inputs));
+        for (Map.Entry<String, StreamModel> entry : streams.entrySet()) {
+            List<SinkModel> sinks = entry.getValue().sinks;
+            if (sinks != null) {
+                for (SinkModel sink : sinks) {
+                    if (sink.getType().equals(SinkModel.STREAM_TYPE)) {
+                        definedStreams.add(sink.getTopic());
+                    }
+                }
+
+                if (!definedStreams.contains(entry.getKey())) {
+                    throw new PlanBuilderException(String.format("Stream[%s]: Not defined on inputs. Available definedStreams %s", entry.getKey(), definedStreams));
+                }
             }
         }
     }
