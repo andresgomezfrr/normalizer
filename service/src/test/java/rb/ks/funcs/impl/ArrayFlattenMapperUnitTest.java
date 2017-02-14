@@ -2,9 +2,11 @@ package rb.ks.funcs.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.StreamsConfig;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import rb.ks.builder.StreamBuilder;
+import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.funcs.FlatMapperFunction;
 import rb.ks.funcs.Function;
@@ -18,7 +20,13 @@ import static org.junit.Assert.*;
 
 public class ArrayFlattenMapperUnitTest {
 
-    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1", null);
+    static Config config = new Config();
+
+    static {
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "app-id-1");
+    }
+
+    private static StreamBuilder streamBuilder = new StreamBuilder(config, null);
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {

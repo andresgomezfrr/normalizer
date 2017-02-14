@@ -6,5 +6,6 @@
   "bootstraper.classname": "rb.ks.builder.bootstrap.KafkaBootstraper",
   "metric.enable": true,
   "metric.listeners": ["rb.ks.metrics.ConsoleMetricListener"],
-  "metric.interval": 60000
+  "metric.interval": 60000,
+  "multi.id": false
 }
