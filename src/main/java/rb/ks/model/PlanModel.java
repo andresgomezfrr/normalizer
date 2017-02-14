@@ -2,6 +2,8 @@ package rb.ks.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import rb.ks.exceptions.PlanBuilderException;
 
 import java.util.ArrayList;
@@ -47,7 +49,11 @@ public class PlanModel {
     }
 
     public String printExecutionPlan() {
+        ObjectMapper mapper = new ObjectMapper();
         StringBuilder builder = new StringBuilder();
+        StringBuilder propertiesBuilder = new StringBuilder();
+        propertiesBuilder.append("\n").append("Properties: ").append("\n");
+
         inputs.entrySet().forEach(inputEntry -> {
             builder.append("\n");
             builder.append("CREATE STREAMS ")
@@ -67,6 +73,15 @@ public class PlanModel {
                         .map(FunctionModel::getName).collect(Collectors.toList());
                 builder.append("   TRANSFORM USING ").append(funcNames).append("\n");
 
+                funcs.forEach(func -> {
+                    propertiesBuilder.append("   * ").append(func.getName()).append(": ");
+
+                    try {
+                        propertiesBuilder.append(mapper.writeValueAsString(func.getProperties())).append("\n");
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
 
             List<SinkModel> kafkaTopics = entry.getValue().getSinks().stream()
@@ -84,6 +99,13 @@ public class PlanModel {
 
                 if (sink.getFilter() != null) {
                     builder.append(" FILTER WITH ").append(sink.getFilter().getName());
+                    propertiesBuilder.append("   * ").append(sink.getFilter().getName()).append(": ");
+                    try {
+                        propertiesBuilder
+                                .append(mapper.writeValueAsString(sink.getFilter().getProperties())).append("\n");
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 builder.append("\n");
@@ -95,10 +117,19 @@ public class PlanModel {
 
                 if (sink.getFilter() != null) {
                     builder.append(" FILTER WITH ").append(sink.getFilter().getName());
+                    propertiesBuilder.append("   * ").append(sink.getFilter().getName()).append(": ");
+                    try {
+                        propertiesBuilder
+                                .append(mapper.writeValueAsString(sink.getFilter().getProperties())).append("\n");
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
                 }
                 builder.append("\n");
             });
         });
+
+        builder.append(propertiesBuilder.toString());
         return builder.toString();
     }
 
