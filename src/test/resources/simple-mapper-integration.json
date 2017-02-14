@@ -18,7 +18,6 @@
                   }
                 }
           ],
-          "timestamper":{"dimension":"timestamp", "format":"iso"},
           "sinks":[
               {"topic":"output1", "partitionBy":"X"}
           ]

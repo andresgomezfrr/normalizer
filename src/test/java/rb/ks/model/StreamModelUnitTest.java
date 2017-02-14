@@ -15,20 +15,15 @@ public class StreamModelUnitTest {
     public void shouldAssignFields() {
 
         List<FunctionModel> funcs = new ArrayList<>();
-        TimestamperModel timestamperModelObject = mock(TimestamperModel.class);
         List<SinkModel> sinks = new ArrayList<>();
 
-        StreamModel streamModelObject = new StreamModel(funcs, timestamperModelObject, sinks);
+        StreamModel streamModelObject = new StreamModel(funcs, sinks);
 
         assertNotNull(streamModelObject.getFuncs());
         assertEquals(streamModelObject.getFuncs(), funcs);
 
         assertNotNull(streamModelObject.getSinks());
         assertEquals(streamModelObject.getSinks(), sinks);
-
-        assertNotNull(streamModelObject.getTimestamper());
-        assertEquals(streamModelObject.getTimestamper(), timestamperModelObject);
-
     }
 
 
