@@ -3,6 +3,7 @@ package rb.ks.builder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.errors.StreamsException;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,13 +56,24 @@ public class Builder {
         log.info("--------  TOPOLOGY BUILD END  --------");
 
         streams = new KafkaStreams(builder, config.getProperties());
+        streams.setUncaughtExceptionHandler((thread, exception) -> {
+            if(!exception.getMessage().contains("Topic not found")) {
+                log.error(exception.getMessage(), exception);
+            } else {
+                log.warn("Creating topics, try execute Normalizer again!");
+            }
+
+            threadBootstraper.interrupt();
+            streamBuilder.close();
+        });
         streams.start();
+
         log.info("Started Normalizer with conf {}", config.getProperties());
     }
 
-    public void close(){
+    public void close() {
         threadBootstraper.interrupt();
         streamBuilder.close();
-        if(streams != null) streams.close();
+        if (streams != null) streams.close();
     }
 }
