@@ -34,15 +34,15 @@ public class Normalizer {
                 "        \"mappers\":[\n" +
                 "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"T\"},\n" +
                 "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"R\"},\n" +
-                "                    {\"dimPath\":[\"timestamp\"]}\n" +
+                "                    {\"dimPath\":[\"timestamp_ms\"], \"as\":\"timestamp\"}\n" +
                 "                  ],\n" +
-                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"iso\"},\n" +
+                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"ms\"},\n" +
                 "        \"sinks\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"R\"}\n" +
+                "            {\"topic\":\"output\", \"partitionBy\":\"T\"}\n" +
                 "        ]\n" +
                 "    }\n" +
                 "  }\n" +
-                "}\n";
+                "}";
 
         Properties streamsConfiguration = new Properties();
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "ks-normalizer");
