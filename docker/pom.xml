@@ -16,7 +16,7 @@
     <description>Docker packaging manager</description>
 
     <properties>
-        <docker.registry>resources.redborder.lan:5000</docker.registry>
+        <docker.registry>862098823673.dkr.ecr.us-east-1.amazonaws.com</docker.registry>
     </properties>
 
     <build>
@@ -27,6 +27,8 @@
                 <version>0.4.13</version>
 
                 <configuration>
+                    <useConfigFile>true</useConfigFile>
+
                     <imageName>${project.parent.artifactId}</imageName>
 
                     <imageTags>
