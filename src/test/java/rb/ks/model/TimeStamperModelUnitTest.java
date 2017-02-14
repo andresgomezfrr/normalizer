@@ -13,7 +13,11 @@ public class TimeStamperModelUnitTest {
         TimestamperModel timestamperModelObject = new TimestamperModel(null, null);
 
         assertNotNull(timestamperModelObject.getFormat());
+        assertEquals(timestamperModelObject.getFormat(), "generate");
+
         assertNotNull(timestamperModelObject.getTimestampDim());
+        assertEquals(timestamperModelObject.getTimestampDim(), "timestamp");
+
     }
 
     @Test
@@ -22,7 +26,12 @@ public class TimeStamperModelUnitTest {
 
         TimestamperModel timestamperModelObject = new TimestamperModel(timestamp, null);
 
+        assertNotNull(timestamperModelObject.getTimestampDim());
+        assertEquals(timestamperModelObject.getTimestampDim(), timestamp);
+
+        assertNotNull(timestamperModelObject.getFormat(), "generate");
         assertEquals(timestamperModelObject.generateTimestamp(new Object()), Long.valueOf(System.currentTimeMillis()/1000L));
+
     }
 
     @Test
@@ -34,7 +43,14 @@ public class TimeStamperModelUnitTest {
 
         TimestamperModel timestamperModelObject = new TimestamperModel(timestamp, format);
 
+        assertNotNull(timestamperModelObject.format);
+        assertEquals(timestamperModelObject.getFormat(), format);
+
+        assertNotNull(timestamperModelObject.timestampDim);
+        assertEquals(timestamperModelObject.getTimestampDim(), timestamp);
+
         assertEquals(timestamperModelObject.generateTimestamp(date), new Long(1473316426L));
+
     }
 
     @Test
@@ -45,6 +61,12 @@ public class TimeStamperModelUnitTest {
         String date = "1473316426";
 
         TimestamperModel timestamperModelObject = new TimestamperModel(timestamp, format);
+
+        assertNotNull(timestamperModelObject.getFormat());
+        assertEquals(timestamperModelObject.getFormat(), format);
+
+        assertNotNull(timestamperModelObject.getTimestampDim());
+        assertEquals(timestamperModelObject.getTimestampDim(), timestamp);
 
         assertEquals(timestamperModelObject.generateTimestamp(date), new Long(1473316426L));
     }
@@ -57,6 +79,12 @@ public class TimeStamperModelUnitTest {
         String date = "1473316426000";
 
         TimestamperModel timestamperModelObject = new TimestamperModel(timestamp, format);
+
+        assertNotNull(timestamperModelObject.getFormat());
+        assertEquals(timestamperModelObject.getFormat(), format);
+
+        assertNotNull(timestamperModelObject.getTimestampDim());
+        assertEquals(timestamperModelObject.getTimestampDim(), timestamp);
 
         assertEquals(timestamperModelObject.generateTimestamp(date), new Long(1473316426L));
     }

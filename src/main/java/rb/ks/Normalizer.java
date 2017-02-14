@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonSerde;
@@ -12,6 +14,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Normalizer {
+    private static final Logger log = LoggerFactory.getLogger(Normalizer.class);
+
     public static void main(String[] args) throws IOException, PlanBuilderException {
 
 
@@ -74,5 +78,6 @@ public class Normalizer {
         }));
 
 
+        log.info("Started Normalizer with conf {}", streamsConfiguration);
     }
 }
