@@ -3,6 +3,7 @@ layout: page
 title: "FlatMapper Functions"
 category: funcs
 date: 2017-02-14 12:58:16
+order: 2
 ---
 
 The flat mapper functions transforms stream one message to zero or many messages `1 to zero OR 1 to many`.

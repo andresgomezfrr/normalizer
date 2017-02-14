@@ -3,6 +3,7 @@ layout: page
 title: "Mapper Functions"
 category: funcs
 date: 2017-02-14 12:58:03
+order: 1
 ---
 
 The mapper functions transforms the stream one message to another message `1 to 1` .

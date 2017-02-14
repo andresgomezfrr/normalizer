@@ -3,6 +3,7 @@ layout: page
 title: "Kafka Bootstrapper"
 category: bootstrapper
 date: 2017-02-14 12:36:04
+order: 3
 ---
 
 `io.wizzie.ks.normalizer.builder.bootstrap.KafkaBootstrapper`
