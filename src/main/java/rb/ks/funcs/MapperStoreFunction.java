@@ -7,6 +7,7 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rb.ks.utils.ConversionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +21,19 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
     private Map<String, KeyValueStore> stores = new HashMap<>();
     private List<String> availableStores;
     private String appId;
+    private Long windownTimeMs;
 
     @Override
     public void init(Map<String, Object> properties) {
         this.availableStores = (List<String>) properties.get(__STORES);
         this.appId = (String) properties.get(__APP_ID);
+        this.windownTimeMs = ConversionUtils.toLong(properties.get(__WINDOW_TIME_MS));
         this.properties = properties;
     }
 
     @Override
     public void init(ProcessorContext context) {
+        if(windownTimeMs != null) context.schedule(windownTimeMs);
         availableStores.forEach((storeName) ->
                 stores.put(storeName, (KeyValueStore) context.getStateStore(String.format("%s_%s", appId, storeName)))
         );
@@ -44,8 +48,7 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
 
     @Override
     public KeyValue<String, Map<String, Object>> punctuate(long timestamp) {
-        // Currently the MapperStore not support windows.
-        return null;
+        return window(timestamp);
     }
 
     @Override
@@ -62,5 +65,6 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
         return (KeyValueStore<String, V>) stores.get(storeName);
     }
 
+    public abstract KeyValue<String, Map<String, Object>> window(long timestamp);
 
 }
