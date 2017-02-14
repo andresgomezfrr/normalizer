@@ -96,16 +96,14 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             }
 
             counters.putAll(newCounters);
-            counters.putAll(newTimestamp);
-
         } else {
 
             if(!firstTimeView) returnValue = null;
 
             counters = newCounters;
-            counters.putAll(newTimestamp);
         }
 
+        counters.putAll(newTimestamp);
         storeCounter.put(definedKey, counters);
 
         return returnValue;
