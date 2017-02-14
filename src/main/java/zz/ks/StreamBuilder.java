@@ -46,27 +46,30 @@ public class StreamBuilder {
     private void addMappers(PlanModel model) {
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
             KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
+            List<MapperModel>  mappers = streams.getValue().getMappers();
 
-            KStream<String, Map<String, Object>> mapKStream = kStream.map((key, value) -> {
-                Map<String, Object> newEvent = new HashMap<>();
+            if(mappers != null && !mappers.isEmpty()) {
+                KStream<String, Map<String, Object>> mapKStream = kStream.map((key, value) -> {
+                    Map<String, Object> newEvent = new HashMap<>();
 
-                for (MapperModel mapper : streams.getValue().getMappers()) {
-                    Integer depth = mapper.dimPath.size() - 1;
+                    for (MapperModel mapper : mappers) {
+                        Integer depth = mapper.dimPath.size() - 1;
 
-                    Map<String, Object> levelPath = new HashMap<>(value);
-                    for (Integer level = 0; level < depth; level++) {
-                        if (levelPath != null) {
-                            levelPath = (Map<String, Object>) levelPath.get(mapper.dimPath.get(level));
+                        Map<String, Object> levelPath = new HashMap<>(value);
+                        for (Integer level = 0; level < depth; level++) {
+                            if (levelPath != null) {
+                                levelPath = (Map<String, Object>) levelPath.get(mapper.dimPath.get(level));
+                            }
                         }
+
+                        if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
                     }
 
-                    if (levelPath != null) newEvent.put(mapper.as, levelPath.get(mapper.dimPath.get(depth)));
-                }
+                    return new KeyValue<>(key, newEvent);
+                });
 
-                return new KeyValue<>(key, newEvent);
-            });
-
-            kStreams.put(streams.getKey(), mapKStream);
+                kStreams.put(streams.getKey(), mapKStream);
+            }
         }
     }
 
