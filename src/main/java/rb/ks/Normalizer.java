@@ -19,26 +19,23 @@ public class Normalizer {
                 "  },\n" +
                 "  \"streams\":{\n" +
                 "    \"stream1\":{\n" +
-                "        \"mappers\":[\n" +
+                "        \"funcs\":[\n" +
+                "              {\n" +
+                "                \"name\":\"myMapper\",\n" +
+                "                \"className\":\"rb.ks.funcs.SimpleMapper\",\n" +
+                "                \"properties\": {\n" +
+                "                  \"maps\": [\n" +
                 "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"X\"},\n" +
-                "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"Q\"},\n" +
+                "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"Q\"}, \n" +
                 "                    {\"dimPath\":[\"timestamp\"]}\n" +
-                "                  ],\n" +
-                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"iso\"},\n" +
+                "                  ]\n" +
+                "                }\n" +
+                "              }\n" +
+                "        ],\n" +
+                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"generate\"},\n" +
                 "        \"sinks\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"Q\"},\n" +
+                "            {\"topic\":\"output\", \"partitionBy\":\"X\"},\n" +
                 "            {\"topic\":\"output1\"}\n" +
-                "        ]\n" +
-                "    },\n" +
-                "    \"stream2\":{\n" +
-                "        \"mappers\":[\n" +
-                "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"T\"},\n" +
-                "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"R\"},\n" +
-                "                    {\"dimPath\":[\"timestamp_ms\"], \"as\":\"timestamp\"}\n" +
-                "                  ],\n" +
-                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"ms\"},\n" +
-                "        \"sinks\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"T\"}\n" +
                 "        ]\n" +
                 "    }\n" +
                 "  }\n" +

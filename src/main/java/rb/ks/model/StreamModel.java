@@ -2,27 +2,28 @@ package rb.ks.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import rb.ks.funcs.Function;
 
 import java.util.List;
 
 public class StreamModel {
-    List<MapperModel> mappers;
+    List<FunctionModel> funcs;
     TimestamperModel timestamper;
     List<SinkModel> sinks;
 
     @JsonCreator
     public StreamModel(
-            @JsonProperty("mappers") List<MapperModel> mappers,
+            @JsonProperty("funcs") List<FunctionModel> funcs,
             @JsonProperty("timestamper") TimestamperModel timestamper,
             @JsonProperty("sinks") List<SinkModel> sinks) {
-        this.mappers = mappers;
+        this.funcs = funcs;
         this.timestamper = timestamper;
         this.sinks = sinks;
     }
 
     @JsonProperty
-    public List<MapperModel> getMappers() {
-        return mappers;
+    public List<FunctionModel> getFuncs() {
+        return funcs;
     }
 
     @JsonProperty
@@ -39,7 +40,7 @@ public class StreamModel {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{")
-                .append("mappers: ").append(mappers).append(", ")
+                .append("funcs: ").append(funcs).append(", ")
                 .append("timestamper: ").append(timestamper).append(", ")
                 .append("sinks: ").append(sinks)
                 .append("}");
