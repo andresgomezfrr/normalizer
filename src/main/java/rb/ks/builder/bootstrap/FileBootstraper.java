@@ -2,6 +2,7 @@ package rb.ks.builder.bootstrap;
 
 import rb.ks.builder.Builder;
 import rb.ks.builder.config.Config;
+import rb.ks.metrics.MetricsManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,7 +16,7 @@ public class FileBootstraper extends ThreadBootstraper {
     }
 
     @Override
-    public void init(Builder builder, Config config) throws Exception {
+    public void init(Builder builder, Config config, MetricsManager metricsManager) throws Exception {
         String filePath = config.get(FILE_PATH);
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
 

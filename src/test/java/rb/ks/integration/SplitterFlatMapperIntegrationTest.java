@@ -86,7 +86,7 @@ public class SplitterFlatMapperIntegrationTest {
         DateTime firstswitched2 = formatter.withZoneUTC().parseDateTime("2016-09-07 11:17:21");
         DateTime timestamp2 = formatter.withZoneUTC().parseDateTime("2016-09-07 11:21:37");
 
-        StreamBuilder streamBuilder = new StreamBuilder(appId);
+        StreamBuilder streamBuilder = new StreamBuilder(appId, null);
 
         KafkaStreams streams = null;
         try {

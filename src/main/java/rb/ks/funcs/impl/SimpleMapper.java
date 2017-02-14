@@ -2,8 +2,8 @@ package rb.ks.funcs.impl;
 
 import org.apache.kafka.streams.KeyValue;
 import rb.ks.funcs.MapperFunction;
+import rb.ks.metrics.MetricsManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class SimpleMapper extends MapperFunction {
     List<MapperModel> mappers;
 
     @Override
-    public void prepare(Map<String, Object> properties) {
+    public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         List<Map<String, Object>> maps = (List<Map<String, Object>>) properties.get("maps");
         mappers = maps.stream()
                 .map(map -> new MapperModel((List<String>) map.get("dimPath"), (String) map.get("as")))

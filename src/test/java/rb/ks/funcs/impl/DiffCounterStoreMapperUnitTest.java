@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class DiffCounterStoreMapperUnitTest {
-    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1", null);
     private static DiffCounterStoreMapper diffCounterStoreMapper;
 
     @BeforeClass
