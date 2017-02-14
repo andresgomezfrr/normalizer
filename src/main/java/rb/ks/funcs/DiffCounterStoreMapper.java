@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static rb.ks.utils.ConversionUtils.*;
+import static rb.ks.utils.ConversionUtils.toLong;
 
 public class DiffCounterStoreMapper extends MapperStoreFunction {
     List<String> counterFields;

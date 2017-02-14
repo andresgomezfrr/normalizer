@@ -1,6 +1,5 @@
 package rb.ks.model;
 
-import org.junit.Assert;
 import org.junit.Test;
 import rb.ks.exceptions.PlanBuilderException;
 
@@ -11,7 +10,6 @@ import java.util.Map;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class PlanModelUnitTest {

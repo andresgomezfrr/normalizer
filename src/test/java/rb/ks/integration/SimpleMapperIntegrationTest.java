@@ -21,6 +21,7 @@ import rb.ks.serializers.JsonDeserializer;
 import rb.ks.serializers.JsonSerde;
 import rb.ks.serializers.JsonSerializer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -47,34 +48,8 @@ public class SimpleMapperIntegrationTest {
 
     @Test
     public void simpleMapperShouldWork() throws InterruptedException {
-
-        String jsonModel = "{\n" +
-                "  \"inputs\":{\n" +
-                "    \"input1\":[\"stream1\"]\n" +
-                "  },\n" +
-                "  \"streams\":{\n" +
-                "    \"stream1\":{\n" +
-                "        \"funcs\":[\n" +
-                "              {\n" +
-                "                \"name\":\"myMapper\",\n" +
-                "                \"className\":\"rb.ks.funcs.SimpleMapper\",\n" +
-                "                \"properties\": {\n" +
-                "                  \"maps\": [\n" +
-                "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"X\"},\n" +
-                "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"Q\"}, \n" +
-                "                    {\"dimPath\":[\"Y\",\"W\",\"P\"]}, \n" +
-                "                    {\"dimPath\":[\"timestamp\"]}\n" +
-                "                  ]\n" +
-                "                }\n" +
-                "              }\n" +
-                "        ],\n" +
-                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"iso\"},\n" +
-                "        \"sinks\":[\n" +
-                "            {\"topic\":\"output1\", \"partitionBy\":\"X\"}\n" +
-                "        ]\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("simple-mapper-integration.json").getFile());
 
         Properties streamsConfiguration = new Properties();
 
@@ -91,7 +66,7 @@ public class SimpleMapperIntegrationTest {
         PlanModel model = null;
 
         try {
-            model = Mockito.spy(objectMapper.readValue(jsonModel, PlanModel.class));
+            model = Mockito.spy(objectMapper.readValue(file, PlanModel.class));
         } catch (IOException e) {
             fail("Exception : " + e.getMessage());
         }
@@ -159,10 +134,9 @@ public class SimpleMapperIntegrationTest {
 
         KeyValue<String, Map<String, Object>> expectedDataKv = new KeyValue<>("VALUE", expectedData);
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfigA,"output1", 1);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfigA, "output1", 1);
 
         assertEquals(receivedMessagesFromOutput1, Collections.singletonList(expectedDataKv));
-
     }
 
 }
