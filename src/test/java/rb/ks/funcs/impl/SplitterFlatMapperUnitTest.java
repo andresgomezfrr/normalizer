@@ -26,7 +26,7 @@ public class SplitterFlatMapperUnitTest {
 
     private DateTime currentTime = new DateTime();
     private DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1", null);
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {

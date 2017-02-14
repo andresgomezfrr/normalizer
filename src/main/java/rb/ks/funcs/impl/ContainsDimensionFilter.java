@@ -1,6 +1,7 @@
 package rb.ks.funcs.impl;
 
 import rb.ks.funcs.FilterFunc;
+import rb.ks.metrics.MetricsManager;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,7 @@ public class ContainsDimensionFilter extends FilterFunc {
     List<String> dimensions;
 
     @Override
-    public void prepare(Map<String, Object> properties) {
+    public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         dimensions = (List<String>) properties.get("dimensions");
     }
 

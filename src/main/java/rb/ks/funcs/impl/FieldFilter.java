@@ -1,6 +1,7 @@
 package rb.ks.funcs.impl;
 
 import rb.ks.funcs.FilterFunc;
+import rb.ks.metrics.MetricsManager;
 import rb.ks.utils.Constants;
 
 import java.util.Map;
@@ -11,7 +12,7 @@ public class FieldFilter extends FilterFunc {
     Boolean isDimensionKey = false;
 
     @Override
-    public void prepare(Map<String, Object> properties) {
+    public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         dimension = (String) properties.get("dimension");
         dimensionValue = properties.get("value");
 
