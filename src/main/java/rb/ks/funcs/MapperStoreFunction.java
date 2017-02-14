@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static rb.ks.utils.Constants.*;
+import static rb.ks.utils.Constants.__APP_ID;
+import static rb.ks.utils.Constants.__STORES;
 public abstract class MapperStoreFunction implements Function<KeyValue<String, Map<String, Object>>>,
         Transformer<String, Map<String, Object>, KeyValue<String, Map<String, Object>>> {
     private final Logger log = LoggerFactory.getLogger(getClass());

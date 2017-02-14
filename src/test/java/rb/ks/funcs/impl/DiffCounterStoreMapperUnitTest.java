@@ -5,10 +5,9 @@ import org.apache.kafka.streams.KeyValue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import rb.ks.StreamBuilder;
+import rb.ks.builder.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.funcs.Function;
-import rb.ks.funcs.impl.DiffCounterStoreMapper;
 import rb.ks.mocks.MockProcessContext;
 import rb.ks.model.PlanModel;
 

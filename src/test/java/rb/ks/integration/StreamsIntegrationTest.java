@@ -13,7 +13,7 @@ import org.apache.kafka.streams.integration.utils.IntegrationTestUtils;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import rb.ks.StreamBuilder;
+import rb.ks.builder.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonDeserializer;
@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
