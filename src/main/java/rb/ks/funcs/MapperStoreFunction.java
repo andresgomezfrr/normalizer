@@ -13,19 +13,20 @@ import java.util.Map;
 
 public abstract class MapperStoreFunction implements Function<KeyValue<String, Map<String, Object>>>,
         Transformer<String, Map<String, Object>, KeyValue<String, Map<String, Object>>> {
-
+    private Map<String, Object> properties;
     private Map<String, KeyValueStore> stores = new HashMap<>();
     private List<String> availableStores;
 
     @Override
     public void init(Map<String, Object> properties) {
         this.availableStores = (List<String>) properties.get("__STORES");
-        prepare(properties);
+        this.properties = properties;
     }
 
     @Override
     public void init(ProcessorContext context) {
         availableStores.forEach((storeName) -> stores.put(storeName, (KeyValueStore) context.getStateStore(storeName)));
+        prepare(properties);
     }
 
     @Override
@@ -45,8 +46,12 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
         stop();
     }
 
-    public <K, V> KeyValue<K, V> getStore(String storeName){
-        return (KeyValue<K, V>) stores.get(storeName);
+    public List<String> getAvailableStores(){
+        return availableStores;
+    }
+
+    public <V> KeyValueStore<String, V> getStore(String storeName){
+        return (KeyValueStore<String, V>) stores.get(storeName);
     }
 
 
