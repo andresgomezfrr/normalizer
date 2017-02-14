@@ -6,9 +6,9 @@ import rb.ks.utils.Constants;
 import java.util.Map;
 
 public class FieldFilter extends FilterFunc {
-    private String dimension;
-    private Object dimensionValue;
-    private Boolean isDimensionKey;
+    String dimension;
+    Object dimensionValue;
+    Boolean isDimensionKey = false;
 
     @Override
     public void prepare(Map<String, Object> properties) {
@@ -25,7 +25,7 @@ public class FieldFilter extends FilterFunc {
             return key.equals(dimensionValue);
         } else {
             Object currentValue = value.get(dimension);
-            return currentValue.equals(dimensionValue);
+            return currentValue != null && currentValue.equals(dimensionValue);
         }
     }
 
