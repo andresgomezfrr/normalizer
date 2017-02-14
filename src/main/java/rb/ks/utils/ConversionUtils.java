@@ -1,6 +1,11 @@
 package rb.ks.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ConversionUtils {
+    private static final Logger log = LoggerFactory.getLogger(ConversionUtils.class);
+
     public static Long toLong(Object l) {
         Long result = null;
 
@@ -15,7 +20,7 @@ public class ConversionUtils {
                 }
             }
         } catch (NumberFormatException ex) {
-            // TODO: Log throw exception.
+            log.error(ex.getMessage(), ex);
         }
 
         return result;
