@@ -11,11 +11,13 @@ public class SinkModel {
     String topic;
     String type;
     String partitionBy;
+    FunctionModel filter;
 
     @JsonCreator
     public SinkModel(@JsonProperty("topic") String topic,
                      @JsonProperty("type") String type,
-                     @JsonProperty("partitionBy") String partitionBy) {
+                     @JsonProperty("partitionBy") String partitionBy,
+                     @JsonProperty("filter") FunctionModel filter) {
         this.topic = topic;
 
         if (partitionBy == null) {
@@ -29,6 +31,8 @@ public class SinkModel {
         } else {
             this.type = type;
         }
+
+        this.filter = filter;
     }
 
     @JsonProperty
@@ -44,6 +48,11 @@ public class SinkModel {
     @JsonProperty
     public String getType() {
         return type;
+    }
+
+    @JsonProperty
+    public FunctionModel getFilter() {
+        return filter;
     }
 
     @Override
