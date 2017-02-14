@@ -14,4 +14,4 @@ do
     CLASSPATH=${CLASSPATH}:${file}
 done
 
-java -cp ${CLASSPATH} rb.ks.Normalizer $1
+java -cp ${CLASSPATH} zz.ks.Normalizer $1
