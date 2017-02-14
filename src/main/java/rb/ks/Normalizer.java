@@ -8,7 +8,6 @@ import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
-import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonSerde;
 

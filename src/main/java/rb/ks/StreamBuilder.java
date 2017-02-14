@@ -6,14 +6,16 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
-import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.funcs.*;
-import rb.ks.model.*;
+import rb.ks.model.FunctionModel;
+import rb.ks.model.PlanModel;
+import rb.ks.model.SinkModel;
+import rb.ks.model.StreamModel;
 import rb.ks.serializers.JsonSerde;
 
 import java.util.*;
@@ -35,7 +37,7 @@ public class StreamBuilder {
     private Set<String> addedSinksToStreams = new HashSet<>();
     private Boolean addedNewStream = true;
 
-    public KStreamBuilder builder(PlanModel model) throws PlanBuilderException, TryToDoLoopException {
+    public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
         model.validate();
 
         clean();
