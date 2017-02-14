@@ -4,12 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import rb.ks.StreamBuilder;
+import rb.ks.builder.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.funcs.FilterFunc;
 import rb.ks.funcs.Function;
 import rb.ks.model.PlanModel;
-import rb.ks.utils.Constants;
 
 import java.io.File;
 import java.io.IOException;

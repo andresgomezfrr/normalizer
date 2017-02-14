@@ -14,7 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.mockito.Mockito;
-import rb.ks.StreamBuilder;
+import rb.ks.builder.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonDeserializer;
