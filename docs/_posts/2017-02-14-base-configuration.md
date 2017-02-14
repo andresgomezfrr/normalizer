@@ -3,7 +3,7 @@ layout: page
 title: "Base Configuration"
 category: conf
 date: 2017-02-14 12:24:37
-order: 0
+order: 1
 ---
 
 The configuration file is a JSON format file where you specific the general properties to configure the normalizer instance. This file is different that stream config file that define the KS topology.
