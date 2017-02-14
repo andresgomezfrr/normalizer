@@ -3,7 +3,7 @@ layout: page
 title: "Stream Configuration"
 category: conf
 date: 2017-02-14 12:25:04
-order: 1
+order: 2
 ---
 
 The stream configuration is the execution plan of the normalizer. Normalizer uses the stream configuration to build the Kafka Streams topology using DSL API. You can configure how the normalizer gets the stream conf to do it you need to use the [Bootstrappers](https://github.com/wizzie-io/normalizer/wiki/Bootstrapper).
