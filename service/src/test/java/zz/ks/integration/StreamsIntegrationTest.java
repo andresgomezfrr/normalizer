@@ -1,6 +1,7 @@
 package zz.ks.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kafka.utils.MockTime;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.Serdes;
@@ -8,7 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.integration.utils.EmbeddedSingleNodeKafkaCluster;
+import org.apache.kafka.streams.integration.utils.EmbeddedKafkaCluster;
 import org.apache.kafka.streams.integration.utils.IntegrationTestUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -32,9 +33,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class StreamsIntegrationTest {
+    private final static int NUM_BROKERS = 1;
 
     @ClassRule
-    public static EmbeddedSingleNodeKafkaCluster CLUSTER = new EmbeddedSingleNodeKafkaCluster();
+    public static EmbeddedKafkaCluster CLUSTER = new EmbeddedKafkaCluster(NUM_BROKERS);
+    private final static MockTime MOCK_TIME = CLUSTER.time;
 
     private static final int REPLICATION_FACTOR = 1;
 
@@ -87,7 +90,6 @@ public class StreamsIntegrationTest {
         StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(config, null));
 
         KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
-
         streams.start();
 
         Map<String, Object> subMessage = new HashMap<>();
@@ -121,7 +123,7 @@ public class StreamsIntegrationTest {
         producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
         try {
-            IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Arrays.asList(kvStreams1, kvStreams2, kvStreams3), producerConfig);
+            IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Arrays.asList(kvStreams1, kvStreams2, kvStreams3), producerConfig, MOCK_TIME);
         } catch (ExecutionException e) {
             fail("Exception : " + e.getMessage());
         }

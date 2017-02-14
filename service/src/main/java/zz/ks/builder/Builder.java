@@ -53,6 +53,7 @@ public class Builder {
         log.info("--------  TOPOLOGY BUILD END  --------");
 
         streams = new KafkaStreams(builder, config.getProperties());
+
         streams.setUncaughtExceptionHandler((thread, exception) -> {
             if (!exception.getMessage().contains("Topic not found")) {
                 log.error(exception.getMessage(), exception);
