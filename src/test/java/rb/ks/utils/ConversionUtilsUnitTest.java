@@ -1,9 +1,8 @@
 package rb.ks.utils;
 
 import org.junit.Test;
-import rb.ks.utils.ConversionUtils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ConversionUtilsUnitTest {
 

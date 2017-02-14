@@ -9,8 +9,11 @@ import rb.ks.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -19,37 +22,11 @@ public class SimpleMapperUnitTest {
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
-        String json = "{\n" +
-                "  \"inputs\":{\n" +
-                "    \"topic1\":[\"stream1\", \"stream2\"]\n" +
-                "  },\n" +
-                "  \"streams\":{\n" +
-                "    \"stream1\":{\n" +
-                "        \"funcs\":[\n" +
-                "              {\n" +
-                "                \"name\":\"myMapper\",\n" +
-                "                \"className\":\"rb.ks.funcs.SimpleMapper\",\n" +
-                "                \"properties\": {\n" +
-                "                  \"maps\": [\n" +
-                "                    {\"dimPath\":[\"A\",\"B\",\"C\"], \"as\":\"X\"},\n" +
-                "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"Q\"}, \n" +
-                "                    {\"dimPath\":[\"Y\",\"W\",\"P\"]}, \n" +
-                "                    {\"dimPath\":[\"timestamp\"]}\n" +
-                "                  ]\n" +
-                "                }\n" +
-                "              }\n" +
-                "        ],\n" +
-                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"generate\"},\n" +
-                "        \"sinks\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"X\"},\n" +
-                "            {\"topic\":\"output1\"}\n" +
-                "        ]\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("simple-mapper.json").getFile());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        PlanModel model = objectMapper.readValue(json, PlanModel.class);
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
         streamBuilder.builder(model);
     }
 
