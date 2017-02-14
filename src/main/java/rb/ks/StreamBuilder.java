@@ -18,6 +18,7 @@ import java.util.*;
 
 public class StreamBuilder {
     Map<String, KStream<String, Map<String, Object>>> kStreams = new HashMap<>();
+    Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
     Set<String> usedStores = new HashSet<>();
 
     public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
@@ -41,6 +42,14 @@ public class StreamBuilder {
         return kStreams.get(streamName);
     }
 
+    public Map<String, Function> getFunctions(String streamName) {
+        return streamFunctions.get(streamName);
+    }
+
+    public Set<String> usedStores() {
+        return usedStores;
+    }
+
     private void createInputs(KStreamBuilder builder, PlanModel model) {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
@@ -57,6 +66,7 @@ public class StreamBuilder {
                 for (FunctionModel funcModel : funcModels) {
                     KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
 
+                    String name = funcModel.getName();
                     String className = funcModel.getClassName();
                     Map<String, Object> properties = funcModel.getProperties();
                     List<String> stores = funcModel.getStores();
@@ -91,12 +101,15 @@ public class StreamBuilder {
                             );
                         }
 
+                        Map<String, Function> functions = streamFunctions.get(streams.getKey());
+                        if (functions == null) functions = new HashMap<>();
+                        functions.put(name, func);
+
+                        streamFunctions.put(streams.getKey(), functions);
                         kStreams.put(streams.getKey(), kStream);
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
+                    } catch (InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
