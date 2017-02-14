@@ -39,6 +39,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
 
         String definedKey = "";
+        KeyValue<String, Map<String, Object>> returnValue = new KeyValue<>(key, value);
 
         if (keys != null && !keys.isEmpty()) {
 
@@ -95,19 +96,17 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             }
 
             counters.putAll(newCounters);
-            counters.putAll(newTimestamp);
-
         } else {
 
-            if(!firstTimeView) value = null;
+            if(!firstTimeView) returnValue = null;
 
             counters = newCounters;
-            counters.putAll(newTimestamp);
         }
 
+        counters.putAll(newTimestamp);
         storeCounter.put(definedKey, counters);
 
-        return new KeyValue<>(key, value);
+        return returnValue;
     }
 
     @Override
