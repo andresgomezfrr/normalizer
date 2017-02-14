@@ -9,7 +9,8 @@
           "name":"diffCounterMapper",
           "className":"rb.ks.funcs.impl.DiffCounterStoreMapper",
           "properties": {
-            "counters": ["X"]
+            "counters": ["X"],
+            "timestamp": "time"
           },
           "stores":["counter-store"]
         }
