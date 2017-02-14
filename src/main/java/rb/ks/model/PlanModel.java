@@ -50,8 +50,6 @@ public class PlanModel {
     public void validate() throws PlanBuilderException {
         validateInputs();
         validateStreams();
-        validateTimestamper();
-        validateSinks();
     }
 
     private void validateInputs() throws PlanBuilderException {
@@ -71,40 +69,6 @@ public class PlanModel {
         for (String stream : streams.keySet()) {
             if (!definedStreams.contains(stream)) {
                 throw new PlanBuilderException(String.format("Stream[%s]: Not defined on inputs. Available inputs %s", stream, inputs));
-            }
-        }
-    }
-
-    private void validateTimestamper() throws PlanBuilderException {
-        for (Map.Entry<String, StreamModel> stream : streams.entrySet()) {
-            List<MapperModel> mappers = stream.getValue().getMappers();
-
-            if (mappers != null && !mappers.isEmpty()) {
-                Set<String> dimensions = mappers.stream().map(mapper -> mapper.as).collect(Collectors.toSet());
-                TimestamperModel timestamper = stream.getValue().getTimestamper();
-
-                if (!dimensions.contains(timestamper.getTimestampDim()) && !timestamper.getFormat().equals("generate")) {
-                    throw new PlanBuilderException(String.format("Stream[%s]:" +
-                                    " Timestamp dimension [%s] is not on the message. Available dimensions %s",
-                            stream.getKey(), timestamper.getTimestampDim(), dimensions));
-                }
-            }
-        }
-    }
-
-    private void validateSinks() throws PlanBuilderException {
-        for (Map.Entry<String, StreamModel> stream : streams.entrySet()) {
-            List<MapperModel> mappers = stream.getValue().getMappers();
-
-            if (mappers != null && !mappers.isEmpty()) {
-                Set<String> dimensions = stream.getValue().getMappers().stream().map(mapper -> mapper.as).collect(Collectors.toSet());
-                for (SinkModel sink : stream.getValue().getSinks()) {
-                    if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY) && !dimensions.contains(sink.getPartitionBy())) {
-                        throw new PlanBuilderException(String.format("Stream[%s]:" +
-                                        " PartitionBy dimension [%s] is not on the message. Available dimensions %s",
-                                stream.getKey(), sink.getPartitionBy(), dimensions));
-                    }
-                }
             }
         }
     }

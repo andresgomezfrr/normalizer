@@ -1,4 +1,4 @@
-package unit;
+package rb.ks.model;
 
 import org.junit.Test;
 import rb.ks.model.TimestamperModel;
