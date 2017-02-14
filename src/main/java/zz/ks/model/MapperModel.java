@@ -14,8 +14,12 @@ public class MapperModel {
     public MapperModel(@JsonProperty("dimPath") List<String> dimPath,
                        @JsonProperty("as") String as) {
         this.dimPath = dimPath;
-        if (as != null) this.as = as;
-        else this.as = dimPath.get(dimPath.size() - 1);
+
+        if (as != null ) {
+            this.as = as;
+        } else if(dimPath != null) {
+            this.as = dimPath.get(dimPath.size() - 1);
+        }
     }
 
     @JsonProperty

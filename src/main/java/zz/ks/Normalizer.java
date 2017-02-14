@@ -24,9 +24,10 @@ public class Normalizer {
                 "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"Q\"},\n" +
                 "                    {\"dimPath\":[\"timestamp\"]}\n" +
                 "                  ],\n" +
+                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"iso\"},\n" +
                 "        \"sinks\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"Q\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"sec\"}},\n" +
-                "            {\"topic\":\"output1\", \"partitionBy\":\"Q\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"sec\"}}\n" +
+                "            {\"topic\":\"output\", \"partitionBy\":\"Q\"},\n" +
+                "            {\"topic\":\"output1\"}\n" +
                 "        ]\n" +
                 "    },\n" +
                 "    \"stream2\":{\n" +
@@ -35,12 +36,13 @@ public class Normalizer {
                 "                    {\"dimPath\":[\"Y\",\"W\",\"Z\"], \"as\":\"R\"},\n" +
                 "                    {\"dimPath\":[\"timestamp\"]}\n" +
                 "                  ],\n" +
+                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"iso\"},\n" +
                 "        \"sinks\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"Q\", \"timestamp\":{\"dimension\":\"timestamp\", \"type\":\"sec\"}}\n" +
+                "            {\"topic\":\"output\", \"partitionBy\":\"R\"}\n" +
                 "        ]\n" +
                 "    }\n" +
                 "  }\n" +
-                "}";
+                "}\n";
 
         Properties streamsConfiguration = new Properties();
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "ks-normalizer");
