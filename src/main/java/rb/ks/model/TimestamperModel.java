@@ -4,9 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rb.ks.Normalizer;
 import rb.ks.utils.ConversionUtils;
 
 public class TimestamperModel {
+    private static final Logger log = LoggerFactory.getLogger(TimestamperModel.class);
+
     String timestampDim = "timestamp";
     String format = "generate";
     DateTimeFormatter patternFormat = new DateTimeFormatterBuilder()
@@ -50,12 +55,12 @@ public class TimestamperModel {
                     timestamp = patternFormat.parseDateTime((String) time).getMillis() / 1000L;
                     break;
                 default:
-                    //TODO: Log format [] not valid use generate.
+                    log.warn("Log format not valid, used 'generate'");
                     timestamp = System.currentTimeMillis() / 1000L;
                     break;
             }
         } else {
-            // TODO: Logger WARN timestamp is null.
+            log.warn("Timestamp is null!!");
         }
 
         return timestamp;
