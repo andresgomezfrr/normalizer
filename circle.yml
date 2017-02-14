@@ -20,8 +20,10 @@ deployment:
   master:
     branch: master
     commands:
-      - mvn deploy -Dmaven.test.skip=true -P dist
+      - docker login -u AWS -p ${AWS_REGISTRY_KEY} -e none ${AWS_REGISTRY_URL}
+      - mvn deploy -Dmaven.test.skip=true -P docker
   release:
     tag: /normalizer-.*/
     commands:
-      - mvn deploy -Dmaven.test.skip=true -P dist
+      - docker login -u AWS -p ${AWS_REGISTRY_KEY} -e none ${AWS_REGISTRY_URL}
+      - mvn deploy -Dmaven.test.skip=true -P docker
