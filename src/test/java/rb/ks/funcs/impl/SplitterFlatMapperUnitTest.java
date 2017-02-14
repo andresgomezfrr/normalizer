@@ -28,7 +28,7 @@ public class SplitterFlatMapperUnitTest {
         return (date.getMillis() / 1000);
     }
 
-    static StreamBuilder streamBuilder = new StreamBuilder();
+    static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
