@@ -91,7 +91,7 @@ public class StreamBuilder {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
 
-            if(config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
+            if (config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
                 topic = String.format("%s_%s", appId, topic);
             }
 
@@ -228,7 +228,7 @@ public class StreamBuilder {
                         if (sink.getType().equals(SinkModel.KAFKA_TYPE)) {
                             String topic = sink.getTopic();
 
-                            if(config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
+                            if (config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
                                 topic = String.format("%s_%s", appId, topic);
                             }
 
@@ -247,8 +247,10 @@ public class StreamBuilder {
                                     newBranch = kStream.branch((key, value) -> true)[0];
                                 } else {
                                     newBranch = kStream.through(
-                                            (key, value, numPartitions) ->
-                                                    Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions,
+                                            (key, value, numPartitions) -> {
+                                                if (key == null) key = "NULL_KEY";
+                                                return Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions;
+                                            },
                                             String.format("__%s_normalizer_%s_to_%s", appId, streams.getKey(), newStreamName)
                                     );
                                 }
