@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class JqFlatMapperUnitTest {
-    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1", null);
     private static JqFlatMapper jqFlatMapper;
 
     @BeforeClass

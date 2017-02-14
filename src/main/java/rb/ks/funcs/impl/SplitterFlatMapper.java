@@ -7,6 +7,7 @@ import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.funcs.FlatMapperFunction;
+import rb.ks.metrics.MetricsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class SplitterFlatMapper extends FlatMapperFunction {
     SplitterModel splitter;
 
     @Override
-    public void prepare(Map<String, Object> properties) {
+    public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         splitter = new SplitterModel(
                 (List<String>) properties.get("dimensions"),
                 (String) properties.get("timestampDim"),

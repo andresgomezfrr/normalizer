@@ -8,6 +8,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.funcs.FlatMapperFunction;
+import rb.ks.metrics.MetricsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class JqFlatMapper extends FlatMapperFunction {
     String jqQuery;
 
     @Override
-    public void prepare(Map<String, Object> properties) {
+    public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         jqQuery = (String) properties.get("jqQuery");
         if (jqQuery != null) {
             try {

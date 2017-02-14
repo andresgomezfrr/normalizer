@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.builder.Builder;
 import rb.ks.builder.config.Config;
+import rb.ks.metrics.MetricsManager;
 
 public class Normalizer {
     private static final Logger log = LoggerFactory.getLogger(Normalizer.class);
@@ -11,7 +12,7 @@ public class Normalizer {
     public static void main(String[] args) throws Exception {
         if (args.length == 1) {
             Config config = new Config(args[0]);
-            Builder builder = new Builder(config);
+            Builder builder = new Builder(config.clone());
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 builder.close();
