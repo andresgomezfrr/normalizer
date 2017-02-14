@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
@@ -19,6 +20,7 @@ public class Normalizer {
 
     public static void main(String[] args) throws IOException, PlanBuilderException {
         if(args.length == 5) {
+            log.info("-------- TOPOLOGY BUILD START --------");
             File file = new File(args[0]);
 
             Properties streamsConfiguration = new Properties();
@@ -33,13 +35,16 @@ public class Normalizer {
             PlanModel model = objectMapper.readValue(file, PlanModel.class);
             System.out.println(model.toString());
             StreamBuilder streamBuilder = new StreamBuilder();
+            KStreamBuilder builder = streamBuilder.builder(model);
+            log.info("--------  TOPOLOGY BUILD END  --------");
 
-            KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
+            KafkaStreams streams = new KafkaStreams(builder, streamsConfiguration);
             streams.start();
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 streamBuilder.close();
                 streams.close();
+                log.info("Stopped Normalizer instance.");
             }));
 
 
