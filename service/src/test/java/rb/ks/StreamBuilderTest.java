@@ -1,8 +1,11 @@
 package rb.ks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.streams.StreamsConfig;
 import org.junit.Test;
+import org.mockito.Mockito;
 import rb.ks.builder.StreamBuilder;
+import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.metrics.MetricsManager;
@@ -20,7 +23,11 @@ public class StreamBuilderTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         PlanModel model = objectMapper.readValue(file, PlanModel.class);
-        StreamBuilder streamBuilder = new StreamBuilder("APP-ID-1", null);
+
+        Config config = new Config();
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "APP-ID-1");
+
+        StreamBuilder streamBuilder = new StreamBuilder(config, null);
         streamBuilder.builder(model);
 
         streamBuilder.close();

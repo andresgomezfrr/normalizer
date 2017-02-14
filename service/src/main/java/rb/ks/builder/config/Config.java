@@ -77,6 +77,7 @@ public class Config {
         public static final String METRIC_ENABLE = "metric.enable";
         public static final String METRIC_LISTENERS = "metric.listeners";
         public static final String METRIC_INTERVAL = "metric.interval";
+        public static final String MULTI_ID = "multi.id";
     }
 
     public Config clone() {
