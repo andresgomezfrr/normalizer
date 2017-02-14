@@ -2,20 +2,20 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: kafka
-    component: kafka-normalizer
-  name: ks-normalizer
+    app: normalizer
+    component: kafka-streams
+  name: normalizer
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: kafka
-        component: kafka-normalizer
+        app: normalizer
+        component: kafka-streams
     spec:
       containers:
-      - name: ks-normalizer
-        image: normalizer:v0.1
+      - name: normalizer
+        image: normalizer:latest
         env:
           - name: APPLICATION_ID
             value: "my-kubernetes-normalizer-id"
