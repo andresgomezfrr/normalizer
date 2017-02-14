@@ -28,6 +28,7 @@
 
                 <configuration>
                     <useConfigFile>true</useConfigFile>
+                    <forceTags>true</forceTags>
 
                     <imageName>${project.parent.artifactId}</imageName>
 
