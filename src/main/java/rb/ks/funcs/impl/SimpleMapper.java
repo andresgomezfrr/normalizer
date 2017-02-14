@@ -1,8 +1,6 @@
 package rb.ks.funcs.impl;
 
 import org.apache.kafka.streams.KeyValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import rb.ks.funcs.MapperFunction;
 
 import java.util.ArrayList;
