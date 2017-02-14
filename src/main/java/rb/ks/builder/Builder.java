@@ -20,20 +20,15 @@ import static rb.ks.builder.config.Config.ConfigProperties.BOOTSTRAPER_CLASSNAME
 
 public class Builder {
     private static final Logger log = LoggerFactory.getLogger(Builder.class);
-    Properties properties = new Properties();
+    Config config;
     StreamBuilder streamBuilder;
     KafkaStreams streams;
     ThreadBootstraper threadBootstraper;
 
     public Builder(Config config) throws Exception {
-        properties.put(ZOOKEEPER_CONNECT_CONFIG, config.get(ZOOKEEPER_CONNECT_CONFIG));
-        properties.put(BOOTSTRAP_SERVERS_CONFIG, config.get(BOOTSTRAP_SERVERS_CONFIG));
-        properties.put(APPLICATION_ID_CONFIG, config.get(APPLICATION_ID_CONFIG));
-        properties.put(NUM_STREAM_THREADS_CONFIG, config.get(NUM_STREAM_THREADS_CONFIG).toString());
-        properties.put(KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        properties.put(VALUE_SERDE_CLASS_CONFIG, JsonSerde.class.getName());
+        this.config = config;
 
-        streamBuilder = new StreamBuilder(properties.getProperty(APPLICATION_ID_CONFIG));
+        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG));
 
         Class bootstraperClass = Class.forName(config.get(BOOTSTRAPER_CLASSNAME));
         threadBootstraper = (ThreadBootstraper) bootstraperClass.newInstance();
@@ -55,9 +50,9 @@ public class Builder {
         KStreamBuilder builder = streamBuilder.builder(model);
         log.info("--------  TOPOLOGY BUILD END  --------");
 
-        streams = new KafkaStreams(builder, properties);
+        streams = new KafkaStreams(builder, config.getProperties());
         streams.start();
-        log.info("Started Normalizer with conf {}", properties);
+        log.info("Started Normalizer with conf {}", config.getProperties());
     }
 
     public void close(){

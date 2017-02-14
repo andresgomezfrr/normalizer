@@ -1,14 +1,21 @@
 package rb.ks.builder.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.common.serialization.Serdes;
+import rb.ks.serializers.JsonSerde;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
+import static org.apache.kafka.streams.StreamsConfig.KEY_SERDE_CLASS_CONFIG;
+import static org.apache.kafka.streams.StreamsConfig.VALUE_SERDE_CLASS_CONFIG;
 
 public class Config {
     Map<String, Object> config;
+    Properties properties = new Properties();
 
     public Config() {
         config = new HashMap<>();
@@ -27,8 +34,11 @@ public class Config {
         init(objectMapper.readValue(new File(configPath), Map.class));
     }
 
-    private void init(Map<String, Object> properties) {
-        config = properties;
+    private void init(Map<String, Object> mapProperties) {
+        config = mapProperties;
+        properties.putAll(mapProperties);
+        properties.put(KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        properties.put(VALUE_SERDE_CLASS_CONFIG, JsonSerde.class.getName());
     }
 
     public <T> T get(String property) {
@@ -56,6 +66,10 @@ public class Config {
         config.put(property, value);
 
         return this;
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 
     public static class ConfigProperties {
