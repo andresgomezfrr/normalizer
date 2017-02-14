@@ -55,4 +55,16 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     public void stop() {
         if (counterFields != null) counterFields.clear();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(" {")
+                .append("counters: ").append(counterFields).append(", ")
+                .append("sendIfZero: ").append(sendIfZero).append(", ")
+                .append("stores: ").append(storeCounter.name())
+                .append("} ");
+
+        return builder.toString();
+    }
 }
