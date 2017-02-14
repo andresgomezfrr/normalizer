@@ -7,6 +7,8 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
 import org.apache.kafka.streams.state.Stores;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.funcs.FlatMapperFunction;
 import rb.ks.funcs.Function;
@@ -17,6 +19,8 @@ import rb.ks.model.*;
 import java.util.*;
 
 public class StreamBuilder {
+    private static final Logger log = LoggerFactory.getLogger(StreamBuilder.class);
+
     Map<String, KStream<String, Map<String, Object>>> kStreams = new HashMap<>();
     Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
     Set<String> usedStores = new HashSet<>();
@@ -158,7 +162,8 @@ public class StreamBuilder {
                                 if (newKey != null)
                                     return new KeyValue<>(newKey.toString(), value);
                                 else {
-                                    // TODO: Logger the new partition key is not valid!
+                                    log.warn("Partition key {} isn't on message {}",
+                                            sink.getPartitionBy(), value);
                                     return new KeyValue<>(key, value);
                                 }
                             }
