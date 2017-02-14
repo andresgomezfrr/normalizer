@@ -22,7 +22,6 @@ sections: [
     ['home', 'Home'],
     ['getting', 'Getting Started'],
     ['conf', 'Configuration'],
-    ['stream-conf', 'Stream Configuration'],
     ['bootstrapper', 'Bootstrapper'],
     ['funcs', 'Funcstions'],
     ['metrics', 'Metrics'],
