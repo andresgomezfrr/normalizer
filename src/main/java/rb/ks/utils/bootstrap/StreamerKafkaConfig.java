@@ -1,4 +1,4 @@
-package rb.ks.utils;
+package rb.ks.utils.bootstrap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -119,7 +119,7 @@ public class StreamerKafkaConfig {
                 System.out.println(String.format("Don't find any stream configuration with app id [%s]", args[1]));
             }
         } else {
-            System.out.println("Usage: java -cp normalizer-selfcontained.jar rb.ks.utils.StreamerKafkaConfig <bootstrap_kafka_servers> <app_id> [stream_config_path]");
+            System.out.println("Usage: java -cp normalizer-selfcontained.jar rb.ks.utils.bootstrap.StreamerKafkaConfig <bootstrap_kafka_servers> <app_id> [stream_config_path]");
         }
     }
 }
