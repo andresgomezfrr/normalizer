@@ -23,14 +23,19 @@ public class ArrayFlattenMapper extends FlatMapperFunction {
         if (flatDimension != null) {
 
             if (value.containsKey(flatDimension)) {
-                List<String> array = (List<String>) value.remove(flatDimension);
+                List<Object> array = (List<Object>) value.remove(flatDimension);
 
                 if(array != null) {
                     results = array.stream().map(val -> {
 
                         Map<String, Object> newValue = new HashMap<>();
                         newValue.putAll(value);
-                        newValue.put(flatDimension, val);
+
+                        if(val instanceof Map) {
+                            newValue.putAll((Map<String, Object>) val);
+                        } else {
+                            newValue.put(flatDimension, val);
+                        }
 
                         KeyValue<String, Map<String, Object>> kv = new KeyValue<>(key, newValue);
 

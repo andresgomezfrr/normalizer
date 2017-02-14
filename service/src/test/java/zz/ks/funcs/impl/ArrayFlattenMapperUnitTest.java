@@ -65,6 +65,7 @@ public class ArrayFlattenMapperUnitTest {
         message.put("C", 12345);
         message.put("ARRAY", Arrays.asList("X", "Y", "Z"));
 
+
         List<KeyValue<String, Map<String, Object>>> expectedResult = new ArrayList<>();
 
         Map<String, Object> expected = new HashMap<>();
@@ -88,6 +89,63 @@ public class ArrayFlattenMapperUnitTest {
         expected.put("B", "VALUE-B");
         expected.put("C", 12345);
         expected.put("ARRAY", "Z");
+
+        expectedResult.add(new KeyValue<>("KEY_1", expected));
+
+        List<KeyValue<String, Map<String, Object>>> result = (List<KeyValue<String, Map<String, Object>>>) myFilter.process("KEY_1", message);
+
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void mapArrayProcess() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myArrayFlatMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FlatMapperFunction);
+        ArrayFlattenMapper myFilter = (ArrayFlattenMapper) myFunc;
+
+        Map<String, Object> value1 = new HashMap<>();
+        value1.put("type", "type1");
+        value1.put("value", "value1");
+        Map<String, Object> value2 = new HashMap<>();
+        value1.put("type", "type2");
+        value1.put("value", "value2");
+        Map<String, Object> value3 = new HashMap<>();
+        value1.put("type", "type3");
+        value1.put("value", "value3");
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("A", "VALUE-A");
+        message.put("B", "VALUE-B");
+        message.put("C", 12345);
+        message.put("ARRAY", Arrays.asList(value1, value2, value3));
+
+
+        List<KeyValue<String, Map<String, Object>>> expectedResult = new ArrayList<>();
+
+        Map<String, Object> expected = new HashMap<>();
+        expected.put("A", "VALUE-A");
+        expected.put("B", "VALUE-B");
+        expected.put("C", 12345);
+        expected.putAll(value1);
+
+        expectedResult.add(new KeyValue<>("KEY_1", expected));
+
+        expected = new HashMap<>();
+        expected.put("A", "VALUE-A");
+        expected.put("B", "VALUE-B");
+        expected.put("C", 12345);
+        expected.putAll(value2);
+
+        expectedResult.add(new KeyValue<>("KEY_1", expected));
+
+        expected = new HashMap<>();
+        expected.put("A", "VALUE-A");
+        expected.put("B", "VALUE-B");
+        expected.put("C", 12345);
+        expected.putAll(value3);
 
         expectedResult.add(new KeyValue<>("KEY_1", expected));
 
