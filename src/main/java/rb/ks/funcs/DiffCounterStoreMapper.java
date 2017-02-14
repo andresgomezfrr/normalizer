@@ -1,31 +1,55 @@
 package rb.ks.funcs;
 
 import org.apache.kafka.streams.KeyValue;
-import org.jboss.netty.util.internal.ConversionUtil;
-import rb.ks.utils.ConversionUtils;
+import org.apache.kafka.streams.state.KeyValueStore;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static rb.ks.utils.ConversionUtils.*;
+
 public class DiffCounterStoreMapper extends MapperStoreFunction {
-    List<String> counters;
+    List<String> counterFields;
+    KeyValueStore<String, Map<String, Long>> storeCounter;
 
     @Override
     public void prepare(Map<String, Object> properties) {
-        counters = (List<String>) properties.get("counters");
+        counterFields = (List<String>) properties.get("counters");
+        storeCounter = getStore("counter-store");
     }
 
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
-        for(String counterField : counters){
-            Long counter = ConversionUtils.toLong(value.remove(counterField);
+        Map<String, Long> newCounters = new HashMap<>();
+
+        for (String counterField : counterFields) {
+            Long counter = toLong(value.remove(counterField));
+            if (counter != null) newCounters.put(counterField, counter);
         }
 
+        Map<String, Long> counters = storeCounter.get(key);
+
+        if (counters != null) {
+            for (Map.Entry<String, Long> counter : newCounters.entrySet()) {
+                Long lastValue = toLong(counters.get(counter.getKey()));
+                if (lastValue != null) {
+                    Long diff = counter.getValue() - lastValue;
+                    value.put(counter.getKey(), diff);
+                }
+            }
+
+            counters.putAll(newCounters);
+        } else {
+            counters = newCounters;
+        }
+
+        storeCounter.put(key, counters);
         return new KeyValue<>(key, value);
     }
 
     @Override
     public void stop() {
-
+        if(counterFields != null) counterFields.clear();
     }
 }
