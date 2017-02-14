@@ -46,6 +46,10 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
         stop();
     }
 
+    public List<String> getAvailableStores(){
+        return availableStores;
+    }
+
     public <V> KeyValueStore<String, V> getStore(String storeName){
         return (KeyValueStore<String, V>) stores.get(storeName);
     }
