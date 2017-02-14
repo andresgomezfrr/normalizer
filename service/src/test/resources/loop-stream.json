@@ -8,7 +8,7 @@
       "funcs":[
         {
           "name":"simple-mapper",
-          "className":"rb.ks.funcs.impl.SimpleMapper",
+          "className":"zz.ks.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {"dimPath":["body","mac"], "as":"new_key"},

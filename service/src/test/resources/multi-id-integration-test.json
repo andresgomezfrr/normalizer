@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myMap",
-          "className":"rb.ks.funcs.impl.SimpleMapper",
+          "className":"zz.ks.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {"dimPath":["A","B","C"], "as":"X"},

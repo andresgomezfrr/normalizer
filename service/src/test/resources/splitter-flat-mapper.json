@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"mySplitterFlatMapper",
-          "className":"rb.ks.funcs.impl.SplitterFlatMapper",
+          "className":"zz.ks.funcs.impl.SplitterFlatMapper",
           "properties": {
             "dimensions": ["A", "B", "C", "D"]
           }
