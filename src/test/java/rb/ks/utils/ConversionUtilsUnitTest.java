@@ -3,6 +3,7 @@ package rb.ks.utils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ConversionUtilsUnitTest {
 
@@ -25,6 +26,11 @@ public class ConversionUtilsUnitTest {
         long number = 1234567890L;
 
         assertEquals(ConversionUtils.toLong(number), new Long(number));
+    }
+
+    @Test
+    public void notANumberException() {
+        assertNull(ConversionUtils.toLong("ABC"));
     }
 
 }
