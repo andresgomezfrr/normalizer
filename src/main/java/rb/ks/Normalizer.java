@@ -8,6 +8,7 @@ import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonSerde;
 
@@ -18,7 +19,7 @@ import java.util.Properties;
 public class Normalizer {
     private static final Logger log = LoggerFactory.getLogger(Normalizer.class);
 
-    public static void main(String[] args) throws IOException, PlanBuilderException {
+    public static void main(String[] args) throws IOException, PlanBuilderException, TryToDoLoopException {
         if(args.length == 5) {
             File file = new File(args[0]);
 
