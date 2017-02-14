@@ -80,7 +80,6 @@ public class StreamBuilder {
                         properties.put("__STORES", stores);
                         stores.forEach(store -> {
                             if (!usedStores.contains(store)) {
-                                System.out.println("Creating store: " + store);
                                 StateStoreSupplier storeSupplier = Stores.create(store)
                                         .withKeys(Serdes.String())
                                         .withValues(new JsonSerde())
