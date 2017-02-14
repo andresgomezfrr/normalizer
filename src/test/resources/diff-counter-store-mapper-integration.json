@@ -1,6 +1,6 @@
 {
   "inputs":{
-    "topic1":["stream1"]
+    "input1":["stream1"]
   },
   "streams":{
     "stream1":{
@@ -17,7 +17,7 @@
         }
       ],
       "sinks":[
-        {"topic":"output"}
+        {"topic":"output1"}
       ]
     }
   }

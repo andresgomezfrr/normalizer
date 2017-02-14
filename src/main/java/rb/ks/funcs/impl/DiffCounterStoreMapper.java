@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static rb.ks.utils.Constants.*;
 import static rb.ks.utils.ConversionUtils.toLong;
 
 public class DiffCounterStoreMapper extends MapperStoreFunction {
@@ -15,6 +16,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     KeyValueStore<String, Map<String, Long>> storeCounter;
     Boolean sendIfZero;
     String timestamp;
+    List<String> keys;
 
     @Override
     public void prepare(Map<String, Object> properties) {
@@ -22,6 +24,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
         storeCounter = getStore("counter-store");
         sendIfZero = (Boolean) properties.get("sendIfZero");
         timestamp = String.valueOf(properties.get("timestamp"));
+        keys = (List<String>) properties.get("keys");
 
         if (sendIfZero == null) sendIfZero = true;
 
@@ -30,6 +33,25 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
 
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
+
+        String definedKey = "";
+
+        if (keys != null && !keys.isEmpty()) {
+
+            for (String keyElement : keys) {
+
+                if(keyElement.equals(__KEY))
+                    definedKey += key;
+                else if (value.containsKey(keyElement))
+                    definedKey += value.get(keyElement).toString();
+
+            }
+
+            if (definedKey.isEmpty())
+                definedKey = key;
+        }
+
+
         Map<String, Long> newCounters = new HashMap<>();
         Map<String, Long> newTimestamp = new HashMap<>();
 
@@ -40,14 +62,14 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
 
         Long timestamp = toLong(value.remove(this.timestamp));
 
-        if(timestamp != null) {
+        if (timestamp != null) {
             newTimestamp.put(this.timestamp, timestamp);
         } else {
-            timestamp = System.currentTimeMillis()/1000;
+            timestamp = System.currentTimeMillis() / 1000;
             newTimestamp.put(this.timestamp, timestamp);
         }
 
-        Map<String, Long> counters = storeCounter.get(key);
+        Map<String, Long> counters = storeCounter.get(definedKey);
 
         if (counters != null) {
 
@@ -59,9 +81,9 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 }
             }
 
-            Long lastTimestamp = counters.get(this.timestamp);
+            Long lastTimestamp = toLong(counters.get(this.timestamp));
 
-            if(lastTimestamp != null) {
+            if (lastTimestamp != null) {
                 value.put("last_timestamp", lastTimestamp);
                 value.put(this.timestamp, timestamp);
             }
@@ -75,7 +97,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             counters.putAll(newTimestamp);
         }
 
-        storeCounter.put(key, counters);
+        storeCounter.put(definedKey, counters);
 
         return new KeyValue<>(key, value);
     }
@@ -92,7 +114,8 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 .append("counters: ").append(counterFields).append(", ")
                 .append("sendIfZero: ").append(sendIfZero).append(", ")
                 .append("stores: ").append(storeCounter.name()).append(", ")
-                .append("timestamp: ").append(timestamp)
+                .append("timestamp: ").append(timestamp).append(", ")
+                .append("keys: ").append(keys)
                 .append("} ");
 
         return builder.toString();
