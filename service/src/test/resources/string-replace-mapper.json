@@ -1,0 +1,23 @@
+{
+  "inputs":{
+    "input":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myStringReplacementFunction",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.StringReplaceMapper",
+          "properties": {
+            "dimension": "DIM-C",
+            "target_string": "-",
+            "replacement_string": "."
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}
