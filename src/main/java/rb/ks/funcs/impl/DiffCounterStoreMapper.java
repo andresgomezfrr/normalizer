@@ -3,6 +3,7 @@ package rb.ks.funcs.impl;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.state.KeyValueStore;
 import rb.ks.funcs.MapperStoreFunction;
+import rb.ks.metrics.MetricsManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     Boolean firstTimeView;
 
     @Override
-    public void prepare(Map<String, Object> properties) {
+    public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         counterFields = (List<String>) properties.get("counters");
         storeCounter = getStore("counter-store");
         sendIfZero = (Boolean) properties.get("sendIfZero");

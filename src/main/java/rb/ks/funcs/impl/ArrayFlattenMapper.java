@@ -2,6 +2,7 @@ package rb.ks.funcs.impl;
 
 import org.apache.kafka.streams.KeyValue;
 import rb.ks.funcs.FlatMapperFunction;
+import rb.ks.metrics.MetricsManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,7 +12,7 @@ public class ArrayFlattenMapper extends FlatMapperFunction {
     String flatDimension;
 
     @Override
-    public void prepare(Map<String, Object> properties) {
+    public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         flatDimension = (String) properties.get("flat_dimension");
     }
 

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.funcs.*;
+import rb.ks.metrics.MetricsManager;
 import rb.ks.model.FunctionModel;
 import rb.ks.model.PlanModel;
 import rb.ks.model.SinkModel;
@@ -26,9 +27,11 @@ import static rb.ks.utils.Constants.__STORES;
 
 public class StreamBuilder {
     String appId;
+    MetricsManager metricsManager;
 
-    public StreamBuilder(String appId) {
+    public StreamBuilder(String appId, MetricsManager metricsManager) {
         this.appId = appId;
+        this.metricsManager = metricsManager;
     }
 
     private static final Logger log = LoggerFactory.getLogger(StreamBuilder.class);
@@ -258,7 +261,7 @@ public class StreamBuilder {
             throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         Class funcClass = Class.forName(className);
         Function func = (Function) funcClass.newInstance();
-        func.init(properties);
+        func.init(properties, metricsManager);
         return func;
     }
 }

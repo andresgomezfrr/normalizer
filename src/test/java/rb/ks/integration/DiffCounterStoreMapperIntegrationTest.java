@@ -76,7 +76,7 @@ public class DiffCounterStoreMapperIntegrationTest {
             fail("Exception : " + e.getMessage());
         }
 
-        StreamBuilder streamBuilder = new StreamBuilder(appId);
+        StreamBuilder streamBuilder = new StreamBuilder(appId, null);
 
         KafkaStreams streams = null;
 

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import rb.ks.builder.Builder;
 import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.metrics.MetricsManager;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -30,7 +31,7 @@ public class KafkaBootstraper extends ThreadBootstraper {
     Builder builder;
 
     @Override
-    public void init(Builder builder, Config config) throws IOException, PlanBuilderException {
+    public void init(Builder builder, Config config, MetricsManager metricsManager) throws IOException, PlanBuilderException {
         this.builder = builder;
         Properties consumerConfig = new Properties();
         appId = config.get(APPLICATION_ID_CONFIG);

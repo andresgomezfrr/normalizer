@@ -19,7 +19,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class SimpleMapperUnitTest {
-    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1", null);
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {

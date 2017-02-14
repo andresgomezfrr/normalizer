@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import rb.ks.builder.bootstrap.ThreadBootstraper;
 import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.metrics.MetricsManager;
 import rb.ks.model.PlanModel;
 import rb.ks.serializers.JsonSerde;
 
@@ -24,20 +25,23 @@ public class Builder {
     StreamBuilder streamBuilder;
     KafkaStreams streams;
     ThreadBootstraper threadBootstraper;
+    MetricsManager metricsManager;
 
-    public Builder(Config config) throws Exception {
+    public Builder(Config config, MetricsManager metricsManager) throws Exception {
         this.config = config;
+        this.metricsManager = metricsManager;
 
-        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG));
+        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG), metricsManager);
 
         Class bootstraperClass = Class.forName(config.get(BOOTSTRAPER_CLASSNAME));
         threadBootstraper = (ThreadBootstraper) bootstraperClass.newInstance();
-        threadBootstraper.init(this, config.clone());
+        threadBootstraper.init(this, config.clone(), metricsManager);
         threadBootstraper.start();
     }
 
     public void updateStreamConfig(String streamConfig) throws IOException, PlanBuilderException {
         if(streams != null) {
+            metricsManager.clean();
             streamBuilder.close();
             streams.close();
             log.info("Stopped Normalizer process.");
