@@ -1,0 +1,21 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myArrayFlatMapper",
+          "className":"rb.ks.funcs.impl.ArrayFlattenMapper",
+          "properties": {
+            "flat_dimension": "ARRAY"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}
