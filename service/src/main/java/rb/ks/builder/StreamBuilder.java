@@ -9,6 +9,7 @@ import org.apache.kafka.streams.processor.StateStoreSupplier;
 import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.funcs.*;
@@ -22,15 +23,18 @@ import rb.ks.serializers.JsonSerde;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static rb.ks.utils.Constants.__APP_ID;
 import static rb.ks.utils.Constants.__STORES;
 
 public class StreamBuilder {
     String appId;
     MetricsManager metricsManager;
+    Config config;
 
-    public StreamBuilder(String appId, MetricsManager metricsManager) {
-        this.appId = appId;
+    public StreamBuilder(Config config, MetricsManager metricsManager) {
+        this.appId = config.get(APPLICATION_ID_CONFIG);
+        this.config = config;
         this.metricsManager = metricsManager;
     }
 
@@ -81,6 +85,11 @@ public class StreamBuilder {
     private void createInputStreams(KStreamBuilder builder, PlanModel model) {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
+
+            if(config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
+                topic = String.format("%s_%s", appId, topic);
+            }
+
             KStream<String, Map<String, Object>> kstream = builder.stream(topic);
             for (String stream : inputs.getValue()) {
                 log.info("Creating stream [{}]", stream);
@@ -210,9 +219,15 @@ public class StreamBuilder {
                         }
 
                         if (sink.getType().equals(SinkModel.KAFKA_TYPE)) {
+                            String topic = sink.getTopic();
+
+                            if(config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
+                                topic = String.format("%s_%s", appId, topic);
+                            }
+
                             kStream.to(
                                     (key, value, numPartitions) ->
-                                            Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions, sink.getTopic()
+                                            Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions, topic
 
                             );
                         } else if (sink.getType().equals(SinkModel.STREAM_TYPE)) {

@@ -33,7 +33,7 @@ public class Builder {
         metricsManager = new MetricsManager(config.clone());
         metricsManager.start();
 
-        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG), metricsManager);
+        streamBuilder = new StreamBuilder(config.clone(), metricsManager);
 
         Class bootstraperClass = Class.forName(config.get(BOOTSTRAPER_CLASSNAME));
         threadBootstraper = (ThreadBootstraper) bootstraperClass.newInstance();

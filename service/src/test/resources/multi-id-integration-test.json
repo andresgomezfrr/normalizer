@@ -1,0 +1,24 @@
+{
+  "inputs":{
+    "input1":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myMap",
+          "className":"rb.ks.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath":["A","B","C"], "as":"X"},
+              {"dimPath":["timestamp"]}
+            ]
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output1"}
+      ]
+    }
+  }
+}
