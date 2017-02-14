@@ -2,10 +2,12 @@ package rb.ks.funcs.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.StreamsConfig;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import rb.ks.builder.StreamBuilder;
+import rb.ks.builder.config.Config;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.funcs.Function;
 import rb.ks.mocks.MockProcessContext;
@@ -23,7 +25,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class DiffCounterStoreMapperUnitTest {
-    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1", null);
+    static Config config = new Config();
+
+    static {
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "app-id-1");
+    }
+
+    private static StreamBuilder streamBuilder = new StreamBuilder(config, null);
     private static DiffCounterStoreMapper diffCounterStoreMapper;
 
     @BeforeClass
