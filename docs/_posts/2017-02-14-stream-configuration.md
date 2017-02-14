@@ -103,6 +103,7 @@ Finally, when you define a sink you can repartitioned the stream using different
 By default the partitioned is done using the Kafka key message, that is indicated using the reserved value `__KEY`.
 
 These examples are the same:
+
 ```json
         "sinks":[
             {"topic":"output", "partitionBy":"__KEY"}
