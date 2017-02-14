@@ -54,4 +54,14 @@ public class JqFlatMapper extends FlatMapperFunction {
 
     @Override
     public void stop() { }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(" {")
+                .append("jqQuery: ").append(jqQuery)
+                .append("} ");
+
+        return builder.toString();
+    }
 }
