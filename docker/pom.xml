@@ -8,7 +8,7 @@
     <parent>
         <artifactId>normalizer</artifactId>
         <groupId>zz.ks.normalizer</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1-rc1</version>
     </parent>
 
     <artifactId>docker</artifactId>
