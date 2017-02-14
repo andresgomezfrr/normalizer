@@ -22,7 +22,7 @@
 
     <scm>
         <developerConnection>scm:git:git@github.com:wizzie-io/normalizer.git</developerConnection>
-        <tag>0.0.1-rc1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
