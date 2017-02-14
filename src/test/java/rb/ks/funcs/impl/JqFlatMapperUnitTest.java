@@ -19,7 +19,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class JqFlatMapperUnitTest {
-    static StreamBuilder streamBuilder = new StreamBuilder();
+    static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
     static JqFlatMapper jqFlatMapper;
 
     @BeforeClass
