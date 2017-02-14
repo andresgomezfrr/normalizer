@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Getting Started"
+title: "Base Tutorial"
 category: getting
 date: 2017-02-14 12:16:55
 ---
