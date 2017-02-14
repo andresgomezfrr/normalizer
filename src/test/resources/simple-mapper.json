@@ -18,7 +18,6 @@
                 }
               }
         ],
-        "timestamper":{"dimension":"timestamp", "format":"generate"},
         "sinks":[
             {"topic":"output", "partitionBy":"X"},
             {"topic":"output1"}

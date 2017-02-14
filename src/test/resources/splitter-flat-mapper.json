@@ -13,7 +13,6 @@
           }
         }
       ],
-      "timestamper":{"dimension":"timestamp", "format":"sec"},
       "sinks":[
         {"topic":"output1"}
       ]
