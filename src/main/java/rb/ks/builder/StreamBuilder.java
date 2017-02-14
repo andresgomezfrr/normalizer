@@ -224,7 +224,7 @@ public class StreamBuilder {
                                     newBranch = kStream.through(
                                             (key, value, numPartitions) ->
                                                     Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions,
-                                            String.format("%s_%s_to_%s", appId, streams.getKey(), newStreamName)
+                                            String.format("__%s_%s_to_%s", appId, streams.getKey(), newStreamName)
                                     );
                                 }
 
