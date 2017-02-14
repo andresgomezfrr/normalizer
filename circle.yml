@@ -1,6 +1,7 @@
 machine:
   java:
     version: openjdk8
+
 test:
   override:
     - sudo mkdir -p /var/log/ks-normalizer/ && sudo chown -R ubuntu:ubuntu /var/log/ks-normalizer/
