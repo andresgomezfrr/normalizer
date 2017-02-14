@@ -20,7 +20,6 @@ public class Normalizer {
 
     public static void main(String[] args) throws IOException, PlanBuilderException {
         if(args.length == 5) {
-            log.info("-------- TOPOLOGY BUILD START --------");
             File file = new File(args[0]);
 
             Properties streamsConfiguration = new Properties();
@@ -33,7 +32,8 @@ public class Normalizer {
 
             ObjectMapper objectMapper = new ObjectMapper();
             PlanModel model = objectMapper.readValue(file, PlanModel.class);
-            System.out.println(model.toString());
+            log.info("Execution plan: {}", model.printExecutionPlan());
+            log.info("-------- TOPOLOGY BUILD START --------");
             StreamBuilder streamBuilder = new StreamBuilder();
             KStreamBuilder builder = streamBuilder.builder(model);
             log.info("--------  TOPOLOGY BUILD END  --------");

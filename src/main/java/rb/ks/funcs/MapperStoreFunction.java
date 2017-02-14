@@ -5,6 +5,9 @@ import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rb.ks.funcs.impl.SimpleMapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.Map;
 
 public abstract class MapperStoreFunction implements Function<KeyValue<String, Map<String, Object>>>,
         Transformer<String, Map<String, Object>, KeyValue<String, Map<String, Object>>> {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private Map<String, Object> properties;
     private Map<String, KeyValueStore> stores = new HashMap<>();
     private List<String> availableStores;
@@ -26,6 +30,7 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
     public void init(ProcessorContext context) {
         availableStores.forEach((storeName) -> stores.put(storeName, (KeyValueStore) context.getStateStore(storeName)));
         prepare(properties);
+        log.info("   with {}", toString());
     }
 
     @Override

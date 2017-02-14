@@ -101,7 +101,7 @@ public class StreamBuilder {
                         }
 
                         try {
-                            log.info("Creating function [{}] to stream [{}]", name, streams.getKey());
+                            log.info("Add function [{}] to stream [{}]", name, streams.getKey());
                             Function func = makeFunction(className, properties);
                             if (func instanceof MapperFunction) {
                                 kStream = kStream.map((MapperFunction) func);
@@ -132,7 +132,7 @@ public class StreamBuilder {
                 addedFuncsToStreams.add(streams.getKey());
             } else {
                 if (!kStreams.containsKey(streams.getKey())) {
-                    log.info("Stream {} is to later iteration.", streams.getKey());
+                    log.debug("Stream {} is to later iteration.", streams.getKey());
                 }
             }
         }
@@ -146,6 +146,8 @@ public class StreamBuilder {
                 for (SinkModel sink : sinks) {
                     KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
                     if (kStream != null) {
+                        log.info("Send to {} [{}]", sink.getType(), sink.getTopic());
+
                         if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
                             kStream = kStream.map(
                                     (key, value) -> {
