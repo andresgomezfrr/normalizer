@@ -96,7 +96,7 @@ public class SplitterFlatMapperUnitTest {
         DateTime timestampDate = formatter.withZoneUTC().parseDateTime("2014-01-01 22:10:42");
 
         message.put("timestamp", secs(timestampDate));
-        message.put("first_switched", secs(firstSwitchDate));
+        message.put("last_timestamp", secs(firstSwitchDate));
         message.put("C", 999L);
         message.put("D", 99L);
 
@@ -122,7 +122,7 @@ public class SplitterFlatMapperUnitTest {
         DateTime timestampDate = formatter.withZoneUTC().parseDateTime("2014-01-01 22:13:42");
 
         message.put("timestamp", secs(timestampDate));
-        message.put("first_switched", secs(firstSwitchDate));
+        message.put("last_timestamp", secs(firstSwitchDate));
         message.put("A", 999);
         message.put("D", 99);
 
@@ -173,7 +173,7 @@ public class SplitterFlatMapperUnitTest {
         DateTime timestampDate = formatter.withZoneUTC().parseDateTime("2016-04-06 10:06:26");
 
         message.put("timestamp", secs(timestampDate));
-        message.put("first_switched", secs(firstSwitchDate));
+        message.put("last_timestamp", secs(firstSwitchDate));
         message.put("B", 316402980L);
         message.put("D", 316402980L);
 

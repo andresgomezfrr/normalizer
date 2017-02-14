@@ -100,7 +100,7 @@ public class SplitterFlatMapperIntegrationTest {
         StringBuilder message2 = new StringBuilder();
 
         message1.append("{")
-                .append("\"first_switched\": ")
+                .append("\"last_timestamp\": ")
                 .append((int) secs(firstswitched1))
                 .append(", ")
                 .append("\"timestamp\": ")
@@ -111,7 +111,7 @@ public class SplitterFlatMapperIntegrationTest {
                 .append("}");
 
         message2.append("{")
-                .append("\"first_switched\": ")
+                .append("\"last_timestamp\": ")
                 .append((int) secs(firstswitched2))
                 .append(", ")
                 .append("\"timestamp\": ")
