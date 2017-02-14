@@ -35,19 +35,20 @@ public class JqFlatMapperUnitTest {
     }
 
     @Test
-    public void building(){
+    public void building() {
         assertEquals("{ids:[.ids|split(\",\")[]|tonumber|.+100],name}", jqFlatMapper.jqQuery);
     }
 
     @Test
-    public void processSingleMessage(){
+    public void processSingleMessage() {
         String key = "key1";
         Map<String, Object> message = new HashMap<>();
         message.put("ids", "12,15,23");
         message.put("name", "jqTesting");
         message.put("timestamp", 1418785331123L);
 
-        List<KeyValue<String, Map<String, Object>>> result = (List<KeyValue<String, Map<String, Object>>>) jqFlatMapper.process(key, message);
+        List<KeyValue<String, Map<String, Object>>> result =
+                (List<KeyValue<String, Map<String, Object>>>) jqFlatMapper.process(key, message);
 
         Map<String, Object> expected = new HashMap<>();
         expected.put("name", "jqTesting");
@@ -55,5 +56,13 @@ public class JqFlatMapperUnitTest {
 
         assertEquals(key, result.get(0).key);
         assertEquals(expected, result.get(0).value);
+    }
+
+    @Test
+    public void processNullMessage() {
+        String key = "key1";
+        List<KeyValue<String, Map<String, Object>>> result =
+                (List<KeyValue<String, Map<String, Object>>>) jqFlatMapper.process(key, null);
+
     }
 }
