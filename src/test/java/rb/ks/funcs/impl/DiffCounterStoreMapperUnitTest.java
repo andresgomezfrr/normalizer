@@ -75,8 +75,7 @@ public class DiffCounterStoreMapperUnitTest {
         expected2.put("last_timestamp", 1122334455L);
 
         KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
-        assertNull(result1.value);
-        assertEquals(key1, result1.key);
+        assertNull(result1);
 
         KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key1, message2);
         assertEquals(key1, result2.key);
