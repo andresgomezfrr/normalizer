@@ -3,6 +3,7 @@ layout: page
 title: "File Bootstrapper"
 category: bootstrapper
 date: 2017-02-14 12:36:14
+order: 2
 ---
 
 `io.wizzie.ks.normalizer.builder.bootstrap.FileBootstrapper`
