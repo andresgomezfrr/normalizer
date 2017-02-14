@@ -3,6 +3,7 @@ layout: page
 title: "Filter Functions"
 category: funcs
 date: 2017-02-14 12:58:42
+order: 4
 ---
 
 TODO
