@@ -23,8 +23,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class DiffCounterStoreMapperUnitTest {
-    static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
-    static DiffCounterStoreMapper diffCounterStoreMapper;
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
+    private static DiffCounterStoreMapper diffCounterStoreMapper;
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
