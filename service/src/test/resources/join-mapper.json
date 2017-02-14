@@ -1,0 +1,28 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myJoinMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.JoinMapper",
+          "properties": {
+            "delimitier": "-",
+            "values": [
+              {"fromDimension": "A", "orDefault": "1"},
+              {"fromDimension": "B", "orDefault": "2"},
+              {"fromDimension": "C", "orDefault": "3"},
+              {"fromDimension": "D", "orDefault": "4"}
+            ],
+            "dimensionName": "myDimension"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}
