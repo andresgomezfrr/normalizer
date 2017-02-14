@@ -84,12 +84,12 @@ public class SimpleMapperIntegrationTest {
 
         // Get inputs?
         Mockito.verify(model).getInputs();
-        // Call getStreams method three times? (addSinks, addTimeStamper, createFuncs)
-        Mockito.verify(model, times(3)).getStreams();
+        // Call getStreams method three times? (addSinks, createFuncs)
+        Mockito.verify(model, times(2)).getStreams();
 
         streams.start();
 
-        String jsonData = "{\"A\":{\"B\":{\"C\":\"VALUE\"}},\"timestamp\":\"2016-09-08T06:33:46.000Z\"}";
+        String jsonData = "{\"A\":{\"B\":{\"C\":\"VALUE\"}},\"timestamp\":1473316426}";
 
         KeyValue<String, Map<String, Object>> kvStream1 = null;
 
@@ -137,7 +137,7 @@ public class SimpleMapperIntegrationTest {
 
         List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfigA, "output1", 1);
 
-        assertEquals(receivedMessagesFromOutput1, Collections.singletonList(expectedDataKv));
+        assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput1);
     }
 
 }
