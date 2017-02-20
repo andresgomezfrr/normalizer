@@ -1,0 +1,32 @@
+{
+  "inputs":{
+    "topic1":["stream1", "stream2"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myFilter",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
+          "properties": {
+              "dimension":"FILTER-DIMENSION",
+              "value":"FILTER-VALUE"
+          }
+        },
+        {
+          "name":"myFilterKey",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
+          "properties": {
+            "dimension":"__KEY",
+            "value":"FILTER-kEY"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output", "type":"kafka"},
+        {"topic":"output1", "type":"kafka"},
+        {"topic":"output2", "type":"kafka"}
+      ]
+    }
+  }
+}

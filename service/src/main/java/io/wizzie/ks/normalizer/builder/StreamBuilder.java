@@ -70,7 +70,7 @@ public class StreamBuilder {
     private Boolean addedNewStream = true;
 
     public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
-        model.validate();
+        model.validate(config);
 
         clean();
 

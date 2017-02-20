@@ -35,5 +35,7 @@ Example configuration file:
 | `metric.listeners`      | Array with metrics listeners. More info: [Metrics](https://github.com/wizzie-io/normalizer/wiki/Metrics)      | ["io.wizzie.ks.normalizer.metrics.ConsoleMetricListener"] |
 | `metric.interval`      | Metric report interval (milliseconds)      |  60000 |
 | `multi.id`      | This property is used when you have multiple normalizer instances with differences `application.id` and the normalizer uses the same topic names. More Info [Multi Tenant](https://github.com/wizzie-io/normalizer/wiki/Multi-Tenant)      |  false |
+| `metric.enable`      | Enable metrics system.      | false |
+| `max.kafka.output.topics` | Max number of kafka topics that the normalizer can create to send data using the stream config | Integer.MAX_VALUE |
 
 **Note:** If you want to configure specific [Kafka Streams properties](http://kafka.apache.org/documentation#streamsconfigs), you can add these properties to this config file. The properties `key.serde` and `value.serde` will be overrwritten by normalizer.
