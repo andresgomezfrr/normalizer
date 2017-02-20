@@ -25,10 +25,13 @@ The JqFlatMapper is a special mapper that allow us to use [Jq Syntax](https://st
 You only need to set he property `jqQuery` where you must to define a new JSON. The above function transform this input message into this output message.
 
 **Input:**
+
 ```json
 {"ids": "12,15,23", "name": "jackson", "timestamp": 1418785331123}
 ```
+
 **Output:**
+
 ```json
 {"ids": [112, 115, 123], "name": "jackson"}
 ```
@@ -64,6 +67,7 @@ This mapper process a message and divide the `bytes` and `pkts` counters across 
 ```
 
 **Output:**
+
 ```json
 {"timestamp": 1477379847, "bytes": 60, "pkts": 30}
 {"timestamp": 1477379967, "bytes": 60, "pkts": 30}
@@ -92,11 +96,105 @@ On this flatMapper, you only need to specify the property `flat_dimension`, **th
 ```
 
 **Output:**
+
 ```json
 {"timestamp": 1477379967, "outside_field":"outside_value", "my_first": 1, "my_second": 2}
 {"timestamp": 1477379967, "outside_field":"outside_value", "other_first": 1, "other_second": 2}
 ```
 
 ### FormatterFlatMapper
-TODO
 
+The formatterFlatMapper allow us generate one or more message from a unique message. It allows us to select the different dimensions to build the new output messages.
+
+On this flatMapper you have three properties:
+
+ * `commonFields`: The dimension that the mapper must to select on the input message and put on all output messages.
+ * `filters`: This mapper allows us to apply filter to create multiple stream branches into the function.
+ * `generators`: The generators apply on each input message transforming it on a new output message. Currently, there are two generators:
+    * **constant**: The `constant` generator is used to add constant value to the output message.
+    * **fieldValue**: The `fieldValue` generator select a specific field form the input message and put it on the output message.
+
+```json
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myFormatterFlatMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.FormatterFlatMapper",
+          "properties": {
+            "commonFields": ["timestamp", "user_id"],
+            "filters": [
+              {"name": "inside", "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "location", "value": "inside"}},
+              {"name": "outside", "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "location", "value": "outside"}}
+            ],
+            "generators": [
+              {
+                "filter": "outside",
+                "definitions": [
+                  {
+                    "apply": [
+                      {"field": "location", "content": {"type": "constant", "value": "garden"}},
+                      {"field": "light", "content": {"type": "fieldValue", "value": "dev_1"}}
+                    ]
+                  },
+                  {
+                    "apply": [
+                      {"field": "location", "content": {"type": "constant", "value": "swimming pool"}},
+                      {"field": "cleaner_engine", "content": {"type": "fieldValue", "value": "dev_2"}}
+                    ]
+                  }
+                ]
+              },
+              {
+                "filter": "inside",
+                "definitions": [
+                  {
+                    "apply": [
+                      {"field": "location", "content": {"type": "constant", "value": "kitchen"}},
+                      {"field": "light", "content": {"type": "fieldValue", "value": "light_1"}}
+                    ]
+                  },
+                  {
+                    "apply": [
+                      {"field": "location", "content": {"type": "constant", "value": "bedroom"}},
+                      {"field": "light", "content": {"type": "fieldValue", "value": "light_2"}}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Input**:
+
+```json
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "inside", "dev_1": "ON", "dev_2": "OFF"}
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "outside", "light_1": "ON", "light_2": "ON"}
+
+```
+
+**Output:**
+
+```json
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "garden", "light":"ON"}
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "swimming pool", "cleaner_engine":"OFF"}
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "kitchen", "light":"ON"}
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "bedroom", "light":"OFF"}
+```
