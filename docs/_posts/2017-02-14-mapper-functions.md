@@ -51,9 +51,10 @@ If we use this message using the SimpleMapper that is defined on the above examp
 ```json
 {"X":"MyValue", "Q":"MyOtherValue", "P": 123456, "timestamp": 123456788}
 ```
+
 ### ReplaceMapper
 
-The ReplaceMapper is a function that allow us replace current values of messages by others that define us. The replace value should exists.
+The ReplaceMapper is a function that allows us replace current values of messages by others that define by us. The replace value should exists.
 
 ```json
 {
@@ -142,6 +143,7 @@ If we use this message using the JoinMapper that is defined on the above example
   "timestamp":123456789
 }
 ```
+
 ### MaxValueMapper
 
 The MaxValueMapper is a function that allow us from an array of numbers which is greater. The max value is detected and store in other dimension

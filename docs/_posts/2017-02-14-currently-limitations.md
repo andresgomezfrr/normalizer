@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Currently limitations"
+title: "Current limitations"
 category: limits
 date: 2017-02-14 13:27:02
 ---
