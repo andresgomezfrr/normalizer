@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.ks.normalizer.exceptions.MaxOutputKafkaTopics;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PlanModel {
@@ -68,7 +68,7 @@ public class PlanModel {
             builder.append("FROM ").append(entry.getKey()).append("\n");
 
             List<FunctionModel> funcs = entry.getValue().getFuncs();
-            if(funcs != null) {
+            if (funcs != null) {
                 List<String> funcNames = funcs.stream()
                         .map(FunctionModel::getName).collect(Collectors.toList());
                 builder.append("   TRANSFORM USING ").append(funcNames).append("\n");
@@ -133,9 +133,10 @@ public class PlanModel {
         return builder.toString();
     }
 
-    public void validate() throws PlanBuilderException {
+    public void validate(Config config) throws PlanBuilderException {
         validateInputs();
         validateStreams();
+        validateKafkaOutputs(config);
     }
 
     private void validateInputs() throws PlanBuilderException {
@@ -165,6 +166,33 @@ public class PlanModel {
                 if (!definedStreams.contains(entry.getKey())) {
                     throw new PlanBuilderException(String.format("Stream[%s]: Not defined on inputs. Available definedStreams %s", entry.getKey(), definedStreams));
                 }
+            }
+        }
+    }
+
+    private void validateKafkaOutputs(Config config) throws MaxOutputKafkaTopics {
+        streams.forEach((name, stream) -> stream.getSinks().forEach(SinkModel::getType));
+
+        Optional<List<String>> types = streams.entrySet().stream()
+                .map(entry -> entry.getValue().getSinks())
+                .map(sinks -> sinks.stream()
+                        .map(SinkModel::getType).collect(Collectors.toList())
+                )
+                .reduce((sinks1, sinks2) -> {
+                    sinks1.addAll(sinks2);
+                    return sinks1;
+                });
+
+        if (types.isPresent()) {
+            Long kafkaOutputs = types.get().stream().filter(type -> type.equals(SinkModel.KAFKA_TYPE)).count();
+            Integer maxKafkaOutputs = config.getOrDefault(
+                    Config.ConfigProperties.MAX_KAFKA_OUTPUT_TOPICS, Integer.MAX_VALUE
+            );
+
+            if (kafkaOutputs > maxKafkaOutputs) {
+                throw new MaxOutputKafkaTopics(String.format(
+                        "You try to create [%s] topics, and the limit is [%s]", kafkaOutputs, maxKafkaOutputs
+                ));
             }
         }
     }
