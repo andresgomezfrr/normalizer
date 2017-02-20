@@ -23,9 +23,8 @@ sections: [
     ['getting', 'Getting Started'],
     ['conf', 'Configuration'],
     ['bootstrapper', 'Bootstrapper'],
-    ['funcs', 'Funcstions'],
+    ['funcs', 'Functions'],
     ['metrics', 'Metrics'],
-    ['multi-tenant', 'Multi Tenant'],
     ['internals', 'Internals'],
     ['customize', 'Customize'],
     ['limits', 'Limitations']

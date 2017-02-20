@@ -1,8 +1,9 @@
 ---
 layout: page
 title: "Definition"
-category: multi-tenant
+category: conf
 date: 2017-02-14 13:24:30
+order: 3
 ---
 
 The Normalize service has a multi tenant mode, on this mode it prefix the `application.id` automatically on all the Kafka topic, except the bootstraper and metric topic. 

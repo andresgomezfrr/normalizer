@@ -6,8 +6,14 @@ date: 2017-02-14 12:58:42
 order: 4
 ---
 
-TODO
+The filter functions are used to filter out messages from the stream. 
+
+All the filters has a common property that is called `__MATCH`. The `__MATCH` property allow us filter out the messages that do match with the filter or the messages that don't do match with the filter.
+ * `__MATCH: true` The filter filters out the messages that satisfy the filter.
+ * `__MATCH: false` The filter filters out the messages that don't satisfy the filter.
+
 ### FieldFilter
+
 The FieldFilter is a filter that allow us filter if a concrete dimension contains a concrete value match.
 
 ```json
@@ -137,6 +143,7 @@ The StartWithFilter doesn't match. But if we have next JSON message:
 The StartWithFilter match and return `true`.
 
 ### AndFilter
+
 The AndFilter is a filter that allow us apply as many filters as us want. If all filters do match then AndFilter return `true` else return `false`.
 
 ```json
@@ -164,6 +171,7 @@ The AndFilter is a filter that allow us apply as many filters as us want. If all
   }
 }
 ```
+
 The AndFilter has been one property called `filters`.
 * `filters`: Array of filters definition. Each filter have particular properties.
 
@@ -192,6 +200,7 @@ However if we have this JSON message:
 The AndFilter matchs and return `true` because all defined filters have been matched.
 
 ### OrFilter
+
 The OrFilter is a filter that allow us apply as many filters as us want. If any filter do match then OrFilter return `true` else return `false`.
 
 ```json
@@ -219,6 +228,7 @@ The OrFilter is a filter that allow us apply as many filters as us want. If any 
   }
 }
 ```
+
 The OrFilter has been one property called `filters`.
 * `filters`: Array of filters definition. Each filter have particular properties.
 
