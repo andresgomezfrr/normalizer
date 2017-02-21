@@ -110,7 +110,7 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.11</artifactId>
-            <version>RELEASE</version>
+            <version>${kafka.version}</version>
         </dependency>
 
     </dependencies>
