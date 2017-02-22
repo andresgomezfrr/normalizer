@@ -226,7 +226,7 @@ If we use this message using the MinValueMapper that is defined on the above exa
 
 ### ClassificationMapper
 
-The ClassficationMapper allow us classify a numeric value. 
+The ClassficationMapper allows us classify a numeric value. 
 
 ```json
 {
@@ -271,4 +271,73 @@ If we use this message using the ClassificationMapper that is defined on the exa
   "mark": 75,
   "classification": "B"
 }
+```
+
+### StringSplitterMapper
+
+The StringSplitterMapper allows us to split one dimension into multiple dimension.
+
+```json
+        {
+          "name":"myStringSplitterFunction",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.StringSplitterMapper",
+          "properties": {
+            "dimension": "DIM-H",
+            "delimitier": ">",
+            "fields": ["country", "province", "city"]
+          }
+        }
+```
+
+This mapper has some properties:
+
+* `dimension`: The dimension field that you want to split. 
+* `delimitier`:  The character that the mapper uses to split.
+* `fields`: The new fields to the splitter dimensions. This is a JSON Array.
+* `delete_dimension`: This is a boolean to indicate if you want to delete the original dimension. Default: false
+
+**Input**:
+
+```json
+{"timestamp": 1477379967, "DIM-H": "Spain>Andalucia>Sevilla"}
+```
+
+**Output:**
+
+```json
+{"timestamp": 1477379967, "country": "Spain", "province": "Andalucia", "city":"Sevilla", "DIM-H": "Spain>Andalucia>Sevilla"}
+```
+
+### StringReplaceMapper
+
+The StringReplaceMapper replaces the dimension string value to another one.
+
+```json
+        {
+          "name":"myStringReplacementFunction",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.StringReplaceMapper",
+          "properties": {
+            "dimension": "DIM-C",
+            "target_string": "-",
+            "replacement_string": ":"
+          }
+        }
+```
+ 
+This mapper has some properties:
+
+* `dimension`: The dimension that you want to transform.
+* `target_string`: The string sequence that you want to replace.
+* `replacement_string`: The string sequence that you want to use on the change.
+ 
+**Input**:
+ 
+```json
+{"timestamp": 1477379967, "DIM-C": "00-00-AA-FF-11-33"}
+```
+
+**Output:**
+
+```json
+{"timestamp": 1477379967, "DIM-C": "00:00:AA:FF:11:33"}
 ```
