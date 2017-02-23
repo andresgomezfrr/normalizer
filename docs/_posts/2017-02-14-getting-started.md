@@ -5,7 +5,7 @@ category: getting
 date: 2017-02-14 12:16:55
 ---
 
-On this page, we can to try a stream example using a real Kafka cluster and the normalizer jar artifact. We are going to suppose that you have built the normalizer distribution how we explain on the [Building]() section.
+On this page, we can to try a stream example using a real Kafka cluster and the normalizer jar artifact. We are going to suppose that you have built the normalizer distribution how we explain on the [Building](https://github.com/wizzie-io/normalizer#compiling-sources) section.
 
 ### Explication
 First of all, we need define a stream for launch a normalizer application.
