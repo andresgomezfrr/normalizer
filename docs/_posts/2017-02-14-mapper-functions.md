@@ -9,6 +9,7 @@ order: 1
 The mapper functions transforms the stream one message to another message `1 to 1` .
 
 ### SimpleMapper
+
 The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it. 
 
 ```json
@@ -52,7 +53,9 @@ If we use this message using the SimpleMapper that is defined on the above examp
 {"X":"MyValue", "Q":"MyOtherValue", "P": 123456, "timestamp": 123456788}
 ```
 
+
 ### ReplaceMapper
+
 
 The ReplaceMapper is a function that allows us replace current values of messages by others that define by us. The replace value should exists.
 
