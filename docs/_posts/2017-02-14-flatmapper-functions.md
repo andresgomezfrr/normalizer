@@ -185,8 +185,8 @@ On this flatMapper you have three properties:
 **Input**:
 
 ```json
-{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "inside", "dev_1": "ON", "dev_2": "OFF"}
-{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "outside", "light_1": "ON", "light_2": "ON"}
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "outside", "dev_1": "ON", "dev_2": "OFF"}
+{"timestamp": 1477379967, "user_id": "MY_USER_ID", "location": "inside", "light_1": "ON", "light_2": "ON"}
 
 ```
 
