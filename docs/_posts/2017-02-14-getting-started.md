@@ -52,7 +52,7 @@ First of all, we need define a stream for launch a normalizer application.
     }
 }
 ```
-Once that we are defined us stream we inject messages
+At this point we have defined our stream where we inject messages
 #### Phase 0: Input messages
 ```json
 {
@@ -76,7 +76,7 @@ Once that we are defined us stream we inject messages
 }
 ```
 
-On this example we read the Kafka topic `mytopic` and mapped it to the stream `mystream`. On the stream `mystream` we use one function that is called `firstMapper`, using this function we select a specific fields on the message and rename it. We select the field `messages` that is inside the field `body` and we also select the field `mac` that is inside `header` and rename it to `id`. The processed stream is partitioned by the field `id` and it is sent to the `partitionedStream` that is create at runtime.
+On this example we read the Kafka topic `mytopic` and mapped it to the stream `mystream`. On the stream `mystream` we use one function that is called `firstMapper`, using this function we select messages specific fields and rename them. We select the field `messages` that is inside the field `body` and we also select the field `mac` that is inside `header` and rename it to `id`. The processed stream is partitioned by the field `id` and it is sent to the `partitionedStream` that is created at runtime.
 
 #### Phase 1: Partitioned stream messages
 
@@ -104,11 +104,11 @@ Later, we process the `partitionedStream` using another function that is called 
 {"id": "00:00:00:00:00", "type": "cpu",  "value":  80}
 ```
 
-Finally the result will be send to Kafka again into a topic that is called `output`.
+Finally the result will be sent to Kafka again into a topic that is called `output`.
 
 ### Execution
 
-On the first time we need to have a running Kafka cluster and the descompressed normalizer distribution.
+On the first time we need to have a running Kafka cluster and the decompressed normalizer distribution.
 
 #### Config file
 

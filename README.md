@@ -24,7 +24,7 @@ If you want to build the JAR of the project you can do:
 mvn clean package
 ```
 
-If you want to check if pass all the test:
+If you want to check if it passes all the test:
 
 ```
 mvn test
