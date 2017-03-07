@@ -280,9 +280,10 @@ public class StreamBuilder {
                             createTopicIfNotExists(topic);
 
                             kStream.to(
-                                    (key, value, numPartitions) ->
-                                            Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions, topic
-
+                                    (key, value, numPartitions) -> {
+                                        if (key == null) key = "NULL_KEY";
+                                        return Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions;
+                                    }, topic
                             );
                         } else if (sink.getType().equals(SinkModel.STREAM_TYPE)) {
                             String newStreamName = sink.getTopic();
