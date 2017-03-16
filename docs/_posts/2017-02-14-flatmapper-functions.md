@@ -113,6 +113,7 @@ On this flatMapper you have three properties:
  * `generators`: The generators apply on each input message transforming it on a new output message. Currently, there are two generators:
     * **constant**: The `constant` generator is used to add constant value to the output message.
     * **fieldValue**: The `fieldValue` generator select a specific field form the input message and put it on the output message.
+ * `passIfNotApply`: This property enable/disable if the flatmapper allows to send the messages, that don't apply on any filter, to the next function. Default value: `false`
 
 ```json
 {
