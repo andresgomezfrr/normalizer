@@ -52,6 +52,61 @@ The FieldFilter doesn't match and return `false` value. Bu if we have next messa
 
 The FieldFilter match and return `true` value
 
+If you use `__KEY` dimension the filter checks the message key.
+
+### MultipleValueFieldFilter
+
+The MultipleValueFieldFilter is a filter that allow us filter if a concrete dimension contains some value from a list.
+
+```json
+{
+  "name": "myFieldFilter",
+  "className": "io.wizzie.ks.normalizer.funcs.impl.MultipleValueFieldfilter",
+  "properties": {
+    "dimension": "FILTER_DIMENSION",
+    "values": ["FILTER_VALUE", "FILTER_VALUE_1"]
+  }
+}
+```
+
+The FieldFilter has two properties that are called `dimension` and `value`:
+- `dimension`: The dimension to get the value.
+- `values`: Values to compare with obtained value.
+If we have next JSON message:
+
+```json
+{
+  "DIM-A":"VALUE-A", 
+  "DIM-B":10, 
+  "FILTER_DIMENSION": "FILTER_VAL"
+}
+```
+
+The FieldFilter doesn't match and return `false` value. Bu if we have next message:
+
+```json
+{
+  "DIM-A": "VALUE-A",
+  "DIM-B": 10,
+  "FILTER_DIMENSION": "FILTER_VALUE"
+}
+```
+
+or
+
+```json
+{
+  "DIM-A": "VALUE-A",
+  "DIM-B": 10,
+  "FILTER_DIMENSION": "FILTER_VALUE_1"
+}
+```
+
+The FieldFilter match and return `true` value.
+
+If you use `__KEY` dimension the filter checks the message key.
+
+
 ### ContainsDimensionFilter
 The ContainsDimensionFilter is a filter that allow us filter of a JSON contains concrete dimensions defined by us.
 
