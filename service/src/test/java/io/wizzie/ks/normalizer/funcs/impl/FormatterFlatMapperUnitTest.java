@@ -27,17 +27,24 @@ public class FormatterFlatMapperUnitTest {
 
     private static StreamBuilder streamBuilder = new StreamBuilder(config, null);
     private static FormatterFlatMapper formatterFlatMapper;
+    private static FormatterFlatMapper formatterFlatMapperWithPass;
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("formatter-flat-mapper.json").getFile());
-
         ObjectMapper objectMapper = new ObjectMapper();
+
+        File file = new File(classLoader.getResource("formatter-flat-mapper.json").getFile());
         PlanModel model = objectMapper.readValue(file, PlanModel.class);
         streamBuilder.builder(model);
         Map<String, Function> functionsMap = streamBuilder.getFunctions("stream1");
         formatterFlatMapper = (FormatterFlatMapper) functionsMap.get("myFormatterFlatMapper");
+
+        File file1 = new File(classLoader.getResource("formatter-flat-mapper-with-pass.json").getFile());
+        PlanModel model1 = objectMapper.readValue(file1, PlanModel.class);
+        streamBuilder.builder(model1);
+        Map<String, Function> functionsMap1 = streamBuilder.getFunctions("stream1");
+        formatterFlatMapperWithPass = (FormatterFlatMapper) functionsMap1.get("myFormatterFlatMapperWithPass");
     }
 
     @Test
@@ -180,6 +187,22 @@ public class FormatterFlatMapperUnitTest {
         assertEquals(0, results.size());
 
         assertEquals(Collections.EMPTY_LIST, results);
+    }
+
+    @Test
+    public void notProcessFilteredMessageWithPass(){
+        Map<String, Object> message = new HashMap<>();
+        message.put("timestamp", 123456789L);
+        message.put("type", "C");
+        message.put("A", "VALUE-A");
+        message.put("B", "VALUE-B");
+
+        String key = "KEY1";
+
+        List<KeyValue<String, Map<String, Object>>> results = (List<KeyValue<String, Map<String, Object>>>) formatterFlatMapperWithPass.process(key, message);
+
+        assertEquals(key, results.get(0).key);
+        assertEquals(message, results.get(0).value);
     }
 
     @Test

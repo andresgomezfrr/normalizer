@@ -20,11 +20,13 @@ public class FormatterFlatMapper extends FlatMapperFunction {
     List<String> commonFields;
     Map<String, FilterFunc> filters = new HashMap<>();
     List<Map<String, Object>> generators;
+    Boolean passIfNotApply = false;
 
     @Override
     public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         commonFields = (List<String>) properties.getOrDefault("commonFields", new ArrayList<>());
         List<Map<String, Object>> filterMaps = (List<Map<String, Object>>) properties.getOrDefault("filters", new ArrayList<>());
+        passIfNotApply = (Boolean) properties.getOrDefault("passIfNotApply", false);
 
         for (Map<String, Object> filterDefinition : filterMaps) {
             String filterName = (String) filterDefinition.get("name");
@@ -54,11 +56,14 @@ public class FormatterFlatMapper extends FlatMapperFunction {
                 if (value.containsKey(field)) base.put(field, value.get(field));
             });
 
+            Boolean someApply = false;
+
             for (Map<String, Object> generator : generators) {
                 String filter = (String) generator.get("filter");
 
                 if (filters.containsKey(filter) && filters.get(filter).process(key, value)) {
                     List<Map<String, Object>> definitions = (List<Map<String, Object>>) generator.get("definitions");
+                    someApply = true;
 
                     for (Map<String, Object> definition : definitions) {
                         List<Map<String, Object>> fields = (List<Map<String, Object>>) definition.get("apply");
@@ -82,7 +87,7 @@ public class FormatterFlatMapper extends FlatMapperFunction {
                                     break;
                             }
 
-                            if(contentValue == null) {
+                            if (contentValue == null) {
                                 log.warn("Detected null value for field [{}]", content.get("value"));
                                 isNullValue = true;
                                 break;
@@ -96,11 +101,16 @@ public class FormatterFlatMapper extends FlatMapperFunction {
                     }
                 }
             }
+
+            if (passIfNotApply && !someApply) {
+                toSend.add(new KeyValue<>(key, value));
+            }
         }
 
         return toSend;
     }
 
     @Override
-    public void stop() {}
+    public void stop() {
+    }
 }
