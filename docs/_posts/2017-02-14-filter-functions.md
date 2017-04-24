@@ -19,7 +19,7 @@ The FieldFilter is a filter that allow us filter if a concrete dimension contain
 ```json
 {
   "name": "myFieldFilter",
-  "className": "io.wizzie.ks.normalizer.funcs.impl.Fieldfilter",
+  "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
   "properties": {
     "dimension": "FILTER_DIMENSION",
     "value": "FILTER_VALUE"
