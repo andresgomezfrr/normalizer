@@ -54,14 +54,14 @@ The FieldFilter match and return `true` value
 
 If you use `__KEY` dimension the filter checks the message key.
 
-### MultipleValueFieldFilter
+### MultiValueFieldFilter
 
-The MultipleValueFieldFilter is a filter that allow us filter if a concrete dimension contains some value from a list.
+The MultiValueFieldFilter is a filter that allow us filter if a concrete dimension contains some value from a list.
 
 ```json
 {
   "name": "myFieldFilter",
-  "className": "io.wizzie.ks.normalizer.funcs.impl.MultipleValueFieldfilter",
+  "className": "io.wizzie.ks.normalizer.funcs.impl.MultiValueFieldfilter",
   "properties": {
     "dimension": "FILTER_DIMENSION",
     "values": ["FILTER_VALUE", "FILTER_VALUE_1"]
