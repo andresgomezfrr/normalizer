@@ -53,9 +53,7 @@ If we use this message using the SimpleMapper that is defined on the above examp
 {"X":"MyValue", "Q":"MyOtherValue", "P": 123456, "timestamp": 123456788}
 ```
 
-
-### ReplaceMapper
-
+### ReplaceMapper
 
 The ReplaceMapper is a function that allows us replace current values of messages by others that define by us. The replace value should exists.
 
