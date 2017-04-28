@@ -197,7 +197,7 @@ The StartWithFilter doesn't match. But if we have next JSON message:
 
 The StartWithFilter match and return `true`.
 
-### AndFilter
+### AndFilter
 
 The AndFilter is a filter that allow us apply as many filters as us want. If all filters do match then AndFilter return `true` else return `false`.
 
