@@ -203,8 +203,8 @@ The AndFilter is a filter that allow us apply as many filters as us want. If all
 
 ```json
 {
-  "name":"myOrFilter",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.OrFilter",
+  "name":"myAndFilter",
+  "className":"io.wizzie.ks.normalizer.funcs.impl.AndFilter",
   "properties": { 
     "filters": [
       {
