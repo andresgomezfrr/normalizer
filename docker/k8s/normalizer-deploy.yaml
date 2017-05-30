@@ -21,8 +21,6 @@ spec:
             value: "my-kubernetes-normalizer-id"
           - name: KAFKA_BOOTSTRAP_SERVER
             value: kafka:9092
-          - name: ZOOKEEPER_CONNECT
-            value: zookeeper-svc:2181
           - name: NUM_STREAM_THREADS
             value: "1"
           - name: METRIC_ENABLE
