@@ -34,6 +34,7 @@ public class KafkaBootstraperChangeConfigIntegrationTest {
     @ClassRule
     public static EmbeddedKafkaCluster CLUSTER = new EmbeddedKafkaCluster(NUM_BROKERS);
     private final static MockTime MOCK_TIME = CLUSTER.time;
+    private long waitTime = 60000;
 
     private static final int REPLICATION_FACTOR = 1;
 
@@ -102,7 +103,7 @@ public class KafkaBootstraperChangeConfigIntegrationTest {
 
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        List<KeyValue<String, String>> receivedMessagesFromConfig1 = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
+        List<KeyValue<String, String>> receivedMessagesFromConfig1 = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1, waitTime);
 
         assertEquals(Collections.singletonList(jsonConfig1), receivedMessagesFromConfig1);
 
@@ -145,7 +146,7 @@ public class KafkaBootstraperChangeConfigIntegrationTest {
 
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1, waitTime);
 
         assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput);
 
@@ -163,10 +164,6 @@ public class KafkaBootstraperChangeConfigIntegrationTest {
 
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        List<KeyValue<String, String>> receivedMessagesFromConfig2 = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
-
-        assertEquals(Collections.singletonList(jsonConfig2), receivedMessagesFromConfig2);
-
         Map<String, Object> message3 = new HashMap<>();
         message3.put("B", "VALUE-B");
         message3.put("timestamp", 1122334455);
@@ -181,16 +178,18 @@ public class KafkaBootstraperChangeConfigIntegrationTest {
         KeyValue<String, Map<String, Object>> kvStream4 = new KeyValue<>("KEY_A", message4);
 
         producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Arrays.asList(kvStream3, kvStream4), producerConfig, MOCK_TIME);
+        Thread.sleep(5000); // Wait to load the new stream config
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Collections.singletonList(kvStream3), producerConfig, MOCK_TIME);
 
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        List<KeyValue<String, Object>> receivedFilteredMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC2, 1);
+        List<KeyValue<String, Object>> receivedFilteredMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC2, 1, waitTime);
 
         assertEquals(Collections.singletonList(kvStream3), receivedFilteredMessage);
 
-        List<KeyValue<String, Object>> receivedSplitterMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Collections.singletonList(kvStream4), producerConfig, MOCK_TIME);
+
+        List<KeyValue<String, Object>> receivedSplitterMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 4, waitTime);
 
         List<KeyValue<String, Map<String, Object>>> expectedSplitterArray = new ArrayList<>();
 
