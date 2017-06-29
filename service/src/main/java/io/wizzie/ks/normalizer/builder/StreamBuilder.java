@@ -60,7 +60,7 @@ public class StreamBuilder {
             log.info("*** Iteration [{}]", iteration);
             addedNewStream = false;
             addFuncsToStreams(builder, model);
-            addSinksToStreams(model);
+            addSinksToStreams(builder, model);
         }
 
         return builder;
@@ -181,7 +181,7 @@ public class StreamBuilder {
         }
     }
 
-    private void addSinksToStreams(PlanModel model) throws TryToDoLoopException {
+    private void addSinksToStreams(KStreamBuilder builder, PlanModel model) throws TryToDoLoopException {
         List<String> generatedStreams = new ArrayList<>();
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
             Map<String, FilterFunc> filters = new HashMap<>();
@@ -193,18 +193,15 @@ public class StreamBuilder {
                         log.info("Send to {} [{}]", sink.getType(), sink.getTopic());
 
                         if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
-                            kStream = kStream.map(
-                                    (key, value) -> {
-                                        Object newKey = value.get(sink.getPartitionBy());
-                                        if (newKey != null)
-                                            return new KeyValue<>(newKey.toString(), value);
-                                        else {
-                                            log.warn("Partition key {} isn't on message {}",
-                                                    sink.getPartitionBy(), value);
-                                            return new KeyValue<>(key, value);
-                                        }
-                                    }
-                            );
+                            kStream = kStream.selectKey((key, value) -> {
+                                Object newKey = value.get(sink.getPartitionBy());
+                                if (newKey != null) return newKey.toString();
+                                else {
+                                    log.trace("Partition key {} isn't on message {}",
+                                            sink.getPartitionBy(), value);
+                                    return key;
+                                }
+                            });
                         }
 
                         FunctionModel filterModel = sink.getFilter();
@@ -247,12 +244,14 @@ public class StreamBuilder {
                                 if (sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
                                     newBranch = kStream.branch((key, value) -> true)[0];
                                 } else {
+                                    String throughTopic = String.format("normalizer_%s_to_%s", streams.getKey(), newStreamName);
+                                    builder.addInternalTopic(throughTopic);
                                     newBranch = kStream.through(
                                             (key, value, numPartitions) -> {
                                                 if (key == null) key = "NULL_KEY";
                                                 return Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions;
                                             },
-                                            String.format("__%s_normalizer_%s_to_%s", appId, streams.getKey(), newStreamName)
+                                            throughTopic
                                     );
                                 }
 

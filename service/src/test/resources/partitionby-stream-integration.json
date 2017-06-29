@@ -1,0 +1,29 @@
+{
+  "inputs":{
+    "input1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath":["A","B","C"], "as":"X"},
+              {"dimPath":["timestamp"]}
+            ]
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"stream_mid", "type":"stream", "partitionBy": "X"}
+      ]
+    },
+    "stream_mid":{
+      "sinks":[
+        {"topic":"output1", "type":"kafka", "partitionBy": "X"}
+      ]
+    }
+  }
+}
