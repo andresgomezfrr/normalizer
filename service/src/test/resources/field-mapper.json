@@ -1,0 +1,42 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myFieldMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.FieldMapper",
+          "properties": {
+            "dimensions": [
+              {
+                "dimension": "dimension1",
+                "value": "defaultValue1",
+                "overwrite": false
+              },
+              {
+                "dimension": "dimension2",
+                "value": "defaultValue2",
+                "overwrite": true
+              },
+              {
+                "dimension": "dimension3",
+                "value": "defaultValue3"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
+
+
