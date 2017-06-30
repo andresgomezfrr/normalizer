@@ -8,6 +8,56 @@ order: 1
 
 The mapper functions transforms the stream one message to another message `1 to 1` .
 
+
+### FieldMapper
+
+The FieldMapper is a function that allows us to add fields to one event.
+
+```json
+{
+  "name": "myFieldMapper",
+  "className": "io.wizzie.ks.normalizer.funcs.impl.FieldMapper",
+  "properties": {
+   "dimensions": [
+     {
+       "dimension": "dimension1",
+       "value": "defaultValue1",
+       "overwrite": false
+      },
+      {
+        "dimension": "dimension2",
+        "value": "defaultValue2",
+        "overwrite": true
+       },
+       {
+         "dimension": "dimension3",
+         "value": "defaultValue3"
+      }
+    ]
+  }
+}
+```
+
+The FieldMapper has one property that is called `dimensions` on this property you define the fields that you want to add and if you want overwrite them if they exists. If we have this json message:
+
+```json
+{
+  "dimension1":"value1",
+  "dimension2":"value2",
+  "dimension3": "value3",
+  "timestamp": 123456789
+}
+```
+
+If we use this message using the FieldMapper that is defined on the above example, we get this output:
+
+```json
+{"dimension1":"value1", "dimension2":"defaultValue2", "dimension3": "value3", "timestamp": 123456788}
+```
+
+By default the FieldMapper will not overwrite the values if you don't specify the overwrite property.
+
+
 ### SimpleMapper
 
 The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it. 
@@ -140,7 +190,7 @@ If we use this message using the JoinMapper that is defined on the above example
 ```json
 {
   "dimension1":"A",
-  "myNewDimension":"A/B/defaultValue3",
+  "myNewDimension":"A-B-defaultValue3",
   "timestamp":123456789
 }
 ```
