@@ -194,7 +194,10 @@ public class StreamBuilder {
 
                         if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
                             kStream = kStream.selectKey((key, value) -> {
-                                Object newKey = value.get(sink.getPartitionBy());
+                                Object newKey = null;
+                                if (value != null) {
+                                    newKey = value.get(sink.getPartitionBy());
+                                }
                                 if (newKey != null) return newKey.toString();
                                 else {
                                     log.trace("Partition key {} isn't on message {}",
