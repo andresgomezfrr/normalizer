@@ -37,11 +37,12 @@ public class FieldMapper extends MapperFunction {
 
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
+      
+        if (value != null) {
 
-        Map<String, Object> newEvent = new HashMap<>();
-        newEvent.putAll(value);
+            Map<String, Object> newEvent = new HashMap<>();
+            newEvent.putAll(value);
 
-        if (newEvent != null) {
             dimensionsToAdd.stream()
                     .forEach(m ->
                     {
@@ -49,9 +50,11 @@ public class FieldMapper extends MapperFunction {
                             newEvent.put((String) m.get(DIMENSION), m.get(VALUE));
                         }
                     });
+       
+            return new KeyValue<>(key, newEvent);
+        } else {
+            return new KeyValue<>(key, null);
         }
-
-        return new KeyValue<>(key, newEvent);
     }
 
     @Override
