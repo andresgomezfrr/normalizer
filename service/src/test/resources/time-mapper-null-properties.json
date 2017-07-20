@@ -1,0 +1,28 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "toFormat":"secs"
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
+
+
