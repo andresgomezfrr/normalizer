@@ -392,3 +392,171 @@ This mapper has some properties:
 ```json
 {"timestamp": 1477379967, "DIM-C": "00:00:AA:FF:11:33"}
 ```
+
+### TimeMapper
+
+The StringReplaceMapper converts different time formats to a specified format.
+
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"millis",
+            "toFormat":"secs",
+            "forceStringOutput": "false"
+          }
+        }
+```
+
+This mapper has some properties:
+
+* `dimension`: The dimension that you want to transform.
+* `fromFormat`: The format that will be received by the function.
+* `toFormat`: The format that you want at the function output.
+* `forceStringOutput`: This property force the output to be a string. i.e. if you want to have `{"timestamp": "1477379967"}` as time output instead of `{"timestamp": 1477379967}`` you have to set this property to true. Its default value is false.
+
+
+Both `fromFormat` and `toFormat` must be: "ISO", "millis", "secs" or "pattern: ...".
+
+If you choose "pattern: ..." as fromFormat or toFormat you have to specify a valid format. A valid format is a JDK date format (you can read more at: https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html and at JDK docs).
+
+
+#### Examples:
+
+##### Example 1: millis -> secs
+
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"millis",
+            "toFormat":"secs",
+            "forceStringOutput": "false"
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"timestamp": 1234567890000, "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+**Output:**
+
+```json
+{"timestamp": 1234567890, "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+##### Example 2: millis -> secs (force string)
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"millis",
+            "toFormat":"secs",
+            "forceStringOutput": "true"
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"timestamp": 1234567890000, "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+**Output:**
+
+```json
+{"timestamp": "1234567890", "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+##### Example 3: ISO -> secs
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"ISO",
+            "toFormat":"secs",
+            "forceStringOutput": "false"
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"timestamp": "2009-02-13T23:31:30.000Z", "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+**Output:**
+
+```json
+{"timestamp": 1234567890, "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+##### Example 4: secs -> pattern
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"secs",
+            "toFormat":"pattern: yyyyMMdd",
+            "forceStringOutput": "false"
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"timestamp": 1234567890, "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+**Output:**
+
+```json
+{"timestamp": "20090213", "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+##### Example 5: pattern -> pattern
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"pattern: yyyy-MM-dd",
+            "toFormat":"pattern: yyyyMMdd",
+            "forceStringOutput": "false"
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"timestamp": "2009-02-13", "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+**Output:**
+
+```json
+{"timestamp": "20090213", "DIM-C": "00:00:AA:FF:11:33"}
+```
