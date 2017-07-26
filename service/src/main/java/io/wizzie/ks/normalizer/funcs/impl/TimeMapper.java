@@ -3,6 +3,7 @@ package io.wizzie.ks.normalizer.funcs.impl;
 import io.wizzie.ks.normalizer.exceptions.FunctionException;
 import io.wizzie.ks.normalizer.funcs.MapperFunction;
 import io.wizzie.ks.normalizer.metrics.MetricsManager;
+import io.wizzie.ks.normalizer.utils.ConversionUtils;
 import org.apache.kafka.streams.KeyValue;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -60,21 +61,13 @@ public class TimeMapper extends MapperFunction {
                 if (k instanceof String) {
                     k = Long.parseLong((String) k);
                 }
-                return (long) k / 1000L;
+                return ConversionUtils.toLong(k) / 1000L;
             };
         } else if (toFormat.equals("millis") && fromFormat.equals("secs")) {
-            convertTime = (k) -> {
-                if (k instanceof String) {
-                    k = Long.parseLong((String) k);
-                }
-                return (long) k * 1000L;
-            };
+            convertTime = (k) -> ConversionUtils.toLong(k) * 1000L;
         } else if (toFormat.equals("ISO") && fromFormat.equals("secs")) {
             convertTime = (k) -> {
-                if (k instanceof String) {
-                    k = Long.parseLong((String) k);
-                }
-                DateTime dt = new DateTime((long) k * 1000L);
+                DateTime dt = new DateTime(ConversionUtils.toLong(k) * 1000L);
                 return dt.toDateTimeISO().toString();
             };
         } else if (toFormat.equals("ISO") && fromFormat.equals("millis")) {
@@ -82,7 +75,7 @@ public class TimeMapper extends MapperFunction {
                 if (k instanceof String) {
                     k = Long.parseLong((String) k);
                 }
-                DateTime dt = new DateTime((long) k);
+                DateTime dt = new DateTime(ConversionUtils.toLong(k));
                 return dt.toDateTimeISO().toString();
             };
         } else if (toFormat.equals("millis") && fromFormat.equals("ISO")) {
@@ -108,17 +101,14 @@ public class TimeMapper extends MapperFunction {
                 if (k instanceof String) {
                     k = Long.parseLong((String) k);
                 }
-                DateTime dt = new DateTime((long) k);
+                DateTime dt = new DateTime(ConversionUtils.toLong(k));
                 DateTimeFormatter fmtPattern = DateTimeFormat.forPattern(toFormat);
                 return fmtPattern.print(dt);
             };
         } else if (toFormat.startsWith("pattern:") && fromFormat.equals("secs")) {
             toFormat = toFormat.split("pattern:")[1].trim();
             convertTime = (k) -> {
-                if (k instanceof String) {
-                    k = Long.parseLong((String) k);
-                }
-                DateTime dt = new DateTime((long) k * 1000L);
+                DateTime dt = new DateTime(ConversionUtils.toLong(k) * 1000L);
                 DateTimeFormatter fmtPattern = DateTimeFormat.forPattern(toFormat);
                 return fmtPattern.print(dt);
             };
