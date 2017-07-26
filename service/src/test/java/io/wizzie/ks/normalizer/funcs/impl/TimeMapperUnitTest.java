@@ -86,6 +86,34 @@ public class TimeMapperUnitTest {
     }
 
     @Test
+    public void processSecsAsIntegerToMillisReadedFromConfig() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myTimeFunc = functions.get("myTimeMapper");
+
+        assertNotNull(myTimeFunc);
+        assertTrue(myTimeFunc instanceof MapperFunction);
+        MapperFunction myTimeMapper = (MapperFunction) myTimeFunc;
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 1234567890);
+        message1.put("dimension1", "value1");
+        message1.put("dimension2", "value2");
+        message1.put("dimension3", "value3");
+
+
+        Map<String, Object> expectedMessage1 = new HashMap<>();
+        expectedMessage1.put("timestamp", 1234567890000L);
+        expectedMessage1.put("dimension1", "value1");
+        expectedMessage1.put("dimension2", "value2");
+        expectedMessage1.put("dimension3", "value3");
+
+        KeyValue<String, Map<String, Object>> result1 = myTimeMapper.process("KEY", message1);
+
+        assertEquals(new KeyValue<>("KEY", expectedMessage1), result1);
+
+    }
+
+    @Test
     public void processSecsAsStringToMillisReadedFromConfig() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myTimeFunc = functions.get("myTimeMapper");
@@ -112,6 +140,7 @@ public class TimeMapperUnitTest {
         assertEquals(new KeyValue<>("KEY", expectedMessage1), result1);
 
     }
+
 
     @Test
     public void processSecsToISOReadedFromConfig() throws IOException, PlanBuilderException {
@@ -148,6 +177,42 @@ public class TimeMapperUnitTest {
         streamBuilder2.close();
         assertEquals(new KeyValue<>("KEY", expectedMessage1), result1);
 
+    }
+
+    @Test
+    public void processSecsAsIntegerToISOReadedFromConfig() throws IOException, PlanBuilderException {
+
+        StreamBuilder streamBuilder2 = new StreamBuilder(config, null);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("time-mapper-secs-to-ISO.json").getFile());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
+        streamBuilder2.builder(model);
+        Map<String, Function> functions = streamBuilder2.getFunctions("stream1");
+        Function myTimeFunc = functions.get("myTimeMapper");
+
+        assertNotNull(myTimeFunc);
+        assertTrue(myTimeFunc instanceof MapperFunction);
+        MapperFunction myTimeMapper = (MapperFunction) myTimeFunc;
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 1234567890);
+        message1.put("dimension1", "value1");
+        message1.put("dimension2", "value2");
+        message1.put("dimension3", "value3");
+
+
+        Map<String, Object> expectedMessage1 = new HashMap<>();
+        expectedMessage1.put("timestamp", "2009-02-13T23:31:30.000Z");
+        expectedMessage1.put("dimension1", "value1");
+        expectedMessage1.put("dimension2", "value2");
+        expectedMessage1.put("dimension3", "value3");
+
+        KeyValue<String, Map<String, Object>> result1 = myTimeMapper.process("KEY", message1);
+        streamBuilder2.close();
+        assertEquals(new KeyValue<>("KEY", expectedMessage1), result1);
 
     }
 
@@ -588,6 +653,42 @@ public class TimeMapperUnitTest {
 
         Map<String, Object> message1 = new HashMap<>();
         message1.put("timestamp", 1234567890L);
+        message1.put("dimension1", "value1");
+        message1.put("dimension2", "value2");
+        message1.put("dimension3", "value3");
+
+
+        Map<String, Object> expectedMessage1 = new HashMap<>();
+        expectedMessage1.put("timestamp", "20090213");
+        expectedMessage1.put("dimension1", "value1");
+        expectedMessage1.put("dimension2", "value2");
+        expectedMessage1.put("dimension3", "value3");
+
+        KeyValue<String, Map<String, Object>> result1 = myTimeMapper.process("KEY", message1);
+        streamBuilder2.close();
+        assertEquals(new KeyValue<>("KEY", expectedMessage1), result1);
+    }
+
+    @Test
+    public void processSecsAsIntegerToPatternReadedFromConfig() throws IOException, PlanBuilderException {
+
+        StreamBuilder streamBuilder2 = new StreamBuilder(config, null);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("time-mapper-secs-to-pattern.json").getFile());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
+        streamBuilder2.builder(model);
+        Map<String, Function> functions = streamBuilder2.getFunctions("stream1");
+        Function myTimeFunc = functions.get("myTimeMapper");
+
+        assertNotNull(myTimeFunc);
+        assertTrue(myTimeFunc instanceof MapperFunction);
+        MapperFunction myTimeMapper = (MapperFunction) myTimeFunc;
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 1234567890);
         message1.put("dimension1", "value1");
         message1.put("dimension2", "value2");
         message1.put("dimension3", "value3");
