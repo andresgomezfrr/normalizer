@@ -415,7 +415,8 @@ This mapper has some properties:
 * `dimension`: The dimension that you want to transform.
 * `fromFormat`: The format that will be received by the function.
 * `toFormat`: The format that you want at the function output.
-* `forceStringOutput`: This property force the output to be a string. i.e. if you want to have `{"timestamp": "1477379967"}` as time output instead of `{"timestamp": 1477379967}`` you have to set this property to true. Its default value is false.
+* `forceStringOutput`: This property forces the output to be a string. i.e. if you want to have `{"timestamp": "1477379967"}` as time output instead of `{"timestamp": 1477379967}`` you have to set this property to true. Its default value is false.
+* `forceTimestamp`: This property forces to output a timestamp if it doesn't exists at the event. i.e. if you want to have `{"timestamp": 1477379967,"a":"hello-world"}` as output when you have: `{"a": "hello-word"}`` you have to set this property to true. Its default value is true. When forcing timestamp, if you have a null timestamp value at input, current time will be sended at output.
 
 
 Both `fromFormat` and `toFormat` must be: "ISO", "millis", "secs" or "pattern: ...".
@@ -435,7 +436,8 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
             "dimension":"timestamp",
             "fromFormat":"millis",
             "toFormat":"secs",
-            "forceStringOutput": "false"
+            "forceStringOutput": "false",
+            "forceTimestamp": "true"
           }
         }
 ```
@@ -559,4 +561,60 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 
 ```json
 {"timestamp": "20090213", "DIM-C": "00:00:AA:FF:11:33"}
+```
+
+##### Example 6: millis -> secs (no force timestamp)
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"millis",
+            "toFormat":"secs",
+            "forceStringOutput": "false",
+            "forceTimestamp": "false"
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"DIM-C": "00:00:AA:FF:11:33"}
+```
+
+**Output:**
+
+```json
+{"DIM-C": "00:00:AA:FF:11:33"}
+```
+
+##### Example 7: millis -> secs (forcing timestamp)
+```json
+        {
+          "name": "myTimeMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "properties": {
+            "dimension":"timestamp",
+            "fromFormat":"millis",
+            "toFormat":"secs",
+            "forceStringOutput": "false",
+            "forceTimestamp": "true"
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"DIM-C": "00:00:AA:FF:11:33"}
+```
+
+**Output:**
+
+```json
+{"timestamp": 1234567890, "DIM-C": "00:00:AA:FF:11:33"}
 ```
