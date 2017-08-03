@@ -7,5 +7,6 @@
   "metric.enable": true,
   "metric.listeners": ["io.wizzie.ks.normalizer.metrics.ConsoleMetricListener"],
   "metric.interval": 60000,
-  "multi.id": false
+  "multi.id": false,
+  "bootstrap.kafka.topics":["__normalizer_bootstrap"]
 }

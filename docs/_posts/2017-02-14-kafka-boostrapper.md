@@ -6,9 +6,15 @@ date: 2017-02-14 12:36:04
 order: 3
 ---
 
-`io.wizzie.ks.normalizer.builder.bootstrap.KafkaBootstrapper`
+`io.wizzie.bootstrapper.bootstrappers.impl.KafkaBootstrapper`
 
 This bootstrapper read the stream config from Kafka, so you can change the stream topology without restart the service. The bootstrapper is reading the topic `__normalizer_bootstrap` using a kafka consumer instance with a random `group.id`.
+
+| Property     | Description     | 
+| :------------- | :-------------  | 
+| `bootstrap.kafka.topics`      | Topics that are used to read the bootstrapper configuration      |
+| `application.id`      | The app id to identify the client configuration      |
+| `bootstrap.servers`      | The kafka broker to read the bootstrapper configuration      |
 
 ### StreamerKafkaConfig
 
@@ -31,3 +37,6 @@ The write mode allow us to send new stream configuration to specific normalizer 
 ```bash
 bin/streamer-kafka.sh $BOOTSTRAP_KAFKA_SERVER $APPLICATION_ID $STREAM_CONFIG_FILE
 ```
+
+
+Library: https://github.com/wizzie-io/config-bootstrapper
