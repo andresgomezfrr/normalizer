@@ -1,7 +1,8 @@
 package io.wizzie.ks.normalizer.integration;
 
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.builder.Builder;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.serializers.JsonDeserializer;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
 import kafka.utils.MockTime;
@@ -60,7 +61,7 @@ public class KafkaMetricListenerIntegrationTest {
         config.put("metric.listeners", Collections.singletonList("io.wizzie.ks.normalizer.metrics.KafkaMetricListener"));
         config.put("metric.enable", true);
         config.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("dummy-stream.json").getFile());
-        config.put(Config.ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.ks.normalizer.builder.bootstrap.FileBootstraper");
+        config.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
 
         Builder builder = new Builder(config);
 

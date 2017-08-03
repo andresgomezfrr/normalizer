@@ -1,6 +1,6 @@
 package io.wizzie.ks.normalizer.metrics;
 
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,7 @@
 package io.wizzie.ks.normalizer.metrics;
 
-import io.wizzie.ks.normalizer.builder.config.Config;
+
+import io.wizzie.bootstrapper.builder.Config;
 
 /**
  * Simple metric listener

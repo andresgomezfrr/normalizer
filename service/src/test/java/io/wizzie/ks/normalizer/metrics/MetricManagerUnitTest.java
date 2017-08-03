@@ -2,7 +2,7 @@ package io.wizzie.ks.normalizer.metrics;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Timer;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
 import org.junit.Test;
 
 import java.util.Collections;

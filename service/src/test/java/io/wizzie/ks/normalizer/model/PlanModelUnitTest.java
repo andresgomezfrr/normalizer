@@ -1,18 +1,18 @@
 package io.wizzie.ks.normalizer.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.exceptions.MaxOutputKafkaTopics;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
-import io.wizzie.ks.normalizer.serializers.JsonSerde;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.StreamsConfig;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -92,7 +92,7 @@ public class PlanModelUnitTest {
         }
 
         Config config = new Config();
-        config.put(Config.ConfigProperties.MAX_KAFKA_OUTPUT_TOPICS, 1);
+        config.put(ConfigProperties.MAX_KAFKA_OUTPUT_TOPICS, 1);
         model.validate(config);
     }
 
@@ -111,7 +111,7 @@ public class PlanModelUnitTest {
         }
 
         Config config = new Config();
-        config.put(Config.ConfigProperties.MAX_KAFKA_OUTPUT_TOPICS, 1);
+        config.put(ConfigProperties.MAX_KAFKA_OUTPUT_TOPICS, 1);
         model.validate(config);
     }
 }

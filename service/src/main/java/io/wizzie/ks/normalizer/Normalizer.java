@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer;
 
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.builder.Builder;
-import io.wizzie.ks.normalizer.builder.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,11 @@ public class Normalizer {
             Builder builder = new Builder(config.clone());
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                builder.close();
+                try {
+                    builder.close();
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
                 log.info("Stopped Normalizer process.");
             }));
 

@@ -1,8 +1,8 @@
 package io.wizzie.ks.normalizer.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.builder.StreamBuilder;
-import io.wizzie.ks.normalizer.builder.config.Config;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.funcs.*;
 import io.wizzie.ks.normalizer.model.PlanModel;

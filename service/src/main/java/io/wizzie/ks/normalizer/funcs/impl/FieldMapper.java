@@ -4,7 +4,10 @@ import io.wizzie.ks.normalizer.funcs.MapperFunction;
 import io.wizzie.ks.normalizer.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
 

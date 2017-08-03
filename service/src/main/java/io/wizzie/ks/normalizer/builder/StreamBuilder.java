@@ -1,6 +1,7 @@
 package io.wizzie.ks.normalizer.builder;
 
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.exceptions.TryToDoLoopException;
 import io.wizzie.ks.normalizer.funcs.*;
@@ -12,7 +13,6 @@ import io.wizzie.ks.normalizer.model.StreamModel;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Utils;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
@@ -91,7 +91,7 @@ public class StreamBuilder {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
 
-            if (config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
+            if (config.getOrDefault(ConfigProperties.MULTI_ID, false)) {
                 topic = String.format("%s_%s", appId, topic);
             }
 
@@ -228,7 +228,7 @@ public class StreamBuilder {
                         if (sink.getType().equals(SinkModel.KAFKA_TYPE)) {
                             String topic = sink.getTopic();
 
-                            if (config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
+                            if (config.getOrDefault(ConfigProperties.MULTI_ID, false)) {
                                 topic = String.format("%s_%s", appId, topic);
                             }
 

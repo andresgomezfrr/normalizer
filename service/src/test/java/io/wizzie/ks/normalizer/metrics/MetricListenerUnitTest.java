@@ -4,7 +4,8 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import org.apache.kafka.streams.StreamsConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +22,11 @@ public class MetricListenerUnitTest {
     @Before
     public void initTest() {
         config
-                .put(Config.ConfigProperties.METRIC_ENABLE, true)
-                .put(Config.ConfigProperties.METRIC_INTERVAL, 2000)
+                .put(ConfigProperties.METRIC_ENABLE, true)
+                .put(ConfigProperties.METRIC_INTERVAL, 2000)
                 .put(StreamsConfig.APPLICATION_ID_CONFIG, "testing-metric-manager")
                 .put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
-                .put(Config.ConfigProperties.METRIC_LISTENERS, Collections.singletonList("io.wizzie.ks.normalizer.metrics.MockMetricListener"));
+                .put(ConfigProperties.METRIC_LISTENERS, Collections.singletonList("io.wizzie.ks.normalizer.metrics.MockMetricListener"));
     }
 
     @Test
