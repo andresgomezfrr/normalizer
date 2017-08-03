@@ -6,7 +6,8 @@ import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.utils.ConversionUtils;
 import org.apache.kafka.streams.StreamsConfig;
 import org.slf4j.Logger;
@@ -34,13 +35,13 @@ public class MetricsManager extends Thread {
     AtomicBoolean verboseMode = new AtomicBoolean();
 
     public MetricsManager(Config config) {
-        if (config.getOrDefault(Config.ConfigProperties.METRIC_ENABLE, false)) {
+        if (config.getOrDefault(ConfigProperties.METRIC_ENABLE, false)) {
             this.config = config;
-            interval = ConversionUtils.toLong(config.getOrDefault(Config.ConfigProperties.METRIC_INTERVAL, 60000L));
+            interval = ConversionUtils.toLong(config.getOrDefault(ConfigProperties.METRIC_INTERVAL, 60000L));
             app_id = config.get(APPLICATION_ID_CONFIG);
             num_threads = config.getOrDefault(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
-            verboseMode.set(config.getOrDefault(Config.ConfigProperties.METRIC_VERBOSE_MODE, false));
-            List<String> listenersClass = config.getOrDefault(Config.ConfigProperties.METRIC_LISTENERS, Collections.singletonList("ConsoleMetricListener"));
+            verboseMode.set(config.getOrDefault(ConfigProperties.METRIC_VERBOSE_MODE, false));
+            List<String> listenersClass = config.getOrDefault(ConfigProperties.METRIC_LISTENERS, Collections.singletonList("ConsoleMetricListener"));
             if (listenersClass != null) {
                 for (String listenerClassName : listenersClass) {
                     try {

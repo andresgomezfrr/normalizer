@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.exceptions.MaxOutputKafkaTopics;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PlanModel {
@@ -186,7 +190,7 @@ public class PlanModel {
         if (types.isPresent()) {
             Long kafkaOutputs = types.get().stream().filter(type -> type.equals(SinkModel.KAFKA_TYPE)).count();
             Integer maxKafkaOutputs = config.getOrDefault(
-                    Config.ConfigProperties.MAX_KAFKA_OUTPUT_TOPICS, Integer.MAX_VALUE
+                    ConfigProperties.MAX_KAFKA_OUTPUT_TOPICS, Integer.MAX_VALUE
             );
 
             if (kafkaOutputs > maxKafkaOutputs) {
