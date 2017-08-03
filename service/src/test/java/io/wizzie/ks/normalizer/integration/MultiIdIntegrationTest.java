@@ -1,8 +1,9 @@
 package io.wizzie.ks.normalizer.integration;
 
 
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.builder.Builder;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.serializers.JsonDeserializer;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
 import io.wizzie.ks.normalizer.serializers.JsonSerializer;
@@ -90,7 +91,7 @@ public class MultiIdIntegrationTest {
 
         Config config_A = new Config(streamsConfiguration);
         config_A.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("multi-id-integration-test.json").getFile());
-        config_A.put(Config.ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.ks.normalizer.builder.bootstrap.FileBootstraper");
+        config_A.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
         config_A.put("metric.enabled", false);
         config_A.put("multi.id", true);
         config_A.put("application.id", "myapp_A");

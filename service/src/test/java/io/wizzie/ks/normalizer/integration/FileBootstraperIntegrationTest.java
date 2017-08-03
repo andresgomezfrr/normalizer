@@ -1,7 +1,8 @@
 package io.wizzie.ks.normalizer.integration;
 
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.builder.Builder;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.serializers.JsonDeserializer;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
 import io.wizzie.ks.normalizer.serializers.JsonSerializer;
@@ -88,7 +89,7 @@ public class FileBootstraperIntegrationTest {
 
         Config configuration = new Config(streamsConfiguration);
         configuration.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("kafka-bootstraper-integration-test-1.json").getFile());
-        configuration.put(Config.ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.ks.normalizer.builder.bootstrap.FileBootstraper");
+        configuration.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
 
         Builder builder = new Builder(configuration);
 

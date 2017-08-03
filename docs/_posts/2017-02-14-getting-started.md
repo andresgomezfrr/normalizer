@@ -119,7 +119,7 @@ We need to modify the config file that is inside the folder `config/sample_confi
   "application.id": "my-first-normalizer-app",
   "bootstrap.servers": "localhost:9092",
   "num.stream.threads": 1,
-  "bootstraper.classname": "io.wizzie.ks.normalizer.builder.bootstrap.FileBootstraper",
+  "bootstraper.classname": "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper",
   "file.bootstraper.path": "/etc/normalizer/my-stream-tutorial.json",
   "metric.enable": true,
   "metric.listeners": ["io.wizzie.ks.metrics.ConsoleMetricListener"],

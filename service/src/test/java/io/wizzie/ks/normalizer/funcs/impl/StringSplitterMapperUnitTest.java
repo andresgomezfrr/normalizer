@@ -2,7 +2,7 @@ package io.wizzie.ks.normalizer.funcs.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wizzie.ks.normalizer.builder.StreamBuilder;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.funcs.Function;
 import io.wizzie.ks.normalizer.model.PlanModel;
@@ -17,9 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class StringSplitterMapperUnitTest {
 

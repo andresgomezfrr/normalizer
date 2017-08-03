@@ -1,8 +1,7 @@
 package io.wizzie.ks.normalizer.utils.bootstrap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wizzie.ks.normalizer.builder.bootstrap.KafkaBootstraper;
-import io.wizzie.ks.normalizer.builder.config.Config;
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.model.PlanModel;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -48,7 +47,7 @@ public class StreamerKafkaConfig {
             model.validate(config);
 
             KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
-            producer.send(new ProducerRecord<>(KafkaBootstraper.BOOTSTRAP_TOPIC, 0, args[1], streamConfig),
+            producer.send(new ProducerRecord<>("__normalizer_bootstrap", 0, args[1], streamConfig),
                     ((metadata, exception) -> {
                         if (exception == null) {
                             System.out.println(String.format("Wrote stream config with appID[%s] with offset: %d",
@@ -77,7 +76,7 @@ public class StreamerKafkaConfig {
             );
 
             KafkaConsumer<String, String> restoreConsumer = new KafkaConsumer<>(consumerConfig);
-            TopicPartition storePartition = new TopicPartition(KafkaBootstraper.BOOTSTRAP_TOPIC, 0);
+            TopicPartition storePartition = new TopicPartition("__normalizer_bootstrap", 0);
             restoreConsumer.assign(Collections.singletonList(storePartition));
 
             // calculate the end offset of the partition

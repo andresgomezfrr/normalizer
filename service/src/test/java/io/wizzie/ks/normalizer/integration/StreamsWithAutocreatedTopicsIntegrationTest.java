@@ -1,9 +1,8 @@
 package io.wizzie.ks.normalizer.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wizzie.ks.normalizer.builder.Builder;
+import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.builder.StreamBuilder;
-import io.wizzie.ks.normalizer.builder.config.Config;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.funcs.*;
 import io.wizzie.ks.normalizer.model.PlanModel;
@@ -31,7 +30,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class StreamsWithAutocreatedTopicsIntegrationTest {
     private final static int NUM_BROKERS = 1;
