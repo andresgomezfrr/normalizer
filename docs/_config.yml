@@ -24,6 +24,7 @@ sections: [
     ['conf', 'Configuration'],
     ['bootstrapper', 'Bootstrapper'],
     ['funcs', 'Functions'],
+    ['docker', 'Dockers'],
     ['metrics', 'Metrics'],
     ['internals', 'Internals'],
     ['customize', 'Development'],
