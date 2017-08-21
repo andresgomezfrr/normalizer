@@ -36,7 +36,7 @@ You can found more information about `wurstmeister/kafka` image [here](https://h
 
 #### Start Normalizer
 
-Once kafka broker is up, we can start a Normalizer container and link it to the kafka broker, and configuring the APPLICATION_ID environment variable with us custom app name:
+Once kafka broker is up, we can start a Normalizer container and link it to the kafka broker, and configuring the APPLICATION_ID environment variable with our custom app name:
 
 ```
 $ docker run --rm --name my-normalizer --net=host -e APPLICATION_ID=my-normalizer-app -e KAFKA_BOOTSTRAP_SERVER=localhost:9092 gcr.io/wizzie-registry/normalizer:0.1.0
