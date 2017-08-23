@@ -1,0 +1,82 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myFieldConverterMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.FieldTypeConverterMapper",
+          "properties": {
+            "conversions": [
+              {
+                "dimension": "dimension-A",
+                "from": "number",
+                "to": "string",
+                "newDimension": "num2str"
+              },
+              {
+                "dimension": "dimension-B",
+                "from": "boolean",
+                "to": "string",
+                "newDimension": "bool2str"
+              },
+              {
+                "dimension": "dimension-C",
+                "from": "string",
+                "to": "string",
+                "newDimension": "str2str"
+              },
+              {
+                "dimension": "dimension-D",
+                "from": "boolean",
+                "to": "number",
+                "newDimension": "bool2num"
+              },
+              {
+                "dimension": "dimension-E",
+                "from": "string",
+                "to": "number",
+                "newDimension": "str2num"
+              },
+              {
+                "dimension": "dimension-F",
+                "from": "number",
+                "to": "number",
+                "newDimension": "num2num"
+              },
+              {
+                "dimension": "dimension-G",
+                "from": "number",
+                "to": "boolean",
+                "newDimension": "num2bool"
+              },
+              {
+                "dimension": "dimension-H",
+                "from": "string",
+                "to": "boolean",
+                "newDimension": "str2bool"
+              },
+              {
+                "dimension": "dimension-I",
+                "from": "boolean",
+                "to": "boolean",
+                "newDimension": "bool2bool"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
+
+
