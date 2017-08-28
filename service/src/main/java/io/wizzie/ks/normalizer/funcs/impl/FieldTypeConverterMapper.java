@@ -4,6 +4,8 @@ import io.wizzie.ks.normalizer.funcs.MapperFunction;
 import io.wizzie.ks.normalizer.metrics.MetricsManager;
 import io.wizzie.ks.normalizer.utils.ConvertFrom;
 import org.apache.kafka.streams.KeyValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.List;
@@ -14,6 +16,7 @@ import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
 public class FieldTypeConverterMapper extends MapperFunction {
 
     List<Map<String, Object>> conversions;
+    private static final Logger log = LoggerFactory.getLogger(FieldTypeConverterMapper.class);
 
     @Override
     public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
@@ -26,7 +29,6 @@ public class FieldTypeConverterMapper extends MapperFunction {
         for (Map<String, Object> conversion : conversions) {
             String dimension = checkNotNull((String) conversion.get("dimension"), "dimension cannot be null!");
             String newDimension = (String) conversion.get("newDimension");
-
             // Get value
             Object value = message.get(dimension);
 
@@ -45,14 +47,23 @@ public class FieldTypeConverterMapper extends MapperFunction {
                         try {
                             convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toNumber(value);
                         } catch (ParseException e) {
-                            e.printStackTrace();
+                                log.debug("ParseException at ConvertFrom function.");
+                        }
+                        if(convertedValue == null){
+                            log.debug("Value is null or cannot be converted");
                         }
                         break;
                     case STRING:
                         convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toString(value);
+                        if(convertedValue == null){
+                            log.debug("Value is null or cannot be converted");
+                        }
                         break;
                     case BOOLEAN:
                         convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toBoolean(value);
+                        if(convertedValue == null){
+                            log.debug("Value is null or cannot be converted");
+                        }
                         break;
                 }
 
