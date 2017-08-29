@@ -47,6 +47,8 @@ public class StreamsWithAutocreatedTopicsIntegrationTest {
 
     @BeforeClass
     public static void startKafkaCluster() throws Exception {
+        CLUSTER.createTopic(INPUT_TOPIC, 2, REPLICATION_FACTOR);
+        CLUSTER.createTopic(OUTPUT_TOPIC_1, 2, REPLICATION_FACTOR);
         CLUSTER.createTopic(OUTPUT_TOPIC_2, 2, REPLICATION_FACTOR);
     }
 
