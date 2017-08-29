@@ -6,10 +6,24 @@ date: 2017-02-14 12:58:03
 order: 1
 ---
 
-The mapper functions transforms the stream one message to another message `1 to 1` .
+The mapper functions transforms the stream one message to another message `1 to 1`.
+
+### <a name="index"></a> Mapper functions
+* [FieldMapper](#fieldMapper)
+* [SimpleMapper](#simpleMapper)
+* [ReplaceMapper](#replaceMapper)
+* [JoinMapper](#joinMapper)
+* [MaxValueMapper](#maxValueMapper)
+* [MinValueMapper](#minValueMapper)
+* [ClassificationMapper](#classificationMapper)
+* [StringSplitterMapper](#stringSplitterMapper)
+* [StringReplaceMapper](#stringReplaceMapper)
+* [TimeMapper](#timeMapper)
+* [FieldTypeConverterMapper](#fieldTypeConverterMapper)
 
 
-### FieldMapper
+
+### <a name="fieldMapper"></a> FieldMapper [ [Top](#index) ]
 
 The FieldMapper is a function that allows us to add fields to one event.
 
@@ -58,7 +72,7 @@ If we use this message using the FieldMapper that is defined on the above exampl
 By default the FieldMapper will not overwrite the values if you don't specify the overwrite property.
 
 
-### SimpleMapper
+### <a name="simpleMapper"></a> SimpleMapper [ [Top](#index) ]
 
 The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it. 
 
@@ -103,7 +117,7 @@ If we use this message using the SimpleMapper that is defined on the above examp
 {"X":"MyValue", "Q":"MyOtherValue", "P": 123456, "timestamp": 123456788}
 ```
 
-### ReplaceMapper
+### <a name="replaceMapper"></a> ReplaceMapper [ [Top](#index) ]
 
 The ReplaceMapper is a function that allows us replace current values of messages by others that define by us. The replace value should exists.
 
@@ -147,7 +161,7 @@ If we use this message using the ReplaceMapper that is defined on the above exam
 }
 ```
 
-### JoinMapper
+### <a name="joinMapper"></a> JoinMapper
 The JoinMapper is a function that allow us join as many values as us want and assign them in other dimension.
 
 ```json
@@ -195,7 +209,7 @@ If we use this message using the JoinMapper that is defined on the above example
 }
 ```
 
-### MaxValueMapper
+### <a name="maxValueMapper"></a> MaxValueMapper [ [Top](#index) ]
 
 The MaxValueMapper is a function that allow us from an array of numbers which is greater. The max value is detected and store in other dimension
 
@@ -236,7 +250,7 @@ If we use this message using the MaxValueMapper that is defined on the above exa
 }
 ```
 
-### MinValueMapper
+### <a name="minValueMapper"></a> MinValueMapper [ [Top](#index) ]
 The MinValueMapper is like MaxValueMapper function, except that this function locate the smaller number in a array number.
 
 ```json
@@ -275,7 +289,7 @@ If we use this message using the MinValueMapper that is defined on the above exa
 }
 ```
 
-### ClassificationMapper
+### <a name="classificationMapper"></a> ClassificationMapper [ [Top](#index) ]
 
 The ClassficationMapper allows us classify a numeric value. 
 
@@ -324,7 +338,7 @@ If we use this message using the ClassificationMapper that is defined on the exa
 }
 ```
 
-### StringSplitterMapper
+### <a name="stringSplitterMapper"></a> StringSplitterMapper [ [Top](#index) ]
 
 The StringSplitterMapper allows us to split one dimension into multiple dimension.
 
@@ -359,7 +373,7 @@ This mapper has some properties:
 {"timestamp": 1477379967, "country": "Spain", "province": "Andalucia", "city":"Sevilla", "DIM-H": "Spain>Andalucia>Sevilla"}
 ```
 
-### StringReplaceMapper
+### <a name="stringReplaceMapper"></a> StringReplaceMapper [ [Top](#index) ]
 
 The StringReplaceMapper replaces the dimension string value to another one.
 
@@ -393,7 +407,7 @@ This mapper has some properties:
 {"timestamp": 1477379967, "DIM-C": "00:00:AA:FF:11:33"}
 ```
 
-### TimeMapper
+### <a name="timeMapper"></a> TimeMapper [ [Top](#index) ]
 
 The StringReplaceMapper converts different time formats to a specified format.
 
@@ -618,3 +632,83 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
 {"timestamp": 1234567890, "DIM-C": "00:00:AA:FF:11:33"}
 ```
+
+### <a name="fieldTypeConverterMapper"></a> FieldTypeConverterMapper [ [Top](#index) ]
+
+The FieldTypeConverterMapper allows us to convert value types of several dimensions into other types.
+
+```json
+        {
+          "name":"myFieldTypeConverterMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.FieldTypeConverterMapper",
+          "properties": {
+			"conversions": [
+				{
+				  "dimension": "field-A",
+                  "from": "string",
+                  "to": "boolean"
+				},
+                {
+                  "dimension": "timestamp",
+                  "from": "string",
+                  "to": "number"
+                },
+                {
+                  "dimension": "field-B",
+                  "from": "number",
+                  "to": "boolean",
+                  "newDimension": "isPositive"
+                }
+			]
+          }
+        }
+```
+
+
+**Input**:
+
+```json
+{"timestamp": "1503391561", "field-A": "true", "field-B": 1.35}
+```
+
+**Output:**
+
+```json
+{"timestamp": 1503391561, "field-A": true, "field-B": 1.35, "isPositive": true}
+```
+
+This mapper has some properties:
+
+* `conversions`: Set of conversions that you want to apply. 
+	* `dimension`:  The dimension field which contains the value that you want to convert.
+	* `from`: The source type: `NUMBER`, `STRING` or `BOOLEAN`.
+	* `to`: The destiny type: `NUMBER`, `STRING` or `BOOLEAN`.
+	* `newDimension`: If you set this property then the new value field will be renamed. Else `dimension` will be replace.
+
+You can convert next types:
+
+* `NUMBER` : This type represents `long`, `integer`, `short`, `byte`, `double` and `float`
+* `STRING` : This type represents strings.
+* `BOOLEAN` : This type represents boolean values: `true` or `false`
+
+Next table shows available conversion between types:
+
+| FROM\TO | NUMBER | STRING | BOOLEAN |
+|:---------:|:--------:|:--------:|:---------:|
+| **NUMBER**  | -      |&#x2713;|&#x2713;|
+| **STRING**  |&#x2713;|-|&#x2713;|
+| **BOOLEAN** |&#x2713;|&#x2713;|-|
+
+Below you can found a description about conversion between types:
+
+|Conversion|Description|
+|--------|---------|
+|NUMBER &#x2192; NUMBER|Without effect.|
+|NUMBER &#x2192; STRING|Convert any number type into string type. If the number value is `1.35` then it will be converted into `"1.35"`|
+|NUMBER &#x2192; BOOLEAN|Convert any number type into boolean type. If number is positive then the returned value will be `true`, else if numer is negative then the returned value will be `false`|
+|STRING &#x2192; NUMBER|Convert any number string type into number type value. If the string value is `"1.35"` then it will be converted into `1.35`.|
+|STRING &#x2192; STRING|Without effect.|
+|STRING &#x2192; BOOLEAN|Convert literal boolean string type into boolean type. If string is "true" then the returned value will be `true`, else if string values is "false" then the returned value will be `false`. |
+|BOOLEAN &#x2192; NUMBER|Convert any boolean type into integer number type. If boolean is `true` then the returned value will be `1` else if boolean values is `false` then the returned value will be `0`.|
+|BOOLEAN &#x2192; STRING|Convert any boolean type into string type. If boolean value is `true ` then the returned value will be `"true"`, else if boolean value is `false` then the returned value will be `"false"`.|
+|BOOLEAN &#x2192; BOOLEAN|Without effect.|
