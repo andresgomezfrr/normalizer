@@ -8,6 +8,5 @@
   "metric.interval": ${METRIC_INTERVAL},
   "multi.id": ${MULTI_ID},
   "max.output.kafka.topics": ${MAX_OUTPUT_KAFKA_TOPICS},
-  "timestamp.extractor": "org.apache.kafka.streams.processor.WallclockTimestampExtractor",
   "bootstrap.kafka.topics":["__normalizer_bootstrap"]
 }
