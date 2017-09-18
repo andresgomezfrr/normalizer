@@ -1,0 +1,77 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1",
+      "stream2"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.ArithmeticMapper",
+          "properties": {
+            "equations": [
+              {
+                "dimensions": ["field1", "field2"],
+                "equation": "field1+field2",
+                "as": "sum"
+              },
+              {
+                "dimensions": [
+                  "field1",
+                  "field3"
+                ],
+                "equation": "field1-field3",
+                "as": "subtract"
+              },
+              {
+                "dimensions": ["field1", "field2"],
+                "equation": "field1*field2",
+                "as": "multiply"
+              },
+              {
+                "dimensions": ["field1", "field2"],
+                "equation": "field1/field2",
+                "as": "division"
+              },
+              {
+                "dimensions": ["field1"],
+                "equation": "sqrt(field1)",
+                "as": "sqrt"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    },
+    "stream2": {
+      "funcs": [
+        {
+          "name": "myMapper2",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.ArithmeticMapper",
+          "properties": {
+            "equations": [
+              {
+                "dimensions": ["field1"],
+                "equation": "floor(field1*1000)/1000",
+                "as": "truncate"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
