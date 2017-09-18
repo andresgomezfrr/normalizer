@@ -69,6 +69,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+docs/_site
 
 # Other files
 .DS_Store
