@@ -20,6 +20,7 @@ The mapper functions transforms the stream one message to another message `1 to 
 * [StringReplaceMapper](#stringReplaceMapper)
 * [TimeMapper](#timeMapper)
 * [FieldTypeConverterMapper](#fieldTypeConverterMapper)
+* [ArithmeticMapper](#arithmeticMapper)
 
 
 
@@ -712,3 +713,107 @@ Below you can found a description about conversion between types:
 |BOOLEAN &#x2192; NUMBER|Convert any boolean type into integer number type. If boolean is `true` then the returned value will be `1` else if boolean values is `false` then the returned value will be `0`.|
 |BOOLEAN &#x2192; STRING|Convert any boolean type into string type. If boolean value is `true ` then the returned value will be `"true"`, else if boolean value is `false` then the returned value will be `"false"`.|
 |BOOLEAN &#x2192; BOOLEAN|Without effect.|
+
+
+### <a name="arithmeticMapper"></a> ArithmeticMapper [ [Top](#index) ]
+
+The Arithmetic mapper allows to evaluate math expressions over the json fields.
+
+```json
+         {
+          "name": "myArithmeticMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.ArithmeticMapper",
+          "properties": {
+            "equations": [
+              {
+                "dimensions": ["field1", "field2"],
+                "equation": "field1+field2",
+                "as": "sum"
+              },
+              {
+                "dimensions": [
+                  "field1",
+                  "field3"
+                ],
+                "equation": "field1-field3",
+                "as": "subtract"
+              }
+            ]
+          }
+        }
+```
+
+This mapper has one property:
+
+* `equations`: The equations that are going to be evaluated. The equations are maps containing this three values:
+
+    * `dimensions`: The dimensions that are going to be used at the equation. They are used to map the incoming json values to the solver.
+    * `equation`: The equation that is going to be evaluated
+    * `as`: The key of the field that will be used to insert the equation result.
+
+For the function defined above, if we have:
+
+**Input**:
+
+```json
+{"timestamp": 1477379967, "field1": 3, "field2": 4}
+```
+
+You will get as output:
+
+**Output:**
+
+```json
+{"timestamp": 1477379967, "field1": 3, "field2": 4, "sum": 7.0}
+```
+
+The second equation `field1-field3` is not evaluated because the field `field3` is not contained at the input json.
+
+If the input is:
+
+```json
+{"timestamp": 1477379967, "field1": 3, "field2": 4, "field3": 1}
+```
+
+The output would be:
+
+```json
+{"timestamp": 1477379967, "field1": 3, "field2": 4, "field3": 1, "sum": 7.0, "subtract": 2.0}
+```
+
+This function supports long, integer and double for input formats and it outputs double values.
+
+#### Supported operations and library used
+
+The library used for doing arithmetic operations is: [parsii](https://github.com/scireum/parsii) .
+You can check the supported operations inspecting the java classes of this project.
+
+Some of the operations supported are:
+
+|Operation|Arguments|Example| Explanation |
+|--------|---------|---------|---------|
+|+| none | a+b | add values |
+|-| none | a-b | subtract values |
+|/| none | a/b | divide values |
+|*| none | a*b | multiply values |
+|sqrt| double a | sqrt(a) | square root value |
+|floor| double a | floor(a) | select integer part of the number |
+|sin| double a | sin(a) | sine of a |
+|cos| double a | cos(a) | cosine of a |
+|tan| double a | tan(a) | tangent of a |
+|round| double a | round(a) | round to the closest integer |
+|ceil| double a | ceil(a) | select next integer |
+|pow| double a, double b | pow(a,b) | a^b |
+|exp| double a | exp(a) | 10^a |
+|log| double a | log(a) | ln(a) |
+|log10| double a | log10(a) | log10(a) |
+|min| double a, double b | min(a,b) | min value of a and b |
+|max| double a, double b | max(a,b) | max value of a and b |
+|random| double a | random(a) | a random number between 0 and a |
+|toDegrees| double a | toDegrees(a) | a to degrees |
+|toRadians| double a | toRadians(a) | a to radians |
+
+
+
+
+
