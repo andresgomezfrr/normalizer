@@ -62,8 +62,13 @@ public class ArithmeticMapper extends MapperFunction {
                 for (String dimension : ((List<String>) equation.get("dimensions"))) {
                     Object value2Set = value.get(dimension);
                     if (value2Set != null) {
-                        Number number = (Number) value2Set;
-                        variableMap.get(dimension).setValue(number.doubleValue());
+                        try {
+                            Number number = (Number) value2Set;
+                            variableMap.get(dimension).setValue(number.doubleValue());
+                        } catch (Exception e) {
+                            everyVarExist = false;
+                            log.debug(e.getMessage(), e);
+                        }
                     } else {
                         everyVarExist = false;
                         log.debug("Dimension: " + dimension + " doesn't exist to evaluate the arithmetic expression.");
