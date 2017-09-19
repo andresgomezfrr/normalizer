@@ -202,4 +202,20 @@ public class ArrayFlattenMapperUnitTest {
 
         assertEquals(Collections.singletonList(new KeyValue<>("KEY_1", expected)), result);
     }
+
+    @Test
+    public void processNullKeyAndNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myArrayFlatMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof ArrayFlattenMapper);
+        ArrayFlattenMapper myMapper = (ArrayFlattenMapper) myFunc;
+
+        List<KeyValue<String, Map<String, Object>>> result = (List<KeyValue<String, Map<String, Object>>>) myMapper.process(null, null);
+        for (KeyValue<String, Map<String, Object>> keyValue : result) {
+            assertNull(keyValue.key);
+            assertNull(keyValue.value);
+        }
+    }
 }

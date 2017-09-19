@@ -23,18 +23,18 @@ public class ArrayFlattenMapper extends FlatMapperFunction {
     public Iterable<KeyValue<String, Map<String, Object>>> process(String key, Map<String, Object> value) {
         List<KeyValue<String, Map<String, Object>>> results = Collections.singletonList(new KeyValue<>(key, value));
 
-        if (flatDimension != null) {
+        if (value != null && flatDimension != null) {
 
             if (value.containsKey(flatDimension)) {
                 List<Object> array = (List<Object>) value.remove(flatDimension);
 
-                if(array != null) {
+                if (array != null) {
                     results = array.stream().map(val -> {
 
                         Map<String, Object> newValue = new HashMap<>();
                         newValue.putAll(value);
 
-                        if(val instanceof Map) {
+                        if (val instanceof Map) {
                             newValue.putAll((Map<String, Object>) val);
                         } else {
                             newValue.put(flatDimension, val);
@@ -48,9 +48,7 @@ public class ArrayFlattenMapper extends FlatMapperFunction {
                 }
 
             }
-
         }
-
         return results;
     }
 
