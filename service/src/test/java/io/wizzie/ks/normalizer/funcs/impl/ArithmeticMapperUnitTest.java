@@ -143,6 +143,28 @@ public class ArithmeticMapperUnitTest {
     }
 
     @Test
+    public void processStringFieldMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof ArithmeticMapper);
+        ArithmeticMapper myMapper = (ArithmeticMapper) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("timestamp", 123456789);
+        message.put("field1", "7");
+        message.put("field2", 0.5);
+        message.put("field3", 1.5);
+
+        KeyValue<String, Map<String, Object>> mapMessage = myMapper.process("key1", message);
+        assertEquals("key1", mapMessage.key);
+
+        Map<String, Object> value = mapMessage.value;
+        assertEquals(message, value);
+    }
+
+    @Test
     public void processSubtractMessage() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myMapper");
