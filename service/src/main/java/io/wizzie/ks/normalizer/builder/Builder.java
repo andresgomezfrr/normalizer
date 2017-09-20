@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static io.wizzie.ks.normalizer.builder.config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
+import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 
 
 public class Builder implements Listener{
@@ -67,6 +68,8 @@ public class Builder implements Listener{
             KStreamBuilder builder = streamBuilder.builder(model);
             log.info("--------  TOPOLOGY BUILD END  --------");
 
+            String appId = config.get(APPLICATION_ID_CONFIG);
+            config.put(APPLICATION_ID_CONFIG, String.format("%s_%s", appId, "normalizer"));
             streams = new KafkaStreams(builder, config.getProperties());
 
             streams.setUncaughtExceptionHandler((thread, exception) -> log.error(exception.getMessage(), exception));
