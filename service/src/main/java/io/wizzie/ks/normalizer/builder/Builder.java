@@ -68,9 +68,10 @@ public class Builder implements Listener{
             KStreamBuilder builder = streamBuilder.builder(model);
             log.info("--------  TOPOLOGY BUILD END  --------");
 
-            String appId = config.get(APPLICATION_ID_CONFIG);
-            config.put(APPLICATION_ID_CONFIG, String.format("%s_%s", appId, "normalizer"));
-            streams = new KafkaStreams(builder, config.getProperties());
+            Config configWithNewAppId = config.clone();
+            String appId = configWithNewAppId.get(APPLICATION_ID_CONFIG);
+            configWithNewAppId.put(APPLICATION_ID_CONFIG, String.format("%s_%s", appId, "normalizer"));
+            streams = new KafkaStreams(builder, configWithNewAppId.getProperties());
 
             streams.setUncaughtExceptionHandler((thread, exception) -> log.error(exception.getMessage(), exception));
             streams.start();
