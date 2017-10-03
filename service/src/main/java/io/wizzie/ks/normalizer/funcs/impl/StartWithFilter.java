@@ -19,19 +19,22 @@ public class StartWithFilter extends FilterFunc {
         startWithValue = checkNotNull((String) properties.get("start_with"), "start_with cannot be null");
         dimension = checkNotNull((String) properties.get("dimension"), "dimension cannot be null");
 
-        if(dimension.equals(__KEY)) isDimensionKey = true;
+        if (dimension.equals(__KEY)) isDimensionKey = true;
     }
 
     @Override
     public Boolean process(String key, Map<String, Object> value) {
-        if(isDimensionKey && key != null)
-            return key.startsWith(startWithValue);
-        else if(!isDimensionKey) {
-            Object currentValue = value.get(dimension);
-            return currentValue != null && currentValue.toString().startsWith(startWithValue);
+        if (value != null) {
+            if (isDimensionKey && key != null)
+                return key.startsWith(startWithValue);
+            else if (!isDimensionKey) {
+                Object currentValue = value.get(dimension);
+                return currentValue != null && currentValue.toString().startsWith(startWithValue);
+            }
+            return false;
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     @Override

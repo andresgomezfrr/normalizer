@@ -82,6 +82,73 @@ public class TimeMapperUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myTimeFunc = functions.get("myTimeMapper");
+
+        assertNotNull(myTimeFunc);
+        assertTrue(myTimeFunc instanceof MapperFunction);
+        MapperFunction myTimeMapper = (MapperFunction) myTimeFunc;
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 1234567890L);
+        message1.put("dimension1", "value1");
+        message1.put("dimension2", "value2");
+        message1.put("dimension3", "value3");
+
+        Map<String, Object> expectedMessage1 = new HashMap<>();
+        expectedMessage1.put("timestamp", 1234567890000L);
+        expectedMessage1.put("dimension1", "value1");
+        expectedMessage1.put("dimension2", "value2");
+        expectedMessage1.put("dimension3", "value3");
+
+        KeyValue<String, Map<String, Object>> result1 = myTimeMapper.process(null, message1);
+
+        assertEquals(new KeyValue<>(null, expectedMessage1), result1);
+
+    }
+
+
+    @Test
+    public void procesNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myTimeFunc = functions.get("myTimeMapper");
+
+        assertNotNull(myTimeFunc);
+        assertTrue(myTimeFunc instanceof MapperFunction);
+        MapperFunction myTimeMapper = (MapperFunction) myTimeFunc;
+
+        Map<String, Object> message1 = null;
+
+        Map<String, Object> expectedMessage1 = null;
+
+        KeyValue<String, Map<String, Object>> result1 = myTimeMapper.process("KEY", message1);
+
+        assertEquals(new KeyValue<>("KEY", expectedMessage1), result1);
+
+    }
+
+    @Test
+    public void procesNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myTimeFunc = functions.get("myTimeMapper");
+
+        assertNotNull(myTimeFunc);
+        assertTrue(myTimeFunc instanceof MapperFunction);
+        MapperFunction myTimeMapper = (MapperFunction) myTimeFunc;
+
+        Map<String, Object> message1 = null;
+
+        Map<String, Object> expectedMessage1 = null;
+
+        KeyValue<String, Map<String, Object>> result1 = myTimeMapper.process(null, message1);
+
+        assertEquals(new KeyValue<>(null, expectedMessage1), result1);
+
+    }
+
+
+    @Test
     public void processSecsToMillisNoTimestampReadedFromConfig() throws IOException, PlanBuilderException {
 
         StreamBuilder streamBuilder2 = new StreamBuilder(config, null);

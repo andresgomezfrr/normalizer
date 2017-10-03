@@ -78,6 +78,32 @@ public class StringSplitterMapperUnitTest {
     }
 
     @Test
+    public void processNullKey(){
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+        Function myFunc = functions.get("myStringSplitterFunction");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof StringSplitterMapper);
+        StringSplitterMapper myStringReplaceMapper = (StringSplitterMapper) myFunc;
+
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("DIM-A", "VALUE-A");
+        msg.put("DIM-B", 94);
+        msg.put("DIM-C", Arrays.asList("X", "Y", "Z"));
+        msg.put("DIM-H", "myCountry > myProvince > myCity");
+
+        Map<String, Object> expectedMsg = new HashMap<>();
+        expectedMsg.putAll(msg);
+        expectedMsg.put("country", "myCountry");
+        expectedMsg.put("province", "myProvince");
+        expectedMsg.put("city", "myCity");
+
+        assertEquals(new KeyValue<>(null, expectedMsg), myStringReplaceMapper.process(null, msg));
+    }
+
+
+
+    @Test
     public void processNullValueMessage() {
         Map<String, Function> functions = streamBuilder.getFunctions("myStream");
         Function myFunc = functions.get("myStringSplitterFunction");
