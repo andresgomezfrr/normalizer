@@ -102,6 +102,99 @@ public class StartWithFilterUnitTest {
         assertTrue(myValueStartWithFilter.process("KEY", message3));
     }
 
+
+    @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+
+        Function myKeyFunc = functions.get("myKeyStartWithFilter");
+
+        assertNotNull(myKeyFunc);
+        assertTrue(myKeyFunc instanceof FilterFunc);
+        StartWithFilter myKeyStartWithFilter = (StartWithFilter) myKeyFunc;
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 123456789L);
+        message1.put("TYPE", "YES-A");
+
+        assertFalse(myKeyStartWithFilter.process(null, message1));
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("timestamp", 123456789L);
+        message2.put("TYPE", "NO-B");
+
+        assertFalse(myKeyStartWithFilter.process(null, message1));
+
+        Map<String, Object> message3 = new HashMap<>();
+        message3.put("timestamp", 123456789L);
+        message3.put("TYPE", "YES-C");
+
+        Function myValueFunc = functions.get("myValueStartWithFilter");
+
+        assertNotNull(myValueFunc);
+        assertTrue(myValueFunc instanceof FilterFunc);
+        StartWithFilter myValueStartWithFilter = (StartWithFilter) myValueFunc;
+
+        assertTrue(myValueStartWithFilter.process(null, message1));
+        assertFalse(myValueStartWithFilter.process(null, message2));
+        assertTrue(myValueStartWithFilter.process(null, message3));
+    }
+
+
+    @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+
+        Function myKeyFunc = functions.get("myKeyStartWithFilter");
+
+        assertNotNull(myKeyFunc);
+        assertTrue(myKeyFunc instanceof FilterFunc);
+        StartWithFilter myKeyStartWithFilter = (StartWithFilter) myKeyFunc;
+
+        Map<String, Object> message1 = null;
+
+        assertFalse(myKeyStartWithFilter.process("FILTER-KEY", message1));
+
+        Map<String, Object> message2 = null;
+        assertFalse(myKeyStartWithFilter.process("KEY", message2));
+
+        Map<String, Object> message3 = null;
+
+        Function myValueFunc = functions.get("myValueStartWithFilter");
+
+        assertNotNull(myValueFunc);
+        assertTrue(myValueFunc instanceof FilterFunc);
+        StartWithFilter myValueStartWithFilter = (StartWithFilter) myValueFunc;
+
+        assertFalse(myValueStartWithFilter.process("KEY", message1));
+        assertFalse(myValueStartWithFilter.process("KEY", message2));
+        assertFalse(myValueStartWithFilter.process("KEY", message3));
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+
+        Function myKeyFunc = functions.get("myKeyStartWithFilter");
+
+        assertNotNull(myKeyFunc);
+        assertTrue(myKeyFunc instanceof FilterFunc);
+        StartWithFilter myKeyStartWithFilter = (StartWithFilter) myKeyFunc;
+
+        Map<String, Object> message1 = null;
+
+        assertFalse(myKeyStartWithFilter.process(null, message1));
+
+        Function myValueFunc = functions.get("myValueStartWithFilter");
+
+        assertNotNull(myValueFunc);
+        assertTrue(myValueFunc instanceof FilterFunc);
+        StartWithFilter myValueStartWithFilter = (StartWithFilter) myValueFunc;
+
+        assertFalse(myValueStartWithFilter.process(null, message1));
+
+    }
+
     @Test
     public void processNullDimension() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");

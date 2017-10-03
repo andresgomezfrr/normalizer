@@ -110,6 +110,72 @@ public class FieldMapperUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFieldFunc = functions.get("myFieldMapper");
+
+        assertNotNull(myFieldFunc);
+        assertTrue(myFieldFunc instanceof MapperFunction);
+        MapperFunction myReplaceMapper = (MapperFunction) myFieldFunc;
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 123456789L);
+        message1.put("dimension1", "value1");
+        message1.put("dimension2", "value2");
+        message1.put("dimension3", "value3");
+
+
+        Map<String, Object> expectedMessage1 = new HashMap<>();
+        expectedMessage1.put("timestamp", 123456789L);
+        expectedMessage1.put("dimension1", "value1");
+        expectedMessage1.put("dimension2", "defaultValue2");
+        expectedMessage1.put("dimension3", "value3");
+
+        KeyValue<String, Map<String, Object>> result1 = myReplaceMapper.process(null, message1);
+
+        assertEquals(new KeyValue<>(null, expectedMessage1), result1);
+
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFieldFunc = functions.get("myFieldMapper");
+
+        assertNotNull(myFieldFunc);
+        assertTrue(myFieldFunc instanceof MapperFunction);
+        MapperFunction myReplaceMapper = (MapperFunction) myFieldFunc;
+
+        Map<String, Object> message1 = null;
+
+        KeyValue<String, Map<String, Object>> result1 = myReplaceMapper.process(null, message1);
+
+        assertEquals(new KeyValue<>(null, null), result1);
+
+    }
+
+
+    @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFieldFunc = functions.get("myFieldMapper");
+
+        assertNotNull(myFieldFunc);
+        assertTrue(myFieldFunc instanceof MapperFunction);
+        MapperFunction myReplaceMapper = (MapperFunction) myFieldFunc;
+
+        Map<String, Object> message1 = null;
+
+
+        KeyValue<String, Map<String, Object>> result1 = myReplaceMapper.process("KEY", message1);
+
+        Map<String, Object> expectedMessage1 = null;
+
+        assertEquals(new KeyValue<>("KEY", null), result1);
+
+    }
+
+    @Test
     public void processNestedMessage() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFieldFunc = functions.get("myFieldMapper");

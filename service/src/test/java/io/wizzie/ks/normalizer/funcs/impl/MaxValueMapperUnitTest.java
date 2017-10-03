@@ -107,6 +107,32 @@ public class MaxValueMapperUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+        Function myFunc = functions.get("myMaxValueMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof MapperFunction);
+        MaxValueMapper myMaxValueFunction = (MaxValueMapper) myFunc;
+
+        assertEquals("measures", myMaxValueFunction.dimension);
+
+        List<Integer> measures = Arrays.asList(2, 1, 0, 8, 4, 3);
+
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("timestamp", 1234567890);
+        msg.put("DIM-A", "VALUE-A");
+        msg.put("DIM-B", 2);
+        msg.put("measures", measures);
+
+        Map<String, Object> expectedMsg = new HashMap<>();
+        expectedMsg.putAll(msg);
+        expectedMsg.put("max_measure", 8);
+
+        assertEquals(new KeyValue<>(null, expectedMsg), myMaxValueFunction.process(null, msg));
+    }
+
+    @Test
     public void processNullMessages() {
         Map<String, Function> functions = streamBuilder.getFunctions("myStream");
         Function myFunc = functions.get("myMaxValueMapper");
@@ -118,6 +144,20 @@ public class MaxValueMapperUnitTest {
         assertEquals("measures", myMaxValueFunction.dimension);
 
         assertEquals(new KeyValue<>("KEY-A", null), myMaxValueFunction.process("KEY-A", null));
+    }
+
+    @Test
+    public void processNullKeysAndMessages() {
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+        Function myFunc = functions.get("myMaxValueMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof MapperFunction);
+        MaxValueMapper myMaxValueFunction = (MaxValueMapper) myFunc;
+
+        assertEquals("measures", myMaxValueFunction.dimension);
+
+        assertEquals(new KeyValue<>(null, null), myMaxValueFunction.process(null, null));
     }
 
     @Test

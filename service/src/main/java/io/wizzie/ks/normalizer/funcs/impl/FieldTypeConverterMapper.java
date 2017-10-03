@@ -25,57 +25,60 @@ public class FieldTypeConverterMapper extends MapperFunction {
 
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> message) {
+        if (message != null) {
+            for (Map<String, Object> conversion : conversions) {
+                String dimension = checkNotNull((String) conversion.get("dimension"), "dimension cannot be null!");
+                String newDimension = (String) conversion.get("newDimension");
+                // Get value
+                Object value = message.get(dimension);
 
-        for (Map<String, Object> conversion : conversions) {
-            String dimension = checkNotNull((String) conversion.get("dimension"), "dimension cannot be null!");
-            String newDimension = (String) conversion.get("newDimension");
-            // Get value
-            Object value = message.get(dimension);
+                // Check that value is not null
+                if (value != null) {
+                    // Source
+                    String from = checkNotNull((String) conversion.get("from"), "from cannot be null!");
+                    // Destiny
+                    String to = checkNotNull((String) conversion.get("to"), "to cannot be null!");
+                    // Converted value
+                    Object convertedValue = null;
 
-            // Check that value is not null
-            if (value != null) {
-                // Source
-                String from = checkNotNull((String) conversion.get("from"), "from cannot be null!");
-                // Destiny
-                String to = checkNotNull((String) conversion.get("to"), "to cannot be null!");
-                // Converted value
-                Object convertedValue = null;
-
-                // Performance conversion
-                switch (ConvertFrom.valueOf(to.toUpperCase())) {
-                    case NUMBER:
-                        try {
-                            convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toNumber(value);
-                        } catch (ParseException e) {
+                    // Performance conversion
+                    switch (ConvertFrom.valueOf(to.toUpperCase())) {
+                        case NUMBER:
+                            try {
+                                convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toNumber(value);
+                            } catch (ParseException e) {
                                 log.debug("ParseException at ConvertFrom function.");
-                        }
-                        if(convertedValue == null){
-                            log.debug("Value is null or cannot be converted");
-                        }
-                        break;
-                    case STRING:
-                        convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toString(value);
-                        if(convertedValue == null){
-                            log.debug("Value is null or cannot be converted");
-                        }
-                        break;
-                    case BOOLEAN:
-                        convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toBoolean(value);
-                        if(convertedValue == null){
-                            log.debug("Value is null or cannot be converted");
-                        }
-                        break;
+                            }
+                            if (convertedValue == null) {
+                                log.debug("Value is null or cannot be converted");
+                            }
+                            break;
+                        case STRING:
+                            convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toString(value);
+                            if (convertedValue == null) {
+                                log.debug("Value is null or cannot be converted");
+                            }
+                            break;
+                        case BOOLEAN:
+                            convertedValue = ConvertFrom.valueOf(from.toUpperCase()).toBoolean(value);
+                            if (convertedValue == null) {
+                                log.debug("Value is null or cannot be converted");
+                            }
+                            break;
+                    }
+
+                    // Add converted value to map
+                    if (newDimension != null)
+                        message.put(newDimension, convertedValue);
+                    else
+                        message.put(dimension, convertedValue);
                 }
-
-                // Add converted value to map
-                if (newDimension != null)
-                    message.put(newDimension, convertedValue);
-                else
-                    message.put(dimension, convertedValue);
             }
-        }
 
-        return new KeyValue<>(key, message);
+            return new KeyValue<>(key, message);
+        } else{
+            return new KeyValue<>(key, null);
+        }
     }
 
     @Override

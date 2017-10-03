@@ -123,6 +123,21 @@ public class StringReplaceMapperUnitTest {
         assertEquals(new KeyValue<>(null, null), mapMessage);
     }
 
+    @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+        Function myFunc = functions.get("myStringReplacementFunction");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof StringReplaceMapper);
+        StringReplaceMapper myStringReplaceMapper = (StringReplaceMapper) myFunc;
+
+        KeyValue<String, Map<String, Object>> mapMessage = myStringReplaceMapper.process("key", null);
+
+        assertEquals("key", mapMessage.key);
+        assertNull(mapMessage.value);
+        assertEquals(new KeyValue<>("key", null), mapMessage);
+    }
 
     @AfterClass
     public static void stopTest(){
