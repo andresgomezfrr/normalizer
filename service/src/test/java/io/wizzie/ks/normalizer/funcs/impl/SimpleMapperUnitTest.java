@@ -147,7 +147,21 @@ public class SimpleMapperUnitTest {
     }
 
     @Test
-    public void toStringTest(){
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof SimpleMapper);
+        SimpleMapper myMapper = (SimpleMapper) myFunc;
+
+        KeyValue<String, Map<String, Object>> mapMessage = myMapper.process("KEY", null);
+        assertEquals("KEY", mapMessage.key);
+        assertNull(mapMessage.value);
+    }
+
+    @Test
+    public void toStringTest() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myMapper");
 
@@ -157,7 +171,7 @@ public class SimpleMapperUnitTest {
     }
 
     @AfterClass
-    public static void stopTest(){
+    public static void stopTest() {
         streamBuilder.close();
     }
 }

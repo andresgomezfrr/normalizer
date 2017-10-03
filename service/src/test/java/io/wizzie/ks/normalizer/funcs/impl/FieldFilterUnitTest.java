@@ -100,6 +100,35 @@ public class FieldFilterUnitTest {
     }
 
     @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        FieldFilter myFilter = (FieldFilter) myFunc;
+
+        Map<String, Object> message = null;
+
+        assertFalse(myFilter.process("key1", message));
+    }
+
+    @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilterKey");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        FieldFilter myFilter = (FieldFilter) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+
+        assertFalse(myFilter.process(null, message));
+    }
+
+
+    @Test
     public void processFilterKey() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myFilterKey");

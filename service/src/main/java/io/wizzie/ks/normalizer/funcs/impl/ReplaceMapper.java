@@ -22,16 +22,20 @@ public class ReplaceMapper extends MapperFunction {
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
 
-        String replaceValue = (String) value.get(dimension);
+        if (value != null) {
+            String replaceValue = (String) value.get(dimension);
 
-        if(replaceValue != null){
-            replaceValue = replaceValue.toLowerCase();
+            if (replaceValue != null) {
+                replaceValue = replaceValue.toLowerCase();
 
-            if(replacements.containsKey(replaceValue))
-                value.put(dimension, replacements.get(replaceValue));
+                if (replacements.containsKey(replaceValue))
+                    value.put(dimension, replacements.get(replaceValue));
+            }
+
+            return new KeyValue<>(key, value);
+        } else {
+            return new KeyValue<>(key, null);
         }
-
-        return new KeyValue<>(key, value);
     }
 
     @Override

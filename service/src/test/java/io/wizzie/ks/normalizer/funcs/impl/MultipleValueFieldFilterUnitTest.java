@@ -92,6 +92,65 @@ public class MultipleValueFieldFilterUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myMultipleValueFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        MultiValueFieldFilter myFilter = (MultiValueFieldFilter) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("timestamp", 123456789L);
+        message.put("FILTER-DIMENSION", "FILTER-VALUE");
+
+        assertTrue(myFilter.process(null, message));
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("timestamp", 123456789L);
+        message2.put("FILTER-DIMENSION", "FILTER-VALUE-1");
+
+        assertTrue(myFilter.process(null, message2));
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 123456789L);
+        message1.put("FILTER-DIMENSION", "NOT-FILTER-VALUE");
+
+        assertFalse(myFilter.process(null, message1));
+    }
+
+    @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myMultipleValueFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        MultiValueFieldFilter myFilter = (MultiValueFieldFilter) myFunc;
+
+        Map<String, Object> message = null;
+
+        assertFalse(myFilter.process("key1", message));
+
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myMultipleValueFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        MultiValueFieldFilter myFilter = (MultiValueFieldFilter) myFunc;
+
+        Map<String, Object> message = null;
+
+        assertFalse(myFilter.process(null, message));
+
+    }
+
+
+    @Test
     public void processNullDimension() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myMultipleValueFilter");

@@ -154,6 +154,108 @@ public class FieldTypeConverterMapperUnitTest {
     }
 
     @Test
+    public void processNullMessage() throws IOException, PlanBuilderException {
+        StreamBuilder streamBuilder2 = new StreamBuilder(config, null);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("field-type-converter-mapper.json").getFile());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
+        streamBuilder2.builder(model);
+
+        Map<String, Function> functions = streamBuilder2.getFunctions("stream1");
+        Function myFieldConverterFunc = functions.get("myFieldConverterMapper");
+
+        assertNotNull(myFieldConverterFunc);
+        assertTrue(myFieldConverterFunc instanceof MapperFunction);
+        FieldTypeConverterMapper fieldConverterMapper = (FieldTypeConverterMapper) myFieldConverterFunc;
+
+        Map<String, Object> message = null;
+
+        Map<String, Object> expectedMessage = null;
+
+        KeyValue<String, Map<String, Object>> result1 = fieldConverterMapper.process("KEY", message);
+        streamBuilder2.close();
+        assertEquals(new KeyValue<>("KEY", expectedMessage), result1);
+    }
+
+    @Test
+    public void processNullKeyAndMessage() throws IOException, PlanBuilderException {
+        StreamBuilder streamBuilder2 = new StreamBuilder(config, null);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("field-type-converter-mapper.json").getFile());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
+        streamBuilder2.builder(model);
+
+        Map<String, Function> functions = streamBuilder2.getFunctions("stream1");
+        Function myFieldConverterFunc = functions.get("myFieldConverterMapper");
+
+        assertNotNull(myFieldConverterFunc);
+        assertTrue(myFieldConverterFunc instanceof MapperFunction);
+        FieldTypeConverterMapper fieldConverterMapper = (FieldTypeConverterMapper) myFieldConverterFunc;
+
+        Map<String, Object> message = null;
+
+        Map<String, Object> expectedMessage = null;
+
+        KeyValue<String, Map<String, Object>> result1 = fieldConverterMapper.process(null, message);
+        streamBuilder2.close();
+        assertEquals(new KeyValue<>(null, expectedMessage), result1);
+    }
+
+    @Test
+    public void processNullKey() throws IOException, PlanBuilderException {
+        StreamBuilder streamBuilder2 = new StreamBuilder(config, null);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("field-type-converter-mapper.json").getFile());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
+        streamBuilder2.builder(model);
+
+        Map<String, Function> functions = streamBuilder2.getFunctions("stream1");
+        Function myFieldConverterFunc = functions.get("myFieldConverterMapper");
+
+        assertNotNull(myFieldConverterFunc);
+        assertTrue(myFieldConverterFunc instanceof MapperFunction);
+        FieldTypeConverterMapper fieldConverterMapper = (FieldTypeConverterMapper) myFieldConverterFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("dimension-A", 1.5);
+        message.put("dimension-B", true);
+        message.put("dimension-C", "foo");
+        message.put("dimension-D", true);
+        message.put("dimension-E", "1.57");
+        message.put("dimension-F", -100);
+        message.put("dimension-G", 7);
+        message.put("dimension-H", "false");
+        message.put("dimension-I", true);
+
+        Map<String, Object> expectedMessage = new HashMap<>();
+        expectedMessage.put("dimension-A", "1.5");
+        expectedMessage.put("dimension-B", "true");
+        expectedMessage.put("dimension-C", "foo");
+        expectedMessage.put("dimension-D", 1);
+        expectedMessage.put("dimension-E", 1.57);
+        expectedMessage.put("dimension-F", -100);
+        expectedMessage.put("dimension-G", true);
+        expectedMessage.put("dimension-H", false);
+        expectedMessage.put("dimension-I", true);
+
+        KeyValue<String, Map<String, Object>> result1 = fieldConverterMapper.process(null, message);
+        streamBuilder2.close();
+        assertEquals(new KeyValue<>(null, expectedMessage), result1);
+    }
+
+    @Test
     public void processConversionWithNewDimensions() throws IOException, PlanBuilderException {
         StreamBuilder streamBuilder2 = new StreamBuilder(config, null);
 

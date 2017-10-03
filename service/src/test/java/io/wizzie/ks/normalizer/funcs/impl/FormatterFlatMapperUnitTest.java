@@ -286,4 +286,13 @@ public class FormatterFlatMapperUnitTest {
         assertEquals(0, results.size());
     }
 
+    @Test
+    public void notProcessNullKeysAndMessages() {
+        String key = null;
+
+        List<KeyValue<String, Map<String, Object>>> results = (List<KeyValue<String, Map<String, Object>>>) formatterFlatMapper.process(key, null);
+
+        assertEquals(0, results.size());
+    }
+
 }

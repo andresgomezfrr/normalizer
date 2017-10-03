@@ -107,6 +107,32 @@ public class MinValueMapperUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+        Function myFunc = functions.get("myMinValueMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof MapperFunction);
+        MinValueMapper myMinValueFunction = (MinValueMapper) myFunc;
+
+        assertEquals("measures", myMinValueFunction.dimension);
+
+        List<Integer> measures = Arrays.asList(2, 1, 0, 8, 4, 3);
+
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("timestamp", 1234567890);
+        msg.put("DIM-A", "VALUE-A");
+        msg.put("DIM-B", 2);
+        msg.put("measures", measures);
+
+        Map<String, Object> expectedMsg = new HashMap<>();
+        expectedMsg.putAll(msg);
+        expectedMsg.put("min_measure", 0);
+
+        assertEquals(new KeyValue<>(null, expectedMsg), myMinValueFunction.process(null, msg));
+    }
+
+    @Test
     public void processNullMessages() {
         Map<String, Function> functions = streamBuilder.getFunctions("myStream");
         Function myFunc = functions.get("myMinValueMapper");
@@ -118,6 +144,20 @@ public class MinValueMapperUnitTest {
         assertEquals("measures", myMinValueFunction.dimension);
 
         assertEquals(new KeyValue<>("KEY-A", null), myMinValueFunction.process("KEY-A", null));
+    }
+
+    @Test
+    public void processNullKeysAndMessages() {
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+        Function myFunc = functions.get("myMinValueMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof MapperFunction);
+        MinValueMapper myMinValueFunction = (MinValueMapper) myFunc;
+
+        assertEquals("measures", myMinValueFunction.dimension);
+
+        assertEquals(new KeyValue<>(null, null), myMinValueFunction.process(null, null));
     }
 
     @Test
