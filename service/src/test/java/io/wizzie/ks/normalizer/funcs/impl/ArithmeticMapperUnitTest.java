@@ -272,6 +272,20 @@ public class ArithmeticMapperUnitTest {
     }
 
     @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof ArithmeticMapper);
+        ArithmeticMapper myMapper = (ArithmeticMapper) myFunc;
+
+        KeyValue<String, Map<String, Object>> mapMessage = myMapper.process("key", null);
+        assertEquals("key",mapMessage.key);
+        assertNull(mapMessage.value);
+    }
+
+    @Test
     public void processNullDimensionMessage() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myMapper");

@@ -23,11 +23,19 @@ public class FieldFilter extends FilterFunc {
 
     @Override
     public Boolean process(String key, Map<String, Object> value) {
-        if (isDimensionKey) {
-            return key.equals(dimensionValue);
+        if (value != null) {
+            if (isDimensionKey) {
+                if (key == null) {
+                    return false;
+                } else {
+                    return key.equals(dimensionValue);
+                }
+            } else {
+                Object currentValue = value.get(dimension);
+                return currentValue != null && currentValue.equals(dimensionValue);
+            }
         } else {
-            Object currentValue = value.get(dimension);
-            return currentValue != null && currentValue.equals(dimensionValue);
+            return false;
         }
     }
 

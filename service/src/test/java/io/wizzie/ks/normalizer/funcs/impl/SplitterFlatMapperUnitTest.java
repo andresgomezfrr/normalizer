@@ -119,6 +119,60 @@ public class SplitterFlatMapperUnitTest {
     }
 
     @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("mySplitterFlatMapper");
+
+        Map<String, Object> message = null;
+
+        Map<String, Object> expected = null;
+
+        List<KeyValue<String, Map<String, Object>>> result = (List<KeyValue<String, Map<String, Object>>>) myFunc.process("key1", message);
+
+        assertEquals(null, result);
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("mySplitterFlatMapper");
+
+        Map<String, Object> message = null;
+
+        Map<String, Object> expected = null;
+
+        List<KeyValue<String, Map<String, Object>>> result = (List<KeyValue<String, Map<String, Object>>>) myFunc.process(null, message);
+
+        assertEquals(null, result);
+    }
+
+    @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("mySplitterFlatMapper");
+
+        Map<String, Object> message = new HashMap<>();
+        DateTime firstSwitchDate = formatter.withZoneUTC().parseDateTime("2014-01-01 22:10:12");
+        DateTime timestampDate = formatter.withZoneUTC().parseDateTime("2014-01-01 22:10:42");
+
+        message.put("timestamp", secs(timestampDate));
+        message.put("last_timestamp", secs(firstSwitchDate));
+        message.put("C", 999L);
+        message.put("D", 99L);
+
+        Map<String, Object> expected = new HashMap<>();
+        expected.put("timestamp", secs(firstSwitchDate));
+        expected.put("C", 999L);
+        expected.put("D", 99L);
+
+        KeyValue<String, Object> expectedMessage = new KeyValue<>(null, expected);
+
+        List<KeyValue<String, Map<String, Object>>> result = (List<KeyValue<String, Map<String, Object>>>) myFunc.process(null, message);
+
+        assertEquals(expectedMessage, result.get(0));
+    }
+
+    @Test
     public void higherThanAMinute() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("mySplitterFlatMapper");
