@@ -24,11 +24,15 @@ public class MultiValueFieldFilter extends FilterFunc {
 
     @Override
     public Boolean process(String key, Map<String, Object> value) {
-        if (isDimensionKey) {
-            return dimensionValues.contains(key);
+        if (value != null) {
+            if (isDimensionKey) {
+                return dimensionValues.contains(key);
+            } else {
+                Object currentValue = value.get(dimension);
+                return currentValue != null && dimensionValues.contains(currentValue);
+            }
         } else {
-            Object currentValue = value.get(dimension);
-            return currentValue != null && dimensionValues.contains(currentValue);
+            return false;
         }
     }
 

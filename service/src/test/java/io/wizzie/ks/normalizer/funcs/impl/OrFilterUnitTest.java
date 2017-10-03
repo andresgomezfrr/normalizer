@@ -65,6 +65,48 @@ public class OrFilterUnitTest {
     }
 
     @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof OrFilter);
+        OrFilter myFilter = (OrFilter) myFunc;
+
+        Map<String, Object> message = null;
+        assertFalse(myFilter.process("key1", message));
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof OrFilter);
+        OrFilter myFilter = (OrFilter) myFunc;
+
+        Map<String, Object> message = null;
+        assertFalse(myFilter.process(null, message));
+    }
+
+    @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof OrFilter);
+        OrFilter myFilter = (OrFilter) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("timestamp", 123456789L);
+        message.put("FILTER-DIMENSION", "FILTER-VALUE");
+
+        assertTrue(myFilter.process(null, message));
+    }
+
+    @Test
     public void processGoodSimpleMessage2() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myFilter");

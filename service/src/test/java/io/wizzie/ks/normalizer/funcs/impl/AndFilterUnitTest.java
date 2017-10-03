@@ -91,6 +91,20 @@ public class AndFilterUnitTest {
     }
 
 
+    @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof AndFilter);
+        AndFilter myFilter = (AndFilter) myFunc;
+
+        Map<String, Object> message = null;
+
+        assertFalse(myFilter.process(null, message));
+    }
+
     @AfterClass
     public static void stop(){
         streamBuilder.close();

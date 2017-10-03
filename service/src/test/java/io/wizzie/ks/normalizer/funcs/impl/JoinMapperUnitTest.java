@@ -105,6 +105,45 @@ public class JoinMapperUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+
+        Function myFunc = streamBuilder.getFunctions("stream1").get("myJoinMapper");;
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof MapperFunction);
+        JoinMapper myJoinFunc = (JoinMapper) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("A", "1");
+        message.put("B", "2");
+        message.put("C", "3");
+        message.put("D", "4");
+
+        KeyValue<String, Map<String, Object>> receivedMessage = myJoinFunc.process(null, message);
+
+        Map<String, Object> expectedMessage = new HashMap<>();
+        expectedMessage.put("A", "1");
+        expectedMessage.put("D", "4");
+        expectedMessage.put("myDimension", "1-2-3-4");
+
+        assertEquals(new KeyValue<>(null, expectedMessage), receivedMessage);
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+
+        Function myFunc = streamBuilder.getFunctions("stream1").get("myJoinMapper");;
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof MapperFunction);
+        JoinMapper myJoinFunc = (JoinMapper) myFunc;
+
+        KeyValue<String, Map<String, Object>> message = myJoinFunc.process(null, null);
+
+        assertEquals(new KeyValue<>(null, new HashMap<>()), message);
+    }
+
+    @Test
     public void processMessageWithValues() {
 
         String KEY = "key";

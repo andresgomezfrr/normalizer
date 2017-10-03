@@ -68,10 +68,37 @@ public class JqFlatMapperUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        String key = null;
+        Map<String, Object> message = new HashMap<>();
+        message.put("ids", "12,15,23");
+        message.put("name", "jqTesting");
+        message.put("timestamp", 1418785331123L);
+
+        List<KeyValue<String, Map<String, Object>>> result =
+                (List<KeyValue<String, Map<String, Object>>>) jqFlatMapper.process(key, message);
+
+        Map<String, Object> expected = new HashMap<>();
+        expected.put("name", "jqTesting");
+        expected.put("ids", Arrays.asList(112, 115, 123));
+
+        assertEquals(null, result.get(0).key);
+        assertEquals(expected, result.get(0).value);
+    }
+
+    @Test
     public void processNullMessage() {
         String key = "key1";
         List<KeyValue<String, Map<String, Object>>> result =
                 (List<KeyValue<String, Map<String, Object>>>) jqFlatMapper.process(key, null);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        List<KeyValue<String, Map<String, Object>>> result =
+                (List<KeyValue<String, Map<String, Object>>>) jqFlatMapper.process(null, null);
 
         assertTrue(result.isEmpty());
     }
