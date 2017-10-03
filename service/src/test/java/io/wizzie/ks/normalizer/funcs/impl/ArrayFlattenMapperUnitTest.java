@@ -218,4 +218,21 @@ public class ArrayFlattenMapperUnitTest {
             assertNull(keyValue.value);
         }
     }
+
+    @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myArrayFlatMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof ArrayFlattenMapper);
+        ArrayFlattenMapper myMapper = (ArrayFlattenMapper) myFunc;
+
+        List<KeyValue<String, Map<String, Object>>> result = (List<KeyValue<String, Map<String, Object>>>) myMapper.process("key", null);
+        for (KeyValue<String, Map<String, Object>> keyValue : result) {
+            assertEquals("key", keyValue.key);
+            assertNull(keyValue.value);
+        }
+    }
+
 }

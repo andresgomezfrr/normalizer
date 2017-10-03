@@ -99,6 +99,82 @@ public class ReplaceMapperUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myReplaceFunc = functions.get("myReplaceMapper");
+
+        assertNotNull(myReplaceFunc);
+        assertTrue(myReplaceFunc instanceof MapperFunction);
+        MapperFunction myReplaceMapper = (MapperFunction) myReplaceFunc;
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("timestamp", 123456789L);
+        message1.put("TYPE", "ver");
+        message1.put("A", "VALUE-A");
+
+        Map<String, Object> expectedMessage1 = new HashMap<>();
+        expectedMessage1.put("timestamp", 123456789L);
+        expectedMessage1.put("TYPE", "version");
+        expectedMessage1.put("A", "VALUE-A");
+
+        KeyValue<String, Map<String, Object>> result1 = myReplaceMapper.process(null, message1);
+
+        assertEquals(new KeyValue<>(null, expectedMessage1), result1);
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("timestamp", 123456789L);
+        message2.put("TYPE", "vrsn");
+        message2.put("B", "VALUE-B");
+
+        Map<String, Object> expectedMessage2 = new HashMap<>();
+        expectedMessage2.put("timestamp", 123456789L);
+        expectedMessage2.put("TYPE", "version");
+        expectedMessage2.put("B", "VALUE-B");
+
+        KeyValue<String, Map<String, Object>> result2 = myReplaceMapper.process(null, message2);
+
+        assertEquals(new KeyValue<>(null, expectedMessage2), result2);
+    }
+
+    @Test
+    public void processNullMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myReplaceFunc = functions.get("myReplaceMapper");
+
+        assertNotNull(myReplaceFunc);
+        assertTrue(myReplaceFunc instanceof MapperFunction);
+        MapperFunction myReplaceMapper = (MapperFunction) myReplaceFunc;
+
+        Map<String, Object> message1 = null;
+
+        Map<String, Object> expectedMessage1 = null;
+
+        KeyValue<String, Map<String, Object>> result1 = myReplaceMapper.process("KEY", message1);
+
+        assertEquals(new KeyValue<>("KEY", expectedMessage1), result1);
+
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myReplaceFunc = functions.get("myReplaceMapper");
+
+        assertNotNull(myReplaceFunc);
+        assertTrue(myReplaceFunc instanceof MapperFunction);
+        MapperFunction myReplaceMapper = (MapperFunction) myReplaceFunc;
+
+        Map<String, Object> message1 = null;
+
+        Map<String, Object> expectedMessage1 = null;
+
+        KeyValue<String, Map<String, Object>> result1 = myReplaceMapper.process(null, message1);
+
+        assertEquals(new KeyValue<>(null, expectedMessage1), result1);
+
+    }
+
+    @Test
     public void processNullDimension() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myReplaceFunc = functions.get("myReplaceMapper");

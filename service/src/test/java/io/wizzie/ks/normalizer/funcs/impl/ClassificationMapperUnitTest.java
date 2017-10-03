@@ -149,6 +149,19 @@ public class ClassificationMapperUnitTest {
     }
 
     @Test
+    public void processNullKeyAndValue() {
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+
+        Function myFuncKey = functions.get("myClassificationMapper");
+
+        assertNotNull(myFuncKey);
+        assertTrue(myFuncKey instanceof MapperFunction);
+        ClassificationMapper myClassificationMapper = (ClassificationMapper) myFuncKey;
+
+        assertEquals(new KeyValue<>(null, null), myClassificationMapper.process(null, null));
+    }
+
+    @Test
     public void processNullKey() {
         Map<String, Function> functions = streamBuilder.getFunctions("myStream");
 

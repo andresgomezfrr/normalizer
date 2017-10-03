@@ -132,6 +132,19 @@ public class DiffCounterStoreMapperUnitTest {
     }
 
     @Test
+    public void processNullMessage() {
+        diffCounterStoreMapper.firstTimeView = true;
+
+        Map<String, Object> message1 = null;
+
+        Map<String, Object> expected1 = null;
+
+        KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(null, message1);
+        assertEquals(null, result1.key);
+        assertEquals(expected1, result1.value);
+    }
+
+    @Test
     public void sendZeroIfIsEnabled() {
         diffCounterStoreMapper.sendIfZero = true;
         diffCounterStoreMapper.firstTimeView = true;

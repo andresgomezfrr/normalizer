@@ -76,6 +76,29 @@ public class ContainsDimensionFilterUnitTest {
     }
 
     @Test
+    public void processNullKey() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        ContainsDimensionFilter myFilter = (ContainsDimensionFilter) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("A", 123456789L);
+        message.put("B", "FILTER-VALUE");
+        message.put("C", "FILTER-VALUE");
+
+        assertTrue(myFilter.process(null, message));
+
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("A", 123456789L);
+        message1.put("B", "NOT-FILTER-VALUE");
+
+        assertFalse(myFilter.process(null, message1));
+    }
+
+    @Test
     public void processNullMessage() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myFilter");
@@ -85,6 +108,18 @@ public class ContainsDimensionFilterUnitTest {
         ContainsDimensionFilter myFilter = (ContainsDimensionFilter) myFunc;
 
         assertFalse(myFilter.process("key1", null));
+    }
+
+    @Test
+    public void processNullKeyAndMessage() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilter");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        ContainsDimensionFilter myFilter = (ContainsDimensionFilter) myFunc;
+
+        assertFalse(myFilter.process(null, null));
     }
 
 
