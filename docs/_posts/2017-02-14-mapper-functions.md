@@ -21,6 +21,7 @@ The mapper functions transforms the stream one message to another message `1 to 
 * [TimeMapper](#timeMapper)
 * [FieldTypeConverterMapper](#fieldTypeConverterMapper)
 * [ArithmeticMapper](#arithmeticMapper)
+* [SimpleArrayMapper](#simpleArrayMapper)
 
 
 
@@ -813,7 +814,39 @@ Some of the operations supported are:
 |toDegrees| double a | toDegrees(a) | a to degrees |
 |toRadians| double a | toRadians(a) | a to radians |
 
+### <a name="simpleArrayMapper"></a> SimpleArrayMapper [ [Top](#index) ]
 
+The SimpleArrayMapper is a function that allow us to make new dimension from an ArrayList. 
 
+```json
+  {
+    "name":"myArrayMapper",
+    "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleArrayMapper",
+    "properties": {
+      "dimension": "dimArray",
+      "dimensionToIndex":{"a": 0, "b": 1, "c": 2},
+      "deleteDimension": true
+    }
+  }
+```
 
+This mapper has some properties:
+
+* `dimensionToIndex` : On this property you define the fields that you want to make based on array index.
+* `dimension` : The array list dimension to process.
+* `deleteDimension` : If you want to remove the source dimension. Default: true. 
+
+Example: 
+
+* Input:
+
+```json
+{"timestamp": 123456789, "dimArray":["ABC", 123, "CDX"]}
+```
+
+* Output:
+
+```json
+{"timestamp": 123456789, "a":"ABC", "b":123, "c":"CDX"}
+```
 
