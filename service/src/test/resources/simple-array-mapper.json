@@ -1,0 +1,21 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+        "funcs":[
+              {
+                "name":"myArrayMapper",
+                "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleArrayMapper",
+                "properties": {
+                  "dimension": "dimArray",
+                  "dimensionToIndex":{"a": 0, "b": 1, "c": 2},
+                  "deleteDimension": true
+                }
+              }
+        ],
+        "sinks":[{"topic":"output"}]
+    }
+  }
+}
