@@ -127,7 +127,7 @@ We need to modify the config file that is inside the folder `config/sample_confi
 }
 ```
 
-On this config file we indicate the `application.id` that will identify our instances group and the running Zookeeper and some Kafka Broker. On the example we are going to use the `FileBootstraper` so we read the config using a local file. We also need to set the property `file.bootstraper.path` to the path where we have the stream config file.
+On this config file we indicate the `application.id` that will identify our instances group and some Kafka Broker. On the example we are going to use the `FileBootstraper` so we read the config using a local file. We also need to set the property `file.bootstraper.path` to the path where we have the stream config file.
 
 Now we can start the normalizer service to do that we can uses the init script that is inside the folder bin:
 
