@@ -27,7 +27,6 @@ Example configuration file:
 | :------------- | :-------------  |   :-------------:   |
 | `application.id`      | This id is used to identify a group of normalizer instances. Normally this id is used to identify different clients.      |  - |
 | `bootstrap.servers`      | A list of host/port pairs to use for establishing the initial connection to the Kafka cluster. The client will make use of all servers irrespective of which servers are specified here for bootstrapping—this list only impacts the initial hosts used to discover the full set of servers. This list should be in the form `host1:port1,host2:port2`      | - |
-| `zookeeper.connect`      | Zookeeper connect string for Kafka topics management.      | - |
 | `num.stream.threads`      | The number of threads to execute stream processing.      | 1 |
 | `bootstrapper.classname`      | The bootstrapper class reference. More info: [Bootstrapper](https://github.com/wizzie-io/normalizer/wiki/Bootstrapper)       | - |
 | `metric.enable`      | Enable metrics system.      | false |
