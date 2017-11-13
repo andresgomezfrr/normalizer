@@ -1,6 +1,7 @@
 package io.wizzie.ks.normalizer.funcs;
 
-import io.wizzie.ks.normalizer.metrics.MetricsManager;
+
+import io.wizzie.metrics.MetricsManager;
 
 import java.util.Map;
 

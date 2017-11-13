@@ -3,7 +3,7 @@ package io.wizzie.ks.normalizer.funcs.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wizzie.ks.normalizer.funcs.FlatMapperFunction;
-import io.wizzie.ks.normalizer.metrics.MetricsManager;
+import io.wizzie.metrics.MetricsManager;
 import net.thisptr.jackson.jq.JsonQuery;
 import net.thisptr.jackson.jq.exception.JsonQueryException;
 import org.apache.kafka.streams.KeyValue;

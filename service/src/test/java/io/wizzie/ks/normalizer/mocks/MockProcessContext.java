@@ -2,10 +2,7 @@ package io.wizzie.ks.normalizer.mocks;
 
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.StreamsMetrics;
-import org.apache.kafka.streams.processor.ProcessorContext;
-import org.apache.kafka.streams.processor.StateRestoreCallback;
-import org.apache.kafka.streams.processor.StateStore;
-import org.apache.kafka.streams.processor.TaskId;
+import org.apache.kafka.streams.processor.*;
 
 import java.io.File;
 import java.util.Map;
@@ -32,6 +29,16 @@ public class MockProcessContext implements ProcessorContext {
     }
 
     @Override
+    public Cancellable schedule(long interval, PunctuationType type, Punctuator callback) {
+        return null;
+    }
+
+    @Override
+    public void schedule(long interval) {
+
+    }
+
+    @Override
     public File stateDir() {
         return null;
     }
@@ -49,11 +56,6 @@ public class MockProcessContext implements ProcessorContext {
     @Override
     public StateStore getStateStore(String name) {
         return new MockKeyValueStore<>();
-    }
-
-    @Override
-    public void schedule(long interval) {
-
     }
 
     @Override

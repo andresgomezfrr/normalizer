@@ -149,10 +149,4 @@ public class PartitionByStreamIntegrationTest {
 
     }
 
-    @AfterClass
-    public static void stop() {
-        CLUSTER.stop();
-    }
-
-
 }

@@ -253,11 +253,4 @@ public class SplitterFlatMapperIntegrationTest {
         streamBuilder.close();
 
     }
-
-    @AfterClass
-    public static void stop(){
-        CLUSTER.stop();
-    }
-
-
 }

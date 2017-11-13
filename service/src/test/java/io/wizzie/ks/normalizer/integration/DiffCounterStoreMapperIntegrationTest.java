@@ -182,11 +182,5 @@ public class DiffCounterStoreMapperIntegrationTest {
         streams.close();
         streamBuilder.close();
     }
-
-    @AfterClass
-    public static void stop() {
-        CLUSTER.stop();
-    }
-
 }
 
