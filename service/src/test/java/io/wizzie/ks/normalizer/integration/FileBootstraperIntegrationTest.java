@@ -134,11 +134,6 @@ public class FileBootstraperIntegrationTest {
 
     }
 
-    @AfterClass
-    public static void stopKafkaCluster() {
-        CLUSTER.stop();
-    }
-
     public static String getFileContent(File file) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 

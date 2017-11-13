@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer.funcs.impl;
 
 import io.wizzie.ks.normalizer.funcs.FilterFunc;
-import io.wizzie.ks.normalizer.metrics.MetricsManager;
+import io.wizzie.metrics.MetricsManager;
 
 import java.util.List;
 import java.util.Map;

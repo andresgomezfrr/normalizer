@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer.funcs.impl;
 
 import io.wizzie.ks.normalizer.funcs.MapperStoreFunction;
-import io.wizzie.ks.normalizer.metrics.MetricsManager;
+import io.wizzie.metrics.MetricsManager;
 import io.wizzie.ks.normalizer.utils.ConversionUtils;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.state.KeyValueStore;

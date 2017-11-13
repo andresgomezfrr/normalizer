@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer.funcs.impl;
 
 import io.wizzie.ks.normalizer.funcs.FilterFunc;
-import io.wizzie.ks.normalizer.metrics.MetricsManager;
+import io.wizzie.metrics.MetricsManager;
 
 import java.util.Map;
 
@@ -18,7 +18,6 @@ public class FieldFilter extends FilterFunc {
         dimensionValue = properties.get("value");
 
         if (dimension == null || dimension.equals(__KEY)) isDimensionKey = true;
-
     }
 
     @Override

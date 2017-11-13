@@ -39,7 +39,6 @@ public class KafkaMetricListenerIntegrationTest {
     public static void startKafkaCluster() throws Exception {
         // inputs
         CLUSTER.createTopic(INPUT_TOPIC, 1, REPLICATION_FACTOR);
-
         CLUSTER.createTopic(DUMMY_TOPIC, 1, REPLICATION_FACTOR);
     }
 
@@ -51,16 +50,17 @@ public class KafkaMetricListenerIntegrationTest {
         String appId = UUID.randomUUID().toString();
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, appId);
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, CLUSTER.bootstrapServers());
-        streamsConfiguration.put(StreamsConfig.KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        streamsConfiguration.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, JsonSerde.class);
+        streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde.class);
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
 
         Config config = new Config(streamsConfiguration);
         config.put("metric.interval", 2000);
-        config.put("metric.listeners", Collections.singletonList("io.wizzie.ks.normalizer.metrics.KafkaMetricListener"));
+        config.put("metric.listeners", Collections.singletonList("io.wizzie.metrics.listeners.KafkaMetricListener"));
         config.put("metric.enable", true);
         config.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("dummy-stream.json").getFile());
+        config.put("metric.kafka.topic", "__normalizer_metrics");
         config.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
 
         Builder builder = new Builder(config);
@@ -76,11 +76,6 @@ public class KafkaMetricListenerIntegrationTest {
         assertTrue(!result.isEmpty());
 
         builder.close();
-    }
-
-    @AfterClass
-    public static void stop() {
-        CLUSTER.stop();
     }
 
 }

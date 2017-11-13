@@ -148,11 +148,4 @@ public class SimpleMapperIntegrationTest {
         streamBuilder.close();
 
     }
-
-    @AfterClass
-    public static void stop() {
-        CLUSTER.stop();
-    }
-
-
 }

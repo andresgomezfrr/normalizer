@@ -233,11 +233,4 @@ public class StreamsIntegrationTest {
         streamBuilder.close();
 
     }
-
-    @AfterClass
-    public static void stop(){
-        CLUSTER.stop();
-    }
-
-
 }
