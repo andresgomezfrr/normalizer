@@ -23,12 +23,12 @@ done
 
 if [ -z "$OUTPUT_FILE" ]
 then
-	jq -s '{"inputs" : [. | to_entries[] | .value | to_entries[] | {"key": .key , "value": [.key]}] | from_entries, "streams": .}'  ${FILES_NAME_ARRAY[*]}
+	jq -s 'reduce .[] as $item ({}; . * $item)' ${FILES_NAME_ARRAY[*]}
 else
 	echo	
 	echo "Loaded files ${FILES_NAME_ARRAY[*]}"
         echo
 	echo -e "\nSaving stream to $OUTPUT_FILE\n"
-	jq -s '{"inputs" : [. | to_entries[] | .value | to_entries[] | {"key": .key , "value": [.key]}] | from_entries, "streams": .}'  ${FILES_NAME_ARRAY[*]} > $OUTPUT_FILE
+	jq -s 'reduce .[] as $item ({}; . * $item)'  ${FILES_NAME_ARRAY[*]} > $OUTPUT_FILE
 fi
 
