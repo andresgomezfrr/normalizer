@@ -231,10 +231,4 @@ public class StreamsWithAutocreatedTopicsIntegrationTest {
         streamBuilder.close();
 
     }
-
-    @AfterClass
-    public static void stop(){
-        CLUSTER.stop();
-    }
-
 }

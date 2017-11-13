@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer.funcs.impl.debug;
 
 import io.wizzie.ks.normalizer.funcs.MapperFunction;
-import io.wizzie.ks.normalizer.metrics.MetricsManager;
+import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
