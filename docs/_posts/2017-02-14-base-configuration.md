@@ -17,7 +17,7 @@ Example configuration file:
   "num.stream.threads": 1,
   "bootstrapper.classname": "io.wizzie.ks.normalizer.builder.bootstrap.KafkaBootstrapper",
   "metric.enable": true,
-  "metric.listeners": ["io.wizzie.ks.normalizer.metrics.ConsoleMetricListener"],
+  "metric.listeners": ["io.wizzie.metrics.listeners.ConsoleMetricListener"],
   "metric.interval": 60000,
   "multi.id": false
 }
@@ -30,7 +30,7 @@ Example configuration file:
 | `num.stream.threads`      | The number of threads to execute stream processing.      | 1 |
 | `bootstrapper.classname`      | The bootstrapper class reference. More info: [Bootstrapper](https://github.com/wizzie-io/normalizer/wiki/Bootstrapper)       | - |
 | `metric.enable`      | Enable metrics system.      | false |
-| `metric.listeners`      | Array with metrics listeners. More info: [Metrics](https://github.com/wizzie-io/normalizer/wiki/Metrics)      | ["io.wizzie.ks.normalizer.metrics.ConsoleMetricListener"] |
+| `metric.listeners`      | Array with metrics listeners. More info: [Metrics](https://github.com/wizzie-io/normalizer/wiki/Metrics)      | ["io.wizzie.metrics.listeners.ConsoleMetricListener"] |
 | `metric.interval`      | Metric report interval (milliseconds)      |  60000 |
 | `multi.id`      | This property is used when you have multiple normalizer instances with differences `application.id` and the normalizer uses the same topic names. More Info [Multi Tenant](https://github.com/wizzie-io/normalizer/wiki/Multi-Tenant)      |  false |
 | `metric.enable`      | Enable metrics system.      | false |
