@@ -114,6 +114,186 @@ These examples are the same:
         ]
 ```
 
+## stream-builder.sh
+
+The `bin/stream-builder.sh` is a script that reads the stream configurations from a folder and generates a file with all the neccesary data.
+
+The usage is:
+```
+./stream-builder.sh streams_folder [output_file]
+```
+Where `streams_folder` is the folder where you have the streams and the optional argument `output_file` is the path of the generated output.
+
+The `streams_folder` must have only the files that you want to be used by this tool. As an example:
+
+streams_folder/flow.json
+
+```
+{
+  "inputs": {
+    "flow":["flow"]
+  },
+  "streams":
+    {
+    "flow": {
+      "funcs": [
+        {
+          "name": "flowNormMap",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath": ["client_name"],"as": "user_id"},
+              {"dimPath": ["client_mac"],"as": "device_id"}
+            ]
+          }
+        },
+        {
+          "name": "flowNormField",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.FieldMapper",
+          "properties": {
+            "dimensions": [
+              {
+                "dimension": "stream_type",
+                "value": "flow",
+                "overwrite": false
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {"topic": "flow-norm","type": "kafka","partitionBy": "device_id"}
+      ]
+    }
+  }
+}
+
+```
+
+streams_folder/ntop.json
+```
+{
+  "inputs": {
+    "ntop":["ntop"]
+  },
+  "streams":
+    {
+      "ntop": {
+      "funcs": [
+        {
+          "name": "ntopNormMap",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath": ["APPLICATION_ID"], "as":"application"},
+              {"dimPath": ["95"], "as":"application"}
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {"topic": "flow-norm","type": "kafka"}
+      ]
+    }
+  }
+}
+
+```
+
+Generated output:
+
+```
+{
+  "inputs": {
+    "flow": [
+      "flow"
+    ],
+    "ntop": [
+      "ntop"
+    ]
+  },
+  "streams": {
+    "flow": {
+      "funcs": [
+        {
+          "name": "flowNormMap",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {
+                "dimPath": [
+                  "client_name"
+                ],
+                "as": "user_id"
+              },
+              {
+                "dimPath": [
+                  "client_mac"
+                ],
+                "as": "device_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "flowNormField",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.FieldMapper",
+          "properties": {
+            "dimensions": [
+              {
+                "dimension": "stream_type",
+                "value": "flow",
+                "overwrite": false
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "flow-norm",
+          "type": "kafka",
+          "partitionBy": "device_id"
+        }
+      ]
+    },
+    "ntop": {
+      "funcs": [
+        {
+          "name": "ntopNormMap",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {
+                "dimPath": [
+                  "APPLICATION_ID"
+                ],
+                "as": "application"
+              },
+              {
+                "dimPath": [
+                  "95"
+                ],
+                "as": "application"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "flow-norm",
+          "type": "kafka"
+        }
+      ]
+    }
+  }
+}
+```
+
+The function does not care about file names. It takes the sections defined at all files and merge them.
+
+
 ## Other Notes
 * If you build an invalid plan, the [PlanBuilderException](https://github.com/wizzie-io/normalizer/blob/master/service/src/main/java/zz/ks/exceptions/PlanBuilderException.java) will be throw.
 * You can't do loop on the stream topology, if you define a loop the [TryToDoLoopException](https://github.com/wizzie-io/normalizer/blob/master/service/src/main/java/zz/ks/exceptions/TryToDoLoopException.java) will be throw.
