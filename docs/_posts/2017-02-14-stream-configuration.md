@@ -126,9 +126,9 @@ Where `streams_folder` is the folder where you have the streams and the optional
 
 The `streams_folder` must have only the files that you want to be used by this tool. As an example:
 
-streams_folder/flow.json
+**streams_folder/flow.json**
 
-```
+```json
 {
   "inputs": {
     "flow":["flow"]
@@ -170,8 +170,9 @@ streams_folder/flow.json
 
 ```
 
-streams_folder/ntop.json
-```
+**streams_folder/ntop.json**
+
+```json
 {
   "inputs": {
     "ntop":["ntop"]
@@ -200,9 +201,9 @@ streams_folder/ntop.json
 
 ```
 
-Generated output:
+**Generated output:**
 
-```
+```json
 {
   "inputs": {
     "flow": [
