@@ -83,7 +83,7 @@ public class MalformedJsonUnitTest {
         KafkaStreams streams = null;
 
         try {
-            streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
+            streams = new KafkaStreams(streamBuilder.builder(model).build(), streamsConfiguration);
         } catch (PlanBuilderException e) {
             fail("Exception : " + e.getMessage());
         }

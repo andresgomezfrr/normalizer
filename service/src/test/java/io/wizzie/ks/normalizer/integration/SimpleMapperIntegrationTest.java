@@ -60,8 +60,8 @@ public class SimpleMapperIntegrationTest {
         String appId = UUID.randomUUID().toString();
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, appId);
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, CLUSTER.bootstrapServers());
-        streamsConfiguration.put(StreamsConfig.KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        streamsConfiguration.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, JsonSerde.class);
+        streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde.class);
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
 
@@ -83,7 +83,7 @@ public class SimpleMapperIntegrationTest {
         KafkaStreams streams = null;
 
         try {
-            streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
+            streams = new KafkaStreams(streamBuilder.builder(model).build(), streamsConfiguration);
         } catch (PlanBuilderException e) {
             fail("Exception : " + e.getMessage());
         }
