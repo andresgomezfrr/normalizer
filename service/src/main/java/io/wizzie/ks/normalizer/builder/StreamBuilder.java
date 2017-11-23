@@ -13,9 +13,11 @@ import io.wizzie.ks.normalizer.serializers.JsonSerde;
 import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Utils;
+import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
+import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,19 +50,19 @@ public class StreamBuilder {
     private Set<String> addedSinksToStreams = new HashSet<>();
     private Boolean addedNewStream = true;
 
-    public KStreamBuilder builder(PlanModel model) throws PlanBuilderException {
+    public StreamsBuilder builder(PlanModel model) throws PlanBuilderException {
         model.validate(config);
 
         clean();
 
-        KStreamBuilder builder = new KStreamBuilder();
+        StreamsBuilder builder = new StreamsBuilder();
         createInputStreams(builder, model);
 
         for (int iteration = 0; addedNewStream; iteration++) {
             log.info("*** Iteration [{}]", iteration);
             addedNewStream = false;
             addFuncsToStreams(builder, model);
-            addSinksToStreams(builder, model);
+            addSinksToStreams(model);
         }
 
         return builder;
@@ -87,7 +89,7 @@ public class StreamBuilder {
         clean();
     }
 
-    private void createInputStreams(KStreamBuilder builder, PlanModel model) {
+    private void createInputStreams(StreamsBuilder builder, PlanModel model) {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
 
@@ -103,7 +105,7 @@ public class StreamBuilder {
         }
     }
 
-    private void addFuncsToStreams(KStreamBuilder builder, PlanModel model) {
+    private void addFuncsToStreams(StreamsBuilder builder, PlanModel model) {
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
             if (!addedFuncsToStreams.contains(streams.getKey()) && kStreams.containsKey(streams.getKey())) {
                 List<FunctionModel> funcModels = streams.getValue().getFuncs();
@@ -125,11 +127,11 @@ public class StreamBuilder {
 
                             stores.forEach(store -> {
                                 if (!usedStores.contains(store)) {
-                                    StateStoreSupplier storeSupplier = Stores.create(store)
-                                            .withKeys(Serdes.String())
-                                            .withValues(new JsonSerde())
-                                            .persistent()
-                                            .build();
+                                    StoreBuilder storeSupplier = Stores
+                                            .keyValueStoreBuilder(Stores.persistentKeyValueStore(store),
+                                                    Serdes.String(),
+                                                    new JsonSerde()
+                                            );
 
                                     builder.addStateStore(storeSupplier);
                                     usedStores.add(store);
@@ -181,7 +183,7 @@ public class StreamBuilder {
         }
     }
 
-    private void addSinksToStreams(KStreamBuilder builder, PlanModel model) throws TryToDoLoopException {
+    private void addSinksToStreams(PlanModel model) throws TryToDoLoopException {
         List<String> generatedStreams = new ArrayList<>();
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
             Map<String, FilterFunc> filters = new HashMap<>();
@@ -232,32 +234,12 @@ public class StreamBuilder {
                                 topic = String.format("%s_%s", appId, topic);
                             }
 
-                            kStream.to(
-                                    (key, value, numPartitions) -> {
-                                        if (key == null) key = "NULL_KEY";
-                                        return Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions;
-                                    }, topic
-                            );
+                            kStream.to(topic);
                         } else if (sink.getType().equals(SinkModel.STREAM_TYPE)) {
                             String newStreamName = sink.getTopic();
                             if (!kStreams.containsKey(newStreamName)) {
                                 addedNewStream = true;
-                                KStream<String, Map<String, Object>> newBranch;
-
-                                if (sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
-                                    newBranch = kStream.branch((key, value) -> true)[0];
-                                } else {
-                                    String throughTopic = String.format("normalizer_%s_to_%s", streams.getKey(), newStreamName);
-                                    builder.addInternalTopic(throughTopic);
-                                    newBranch = kStream.through(
-                                            (key, value, numPartitions) -> {
-                                                if (key == null) key = "NULL_KEY";
-                                                return Utils.abs(Utils.murmur2(key.getBytes())) % numPartitions;
-                                            },
-                                            throughTopic
-                                    );
-                                }
-
+                                KStream<String, Map<String, Object>> newBranch = kStream.branch((key, value) -> true)[0];
                                 kStreams.put(newStreamName, newBranch);
                                 log.info("Creating stream [{}]", sink.getTopic());
                                 generatedStreams.add(sink.getTopic());
