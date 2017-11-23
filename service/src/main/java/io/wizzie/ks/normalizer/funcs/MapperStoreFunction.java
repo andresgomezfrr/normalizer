@@ -5,6 +5,8 @@ import io.wizzie.ks.normalizer.utils.ConversionUtils;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.processor.ProcessorContext;
+import org.apache.kafka.streams.processor.PunctuationType;
+import org.apache.kafka.streams.processor.Punctuator;
 import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;
@@ -49,7 +51,7 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
      */
     @Override
     public void init(ProcessorContext context) {
-        if(windownTimeMs != null) context.schedule(windownTimeMs);
+        if(windownTimeMs != null) context.schedule(windownTimeMs, PunctuationType.STREAM_TIME, this::window);
         availableStores.forEach((storeName) ->
                 stores.put(storeName, (KeyValueStore) context.getStateStore(String.format("%s_%s", appId, storeName)))
         );
@@ -66,16 +68,6 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
     @Override
     public KeyValue<String, Map<String, Object>> transform(String key, Map<String, Object> value) {
         return process(key, value);
-    }
-
-    /**
-     * Process a Key-Value message of kafka periodically
-     * @param timestamp Period of process
-     * @return A Key-Value message after process
-     */
-    @Override
-    public KeyValue<String, Map<String, Object>> punctuate(long timestamp) {
-        return window(timestamp);
     }
 
     /**
@@ -112,4 +104,9 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
      */
     public abstract KeyValue<String, Map<String, Object>> window(long timestamp);
 
+    @Override
+    public KeyValue<String, Map<String, Object>> punctuate(long timestamp) {
+        //DEPRECATED
+        return null;
+    }
 }
