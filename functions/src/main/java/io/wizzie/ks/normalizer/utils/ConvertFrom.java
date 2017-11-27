@@ -1,12 +1,12 @@
 package io.wizzie.ks.normalizer.utils;
 
-import io.wizzie.ks.normalizer.funcs.impl.FieldTypeConverterMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+
 
 public enum ConvertFrom {
 
@@ -109,7 +109,8 @@ public enum ConvertFrom {
             return value instanceof Boolean;
         }
     };
-    private static final Logger log = LoggerFactory.getLogger(FieldTypeConverterMapper.class);
+
+    private static final Logger log = LoggerFactory.getLogger(ConvertFrom.class);
 
     public Number toNumber(Object value) throws ParseException {
         throw new AbstractMethodError();

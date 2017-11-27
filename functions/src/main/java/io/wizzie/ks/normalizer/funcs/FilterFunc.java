@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer.funcs;
 
-import io.wizzie.metrics.MetricsManager;
 import io.wizzie.ks.normalizer.utils.Constants;
+import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.kstream.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
