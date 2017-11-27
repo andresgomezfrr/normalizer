@@ -6,6 +6,15 @@ date: 2017-02-14 12:58:52
 order: 5 
 ---
 
+## Functions Library
+
+Currently there are custom functions developed for specific purposes. They allow you to process different kind of information.
+
+You can check them at: [Normalizer functions](http://wizzie.io/normalizer-functions/)
+
+
+## Development
+
 On this section, we are trying to explain how to develop your own functions. 
 All the function classes implement the [Function](https://github.com/wizzie-io/normalizer/blob/master/service/src/main/java/io/wizzie/ks/normalizer/funcs/Function.java) interface.
 
