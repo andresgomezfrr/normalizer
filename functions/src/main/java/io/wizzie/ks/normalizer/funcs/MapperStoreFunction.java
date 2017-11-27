@@ -1,12 +1,11 @@
 package io.wizzie.ks.normalizer.funcs;
 
-import io.wizzie.metrics.MetricsManager;
 import io.wizzie.ks.normalizer.utils.ConversionUtils;
+import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.PunctuationType;
-import org.apache.kafka.streams.processor.Punctuator;
 import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;

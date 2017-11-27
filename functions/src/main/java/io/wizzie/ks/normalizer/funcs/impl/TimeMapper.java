@@ -2,8 +2,8 @@ package io.wizzie.ks.normalizer.funcs.impl;
 
 import io.wizzie.ks.normalizer.exceptions.FunctionException;
 import io.wizzie.ks.normalizer.funcs.MapperFunction;
-import io.wizzie.metrics.MetricsManager;
 import io.wizzie.ks.normalizer.utils.ConversionUtils;
+import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
