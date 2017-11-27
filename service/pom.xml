@@ -7,48 +7,27 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>${project.parent.artifactId}-service</artifactId>
-
-    <properties>
-        <kafka.version>1.0.0</kafka.version>
-        <dropwizard.version>3.1.0</dropwizard.version>
-        <joda.version>2.9.4</joda.version>
-        <precondition.version>0.1.5</precondition.version>
-    </properties>
+    <artifactId>normalizer-service</artifactId>
 
     <dependencies>
         <dependency>
+            <groupId>io.wizzie.ks.normalizer</groupId>
+            <artifactId>normalizer-base-functions</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.wizzie.metrics</groupId>
             <artifactId>metrics-library</artifactId>
-            <version>0.0.1</version>
+            <version>${metrics-library.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.wizzie</groupId>
             <artifactId>config-bootstrapper</artifactId>
-            <version>0.0.1</version>
+            <version>${config-bootstrapper.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.cookingfox/guava-preconditions -->
-        <dependency>
-            <groupId>com.cookingfox</groupId>
-            <artifactId>guava-preconditions</artifactId>
-            <version>${precondition.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>${dropwizard.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-jvm</artifactId>
-            <version>${dropwizard.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka_2.11 -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.11</artifactId>
@@ -59,18 +38,6 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
             <version>${kafka.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${joda.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.thisptr</groupId>
-            <artifactId>jackson-jq</artifactId>
-            <version>0.0.5</version>
         </dependency>
 
         <!-- Testing -->
@@ -129,12 +96,6 @@
             <artifactId>joda-time</artifactId>
             <version>2.9.9</version>
         </dependency>
-        <dependency>
-            <groupId>com.scireum</groupId>
-            <artifactId>parsii</artifactId>
-            <version>1.5</version>
-        </dependency>
-
     </dependencies>
 
     <build>
