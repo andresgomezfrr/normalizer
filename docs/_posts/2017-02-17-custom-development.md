@@ -7,7 +7,7 @@ order: 1
 ---
 
  * [Custom Functions](https://wizzie.io/normalizer/funcs/custom-functions.html)
- * [Custom Metric Listeners](https://wizzie.io/normalizer/metrics/listeners.html)
- * [Custom Bootstrapper](https://wizzie.io/normalizer/bootstrapper/definition-boostrapper.html)
+ * [Custom Metric Listeners](https://github.com/wizzie-io/metrics-library)
+ * [Custom Bootstrapper](https://github.com/wizzie-io/config-bootstrapper)
 
 
