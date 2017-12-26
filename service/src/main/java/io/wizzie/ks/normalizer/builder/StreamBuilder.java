@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer.builder;
 
 import io.wizzie.bootstrapper.builder.Config;
-import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
+import io.wizzie.ks.normalizer.base.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.exceptions.TryToDoLoopException;
 import io.wizzie.ks.normalizer.funcs.*;
@@ -12,11 +12,8 @@ import io.wizzie.ks.normalizer.model.StreamModel;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
 import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.kafka.streams.processor.StateStoreSupplier;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
@@ -25,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.wizzie.ks.normalizer.utils.Constants.__APP_ID;
-import static io.wizzie.ks.normalizer.utils.Constants.__STORES;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__APP_ID;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__STORES;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 
 public class StreamBuilder {

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.wizzie.ks.normalizer.utils.Constants.__KEY;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__KEY;
 import static org.junit.Assert.*;
 
 public class FieldFilterUnitTest {

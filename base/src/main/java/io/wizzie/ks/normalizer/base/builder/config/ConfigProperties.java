@@ -1,4 +1,4 @@
-package io.wizzie.ks.normalizer.builder.config;
+package io.wizzie.ks.normalizer.base.builder.config;
 
 public class ConfigProperties {
     public static final String BOOTSTRAPER_CLASSNAME = "bootstraper.classname";

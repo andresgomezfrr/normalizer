@@ -2,7 +2,7 @@ package io.wizzie.ks.normalizer.integration;
 
 import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.ks.normalizer.builder.Builder;
-import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
+import io.wizzie.ks.normalizer.base.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.serializers.JsonDeserializer;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
 import io.wizzie.ks.normalizer.serializers.JsonSerializer;

@@ -1,4 +1,4 @@
-package io.wizzie.ks.normalizer.utils;
+package io.wizzie.ks.normalizer.base.utils;
 
 public class Constants {
     public final static String __KEY = "__KEY";

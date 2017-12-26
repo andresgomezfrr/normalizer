@@ -6,7 +6,7 @@ import io.wizzie.metrics.MetricsManager;
 import java.util.Map;
 
 import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
-import static io.wizzie.ks.normalizer.utils.Constants.__KEY;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__KEY;
 
 public class StartWithFilter extends FilterFunc {
 

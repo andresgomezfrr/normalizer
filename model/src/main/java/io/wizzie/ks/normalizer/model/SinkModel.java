@@ -3,7 +3,7 @@ package io.wizzie.ks.normalizer.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import static io.wizzie.ks.normalizer.utils.Constants.__KEY;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__KEY;
 
 public class SinkModel {
     public final static String PARTITION_BY_KEY = __KEY;

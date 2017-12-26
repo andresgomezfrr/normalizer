@@ -6,7 +6,7 @@ import io.wizzie.metrics.MetricsManager;
 import java.util.List;
 import java.util.Map;
 
-import static io.wizzie.ks.normalizer.utils.Constants.__KEY;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__KEY;
 
 public class MultiValueFieldFilter extends FilterFunc {
     String dimension;

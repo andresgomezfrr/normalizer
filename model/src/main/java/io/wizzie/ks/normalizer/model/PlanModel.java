@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wizzie.bootstrapper.builder.Config;
-import io.wizzie.ks.normalizer.builder.config.ConfigProperties;
+import io.wizzie.ks.normalizer.base.builder.config.ConfigProperties;
 import io.wizzie.ks.normalizer.exceptions.MaxOutputKafkaTopics;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 

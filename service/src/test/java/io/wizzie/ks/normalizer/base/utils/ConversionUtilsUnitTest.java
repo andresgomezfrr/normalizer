@@ -1,4 +1,4 @@
-package io.wizzie.ks.normalizer.utils;
+package io.wizzie.ks.normalizer.base.utils;
 
 import org.junit.Test;
 
