@@ -45,6 +45,8 @@
     </scm>
 
     <modules>
+        <module>base</module>
+        <module>model</module>
         <module>service</module>
         <module>functions</module>
     </modules>

@@ -5,7 +5,7 @@ import io.wizzie.metrics.MetricsManager;
 
 import java.util.Map;
 
-import static io.wizzie.ks.normalizer.utils.Constants.__KEY;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__KEY;
 
 public class FieldFilter extends FilterFunc {
     String dimension;

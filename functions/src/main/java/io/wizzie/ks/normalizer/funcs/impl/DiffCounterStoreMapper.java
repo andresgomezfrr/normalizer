@@ -1,7 +1,7 @@
 package io.wizzie.ks.normalizer.funcs.impl;
 
 import io.wizzie.ks.normalizer.funcs.MapperStoreFunction;
-import io.wizzie.ks.normalizer.utils.ConversionUtils;
+import io.wizzie.ks.normalizer.base.utils.ConversionUtils;
 import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.state.KeyValueStore;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.wizzie.ks.normalizer.utils.Constants.__KEY;
+import static io.wizzie.ks.normalizer.base.utils.Constants.__KEY;
 
 public class DiffCounterStoreMapper extends MapperStoreFunction {
     List<String> counterFields;
