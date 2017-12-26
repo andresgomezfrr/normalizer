@@ -2,12 +2,12 @@ package io.wizzie.ks.normalizer.funcs.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wizzie.bootstrapper.builder.Config;
+import io.wizzie.ks.normalizer.base.utils.ConvertFrom;
 import io.wizzie.ks.normalizer.builder.StreamBuilder;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.funcs.Function;
 import io.wizzie.ks.normalizer.funcs.MapperFunction;
 import io.wizzie.ks.normalizer.model.PlanModel;
-import io.wizzie.ks.normalizer.utils.ConvertFrom;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.junit.AfterClass;

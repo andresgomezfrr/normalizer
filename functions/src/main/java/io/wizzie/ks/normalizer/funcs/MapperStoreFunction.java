@@ -1,6 +1,6 @@
 package io.wizzie.ks.normalizer.funcs;
 
-import io.wizzie.ks.normalizer.utils.ConversionUtils;
+import io.wizzie.ks.normalizer.base.utils.ConversionUtils;
 import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Transformer;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.wizzie.ks.normalizer.utils.Constants.*;
+import static io.wizzie.ks.normalizer.base.utils.Constants.*;
 
 /**
  * This class is used to do a mapper process, but it offers a key value store to operate with multiples states

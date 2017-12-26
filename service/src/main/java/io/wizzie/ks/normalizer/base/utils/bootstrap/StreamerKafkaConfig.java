@@ -1,4 +1,4 @@
-package io.wizzie.ks.normalizer.utils.bootstrap;
+package io.wizzie.ks.normalizer.base.utils.bootstrap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wizzie.bootstrapper.builder.Config;
@@ -118,7 +118,7 @@ public class StreamerKafkaConfig {
                 System.out.println(String.format("Don't find any stream configuration with app id [%s]", args[1]));
             }
         } else {
-            System.out.println("Usage: java -cp normalizer-selfcontained.jar io.wizzie.ks.normalizer.utils.bootstrap.StreamerKafkaConfig <bootstrap_kafka_servers> <app_id> [stream_config_path]");
+            System.out.println("Usage: java -cp normalizer-selfcontained.jar io.wizzie.ks.normalizer.base.utils.bootstrap.StreamerKafkaConfig <bootstrap_kafka_servers> <app_id> [stream_config_path]");
         }
     }
 }

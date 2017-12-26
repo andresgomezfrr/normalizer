@@ -17,6 +17,18 @@
         </dependency>
 
         <dependency>
+            <groupId>io.wizzie.ks.normalizer</groupId>
+            <artifactId>normalizer-model</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.wizzie.ks.normalizer</groupId>
+            <artifactId>normalizer-base</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.wizzie.metrics</groupId>
             <artifactId>metrics-library</artifactId>
             <version>${metrics-library.version}</version>
