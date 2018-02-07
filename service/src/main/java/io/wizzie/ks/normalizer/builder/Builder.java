@@ -6,6 +6,7 @@ import io.wizzie.bootstrapper.builder.*;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.model.PlanModel;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
+import io.wizzie.metrics.MetricsConstant;
 import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
