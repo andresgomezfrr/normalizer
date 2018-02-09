@@ -9,6 +9,6 @@
   "metric.databag": {"component":"normalizer"},
   "multi.id": ${MULTI_ID},
   "max.output.kafka.topics": ${MAX_OUTPUT_KAFKA_TOPICS},
-  "bootstrap.kafka.topics":["__normalizer_bootstrap"],
+  "bootstrap.kafka.topics": ${BOOTSTRAP_KAFKA_TOPICS},
   "timestamp.extractor":"org.apache.kafka.streams.processor.LogAndSkipOnInvalidTimestamp"
 }
