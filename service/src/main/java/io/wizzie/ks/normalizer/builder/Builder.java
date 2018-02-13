@@ -3,6 +3,7 @@ package io.wizzie.ks.normalizer.builder;
 import com.codahale.metrics.JmxAttributeGauge;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wizzie.bootstrapper.builder.*;
+import io.wizzie.ks.normalizer.base.utils.Utils;
 import io.wizzie.ks.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.ks.normalizer.model.PlanModel;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.wizzie.ks.normalizer.base.builder.config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
@@ -41,6 +44,13 @@ public class Builder implements Listener{
         metricsManager = new MetricsManager(config.getMapConf());
         metricsManager.start();
 
+        Map<String, Object> metricDataBag = config.getOrDefault(
+                MetricsConstant.METRIC_DATABAG, new HashMap<>()
+        );
+
+        metricDataBag.put("host", Utils.getIdentifier());
+        config.put(MetricsConstant.METRIC_DATABAG, metricDataBag);
+
         streamBuilder = new StreamBuilder(config.clone(), metricsManager);
 
         bootstrapper = BootstrapperBuilder.makeBuilder()
@@ -57,7 +67,7 @@ public class Builder implements Listener{
         if (streams != null) streams.close();
     }
 
-    private void registerKafkaMetrics(Config config, MetricsManager metricsManager){
+    private void registerKafkaMetrics(Config config, MetricsManager metricsManager) {
         Integer streamThreads = config.getOrDefault(NUM_STREAM_THREADS_CONFIG, 1);
         String appId = config.get(APPLICATION_ID_CONFIG);
 
