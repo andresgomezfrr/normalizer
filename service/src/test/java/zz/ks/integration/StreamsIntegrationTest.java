@@ -15,10 +15,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.mockito.Mockito;
 import zz.ks.builder.StreamBuilder;
 import zz.ks.builder.config.Config;
 import zz.ks.exceptions.PlanBuilderException;
+import zz.ks.funcs.*;
 import zz.ks.model.PlanModel;
 import zz.ks.serializers.JsonDeserializer;
 import zz.ks.serializers.JsonSerde;
@@ -29,8 +29,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class StreamsIntegrationTest {
     private final static int NUM_BROKERS = 1;
@@ -87,9 +86,48 @@ public class StreamsIntegrationTest {
         Config config = new Config();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "app-id-1");
 
-        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(config, null));
+        StreamBuilder streamBuilder = new StreamBuilder(config, null);
 
         KafkaStreams streams = new KafkaStreams(streamBuilder.builder(model), streamsConfiguration);
+
+        Map<String, FilterFunc> filterFunctions = streamBuilder.getFilters("filter-stream");
+        Function myContainsFilter1 = filterFunctions.get("stream-mapper-stream");
+
+        assertNotNull(myContainsFilter1);
+        assertTrue(myContainsFilter1 instanceof FilterFunc);
+
+        Function myContainsFilter2 = filterFunctions.get("stream-diff-splitter-stream");
+
+        assertNotNull(myContainsFilter2);
+        assertTrue(myContainsFilter2 instanceof FilterFunc);
+
+        Map<String, Function> functions = streamBuilder.getFunctions("mapper-stream");
+        Function mySimpleMapperFunction = functions.get("myMapper");
+
+        assertNotNull(mySimpleMapperFunction);
+        assertTrue(mySimpleMapperFunction instanceof MapperFunction);
+
+        functions = streamBuilder.getFunctions("diff-splitter-stream");
+        Function myDiffCounterFunction = functions.get("myDiffCounter");
+
+        assertNotNull(myDiffCounterFunction);
+        assertTrue(myDiffCounterFunction instanceof MapperStoreFunction);
+
+        Function mySplitterFunction = functions.get("mySplitter");
+
+        assertNotNull(mySplitterFunction);
+        assertTrue(mySplitterFunction instanceof FlatMapperFunction);
+
+        filterFunctions = streamBuilder.getFilters("diff-splitter-stream");
+        Function myFilteredOutput = filterFunctions.get("stream-filtered-output");
+
+        assertNotNull(myFilteredOutput);
+        assertTrue(myFilteredOutput instanceof FilterFunc);
+
+        Set<String> usedStores = streamBuilder.usedStores();
+
+        assertTrue(usedStores.contains("app-id-1_counter-store"));
+
         streams.start();
 
         Map<String, Object> subMessage = new HashMap<>();
