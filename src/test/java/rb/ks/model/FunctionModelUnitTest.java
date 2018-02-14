@@ -13,7 +13,7 @@ import static junit.framework.TestCase.*;
 public class FunctionModelUnitTest {
 
     @Test
-    public void shouldWork() {
+    public void functionModelIsBuiltCorrectly() {
 
         String className = "rb.ks.funcs.MyFunc";
         String name = "myFunctionName";
