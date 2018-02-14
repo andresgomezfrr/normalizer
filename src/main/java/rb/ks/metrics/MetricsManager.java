@@ -1,5 +1,6 @@
 package rb.ks.metrics;
 
+import com.codahale.metrics.JmxAttributeGauge;
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.MetricSet;
@@ -7,16 +8,20 @@ import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
+import org.apache.kafka.streams.StreamsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rb.ks.builder.config.Config;
 import rb.ks.utils.ConversionUtils;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static rb.ks.builder.config.Config.ConfigProperties.*;
 
 public class MetricsManager extends Thread {
@@ -27,11 +32,15 @@ public class MetricsManager extends Thread {
     Set<String> registredMetrics = new HashSet<>();
     Config config;
     Long interval;
+    String app_id;
+    Integer num_threads;
 
     public MetricsManager(Config config) {
         if (config.getOrDefault(METRIC_ENABLE, false)) {
             this.config = config;
             this.interval = ConversionUtils.toLong(config.getOrDefault(METRIC_INTERVAL, 60000L));
+            this.app_id = config.get(APPLICATION_ID_CONFIG);
+            this.num_threads = config.get(StreamsConfig.NUM_STREAM_THREADS_CONFIG);
             List<String> listenersClass = config.get(METRIC_LISTENERS);
             if (listenersClass != null) {
                 for (String listenerClassName : listenersClass) {
@@ -78,6 +87,47 @@ public class MetricsManager extends Thread {
         registerAll("buffers", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
         registerAll("memory", new MemoryUsageGaugeSet());
         registerAll("threads", new ThreadStatesGaugeSet());
+
+        for (int i = 1; i <= this.config.<Integer>getOrDefault(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1); i++) {
+            try {
+
+                // PRODUCER
+                registerMetric("producer." + i + ".messages_send_per_sec",
+                        new JmxAttributeGauge(new ObjectName("kafka.producer:type=producer-metrics,client-id="
+                                + app_id + "-1-StreamThread-"
+                                + i + "-producer"), "record-send-rate"));
+
+                registerMetric("producer." + i + ".output_bytes_per_sec",
+                        new JmxAttributeGauge(new ObjectName("kafka.producer:type=producer-metrics,client-id="
+                                + app_id + "-1-StreamThread-"
+                                + i + "-producer"), "outgoing-byte-rate"));
+
+                registerMetric("producer." + i + ".incoming_bytes_per_sec",
+                        new JmxAttributeGauge(new ObjectName("kafka.producer:type=producer-metrics,client-id="
+                                + app_id + "-1-StreamThread-"
+                                + i + "-producer"), "incoming-byte-rate"));
+
+                // CONSUMER
+                registerMetric("consumer." + i + ".max_lag",
+                        new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-fetch-manager-metrics,client-id="
+                                + app_id + "-1-StreamThread-"
+                                + i + "-consumer"), "records-lag-max"));
+
+                registerMetric("consumer." + i + ".output_bytes_per_sec",
+                        new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-metrics,client-id="
+                                + app_id + "-1-StreamThread-"
+                                + i + "-consumer"), "outgoing-byte-rate"));
+
+                registerMetric("consumer." + i + ".incoming_bytes_per_sec",
+                        new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-metrics,client-id="
+                                + app_id + "-1-StreamThread-"
+                                + i + "-consumer"), "incoming-byte-rate"));
+
+            } catch (MalformedObjectNameException e) {
+                log.warn("Metric not found");
+            }
+        }
+
     }
 
     private void registerAll(String prefix, MetricSet metricSet) {
