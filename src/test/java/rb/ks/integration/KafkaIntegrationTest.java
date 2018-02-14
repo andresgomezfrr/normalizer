@@ -48,7 +48,7 @@ public class KafkaIntegrationTest {
     @Test
     public void simpleMapperShouldWork() throws InterruptedException {
 
-        String json = "{\n" +
+        String jsonModel = "{\n" +
                 "  \"inputs\":{\n" +
                 "    \"input1\":[\"stream1\"]\n" +
                 "  },\n" +
@@ -91,7 +91,7 @@ public class KafkaIntegrationTest {
         PlanModel model = null;
 
         try {
-            model = Mockito.spy(objectMapper.readValue(json, PlanModel.class));
+            model = Mockito.spy(objectMapper.readValue(jsonModel, PlanModel.class));
         } catch (IOException e) {
             fail("Exception : " + e.getMessage());
         }
@@ -113,12 +113,12 @@ public class KafkaIntegrationTest {
 
         streams.start();
 
-        String json2 = "{\"A\":{\"B\":{\"C\":\"VALUE\"}},\"timestamp\":\"2016-09-08T06:33:46.000Z\"}";
+        String jsonData = "{\"A\":{\"B\":{\"C\":\"VALUE\"}},\"timestamp\":\"2016-09-08T06:33:46.000Z\"}";
 
         KeyValue<String, Map<String, Object>> kvStream1 = null;
 
         try {
-            kvStream1 = new KeyValue<>("KEY_A", objectMapper.readValue(json2, Map.class));
+            kvStream1 = new KeyValue<>("KEY_A", objectMapper.readValue(jsonData, Map.class));
         } catch (IOException e) {
             e.printStackTrace();
         }
