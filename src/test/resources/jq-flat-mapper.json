@@ -1,0 +1,22 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+        "funcs":[
+              {
+                "name":"jqFlatMapper",
+                "className":"rb.ks.funcs.impl.JqFlatMapper",
+                "properties": { 
+                  "jqQuery": "{ids:[.ids|split(\",\")[]|tonumber|.+100],name}"
+                }
+              }
+        ],
+        "timestamper":{"dimension":"timestamp", "format":"generate"},
+        "sinks":[
+            {"topic":"output", "partitionBy":"name"}
+        ]
+    }
+  }
+}
