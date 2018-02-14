@@ -37,12 +37,12 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             if (counter != null) newCounters.put(counterField, counter);
         }
 
-        Long timestampAfterValue = toLong(value.remove(timestamp));
+        Long timestamp = toLong(value.remove(this.timestamp));
 
-        if(timestampAfterValue != null) {
-            newCounters.put(timestamp, timestampAfterValue);
+        if(timestamp != null) {
+            newCounters.put(this.timestamp, timestamp);
         } else {
-            newCounters.put(timestamp, System.currentTimeMillis()/1000);
+            newCounters.put(this.timestamp, System.currentTimeMillis()/1000);
         }
 
         Map<String, Long> counters = storeCounter.get(key);
@@ -57,14 +57,11 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 }
             }
 
-            Long timestampBeforeValue = counters.get(timestamp);
+            Long lastTimestamp = counters.get(this.timestamp);
 
-            if(timestampBeforeValue != null) {
-                value.put("timestamp_before", timestampBeforeValue);
-                value.put("timestamp_after", timestampAfterValue);
-            } else {
-                value.put("timestamp_before", timestampAfterValue);
-                value.put("timestamp_after", System.currentTimeMillis()/1000);
+            if(lastTimestamp != null) {
+                value.put("last_timestamp", lastTimestamp);
+                value.put(this.timestamp, timestamp);
             }
 
             counters.putAll(newCounters);
