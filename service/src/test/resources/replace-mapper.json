@@ -1,0 +1,26 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myReplaceMapper",
+          "className":"zz.ks.funcs.impl.ReplaceMapper",
+          "properties": {
+            "replacements": {
+              "ver": "version",
+              "v": "version",
+              "vrsn": "version"
+            },
+            "dimension": "TYPE"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}
