@@ -438,7 +438,7 @@ public class DiffCounterStoreMapperUnitTest {
     @Test
     public void toStringTest(){
         assertNotNull(diffCounterStoreMapper);
-        assertEquals(" {counters: [X], sendIfZero: true, stores: mock-key-value-store, timestamp: time} ",
+        assertEquals(" {counters: [X], sendIfZero: true, stores: mock-key-value-store, timestamp: time, keys: [gateway, interface]} ",
                 diffCounterStoreMapper.toString());
     }
 
