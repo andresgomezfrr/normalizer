@@ -11,9 +11,9 @@
           "properties": {
             "delimitier": "-",
             "values": [
-              {"fromDimension": "A", "orDefault": "1"},
-              {"fromDimension": "B", "orDefault": "2"},
-              {"fromDimension": "C", "orDefault": "3"},
+              {"fromDimension": "A", "orDefault": "1", "delete": false},
+              {"fromDimension": "B", "orDefault": "2", "delete": true},
+              {"fromDimension": "C", "orDefault": "3", "delete": true},
               {"fromDimension": "D", "orDefault": "4"}
             ],
             "dimensionName": "myDimension"

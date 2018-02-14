@@ -55,18 +55,21 @@ public class JoinMapperUnitTest {
         Map<String ,Object> value = new HashMap<>();
         value.put("fromDimension", "A");
         value.put("orDefault", "1");
+        value.put("delete", false);
 
         values.add(value);
 
         value = new HashMap<>();
         value.put("fromDimension", "B");
         value.put("orDefault", "2");
+        value.put("delete", true);
 
         values.add(value);
 
         value = new HashMap<>();
         value.put("fromDimension", "C");
         value.put("orDefault", "3");
+        value.put("delete", true);
 
         values.add(value);
 
@@ -118,6 +121,8 @@ public class JoinMapperUnitTest {
         KeyValue<String, Map<String, Object>> receivedMessage = myJoinFunc.process(KEY, message);
 
         Map<String, Object> expectedMessage = new HashMap<>();
+        expectedMessage.put("A", "1");
+        expectedMessage.put("D", "4");
         expectedMessage.put("myDimension", "1-2-3-4");
 
         assertEquals(new KeyValue<>(KEY, expectedMessage), receivedMessage);
@@ -141,6 +146,8 @@ public class JoinMapperUnitTest {
         KeyValue<String, Map<String, Object>> receivedMessage = myJoinFunc.process(KEY, message);
 
         Map<String, Object> expectedMessage = new HashMap<>();
+        expectedMessage.put("A", "1");
+        expectedMessage.put("D", "4");
         expectedMessage.put("myDimension", "1-2-3-4");
 
         assertEquals(new KeyValue<>(KEY, expectedMessage), receivedMessage);
