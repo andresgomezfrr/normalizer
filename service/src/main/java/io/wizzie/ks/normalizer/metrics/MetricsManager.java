@@ -1,9 +1,7 @@
 package io.wizzie.ks.normalizer.metrics;
 
-import com.codahale.metrics.JmxAttributeGauge;
-import com.codahale.metrics.Metric;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.MetricSet;
+import com.codahale.metrics.*;
+import com.codahale.metrics.Timer;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
@@ -33,6 +31,7 @@ public class MetricsManager extends Thread {
     Long interval;
     String app_id;
     Integer num_threads;
+    AtomicBoolean verboseMode = new AtomicBoolean();
 
     public MetricsManager(Config config) {
         if (config.getOrDefault(Config.ConfigProperties.METRIC_ENABLE, false)) {
@@ -40,6 +39,7 @@ public class MetricsManager extends Thread {
             interval = ConversionUtils.toLong(config.getOrDefault(Config.ConfigProperties.METRIC_INTERVAL, 60000L));
             app_id = config.get(APPLICATION_ID_CONFIG);
             num_threads = config.getOrDefault(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
+            verboseMode.set(config.getOrDefault(Config.ConfigProperties.METRIC_VERBOSE_MODE, false));
             List<String> listenersClass = config.getOrDefault(Config.ConfigProperties.METRIC_LISTENERS, Collections.singletonList("ConsoleMetricListener"));
             if (listenersClass != null) {
                 for (String listenerClassName : listenersClass) {
@@ -175,13 +175,65 @@ public class MetricsManager extends Thread {
         registredMetrics.clear();
     }
 
-    private void sendMetric(String metricName) {
-        Object value = registry.getGauges().get(metricName).getValue();
-        listeners.forEach(listener -> listener.updateMetric(metricName, value));
+    private void sendGaugeMetric(String metricName) {
+        Gauge selectedGauge = registry.getGauges().get(metricName);
+        listeners.forEach(listener -> listener.updateMetric(metricName, selectedGauge.getValue()));
+    }
+
+    private void sendMeterMetric(String metricName) {
+        Meter selectedMeter = registry.getMeters().get(metricName);
+        listeners.forEach(listener -> listener.updateMetric(String.format("%s-mean-rate", metricName), selectedMeter.getMeanRate()));
+
+        if(verboseMode.get()) {
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-count", metricName), selectedMeter.getCount()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-1-minute-rate", metricName), selectedMeter.getOneMinuteRate()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-5-minute-rate", metricName), selectedMeter.getFiveMinuteRate()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-15-minute-rate", metricName), selectedMeter.getFifteenMinuteRate()));
+        }
+    }
+
+    private void sendHistogramMetric(String metricName) {
+        Histogram selectedHistogram = registry.getHistograms().get(metricName);
+        listeners.forEach(listener -> listener.updateMetric(String.format("%s-count", metricName), selectedHistogram.getCount()));
+
+        if(verboseMode.get()) {
+            Snapshot histogramSnapshot = selectedHistogram.getSnapshot();
+
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-max-value", metricName), histogramSnapshot.getMax()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-min-value", metricName), histogramSnapshot.getMin()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-mean-value", metricName), histogramSnapshot.getMean()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-median-value", metricName), histogramSnapshot.getMedian()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-standard-deviation-value", metricName), histogramSnapshot.getStdDev()));
+        }
+    }
+
+    private void sendCounterMetric(String metricName) {
+        Counter selectedCounter = registry.getCounters().get(metricName);
+        listeners.forEach(listener -> listener.updateMetric(metricName, selectedCounter.getCount()));
+    }
+
+    private void sendTimerMetric(String metricName) {
+        Timer selectedTimer = registry.getTimers().get(metricName);
+
+        listeners.forEach(listener -> listener.updateMetric(String.format("%s-count", metricName), selectedTimer.getCount()));
+
+        if(verboseMode.get()) {
+            Snapshot timerSnapshot = selectedTimer.getSnapshot();
+
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-max-value", metricName), timerSnapshot.getMax()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-min-value", metricName), timerSnapshot.getMin()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-mean-value", metricName), timerSnapshot.getMean()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-median-value", metricName), timerSnapshot.getMedian()));
+            listeners.forEach(listener -> listener.updateMetric(String.format("%s-standard-deviation-value", metricName), timerSnapshot.getStdDev()));
+        }
     }
 
     private void sendAllMetrics() {
-        registry.getGauges().keySet().forEach(this::sendMetric);
+        registry.getGauges().keySet().forEach(this::sendGaugeMetric);
+        registry.getMeters().keySet().forEach(this::sendMeterMetric);
+        registry.getHistograms().keySet().forEach(this::sendHistogramMetric);
+        registry.getCounters().keySet().forEach(this::sendCounterMetric);
+        registry.getTimers().keySet().forEach(this::sendTimerMetric);
     }
 
     @Override
