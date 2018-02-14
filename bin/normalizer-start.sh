@@ -8,4 +8,9 @@ fi
 
 CURRENT=`pwd` && cd `dirname $0` && SOURCE=`pwd` && cd ${CURRENT} && PARENT=`dirname ${SOURCE}`
 
-exec $SOURCE/streamer-kafka.sh localhost:9092 myapp $1
+for file in ${PARENT}/lib/*.jar;
+do
+    CLASSPATH="$CLASSPATH":"$file"
+done
+
+java -cp ${CLASSPATH} rb.ks.Normalizer $1
