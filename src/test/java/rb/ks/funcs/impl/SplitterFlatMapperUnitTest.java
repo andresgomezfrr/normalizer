@@ -20,15 +20,13 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 public class SplitterFlatMapperUnitTest {
-
-    public DateTime currentTime = new DateTime();
-    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-
-    public long secs(DateTime date) {
+    private long secs(DateTime date) {
         return (date.getMillis() / 1000);
     }
 
-    static StreamBuilder streamBuilder = new StreamBuilder();
+    private DateTime currentTime = new DateTime();
+    private DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+    private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
