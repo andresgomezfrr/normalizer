@@ -1,0 +1,83 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myFormatterFlatMapper",
+          "className": "zz.ks.funcs.impl.FormatterFlatMapper",
+          "properties": {
+            "commonFields": ["timestamp", "Q"],
+            "filters": [
+              {"name": "typeAFilter", "className": "zz.ks.funcs.impl.FieldFilter", "properties": {"dimension": "type", "value": "A"}},
+              {"name": "typeBFilter", "className": "zz.ks.funcs.impl.FieldFilter", "properties": {"dimension": "type", "value": "B"}}
+            ],
+            "generators": [
+              {
+                "filter": "typeAFilter",
+                "definitions": [
+                  {
+                    "apply": [
+                      {"field": "type", "content": {"type": "constant", "value": "VALUE-I"}},
+                      {"field": "value", "content": {"type": "fieldValue", "value": "V"}},
+                      {"field": "enable", "content": {"type": "constant", "value": true}}
+                    ]
+                  },
+                  {
+                    "apply": [
+                      {"field": "type", "content": {"type": "constant", "value": "VALUE-J"}},
+                      {"field": "value", "content": {"type": "fieldValue", "value": "W"}},
+                      {"field": "enable", "content": {"type": "constant", "value": false}}
+                    ]
+                  },
+                  {
+                    "apply": [
+                      {"field": "type", "content": {"type": "constant", "value": "VALUE-K"}},
+                      {"field": "value", "content": {"type": "fieldValue", "value": "X"}},
+                      {"field": "enable", "content": {"type": "constant", "value": true}}
+                    ]
+                  },
+                  {
+                    "apply": [
+                      {"field": "type", "content": {"type": "constant", "value": "VALUE-L"}},
+                      {"field": "value", "content": {"type": "fieldValue", "value": "Y"}},
+                      {"field": "enable", "content": {"type": "constant", "value": false}}
+                    ]
+                  }
+                ]
+              },
+              {
+                "filter": "typeBFilter",
+                "definitions": [
+                  {
+                    "apply": [
+                      {"field": "type", "content": {"type": "constant", "value": "VALUE-M"}},
+                      {"field": "value", "content": {"type": "fieldValue", "value": "X"}},
+                      {"field": "enable", "content": {"type": "constant", "value": false}}
+                    ]
+                  },
+                  {
+                    "apply": [
+                      {"field": "type", "content": {"type": "constant", "value": "VALUE-N"}},
+                      {"field": "value", "content": {"type": "fieldValue", "value": "Y"}},
+                      {"field": "enable", "content": {"type": "constant", "value": true}}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
