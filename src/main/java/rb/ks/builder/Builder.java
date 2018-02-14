@@ -33,12 +33,13 @@ public class Builder {
         metricsManager = new MetricsManager(config.clone());
         metricsManager.start();
 
+        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG), metricsManager);
+
         Class bootstraperClass = Class.forName(config.get(BOOTSTRAPER_CLASSNAME));
         threadBootstraper = (ThreadBootstraper) bootstraperClass.newInstance();
         threadBootstraper.init(this, config.clone(), metricsManager);
         threadBootstraper.start();
 
-        streamBuilder = new StreamBuilder(config.get(APPLICATION_ID_CONFIG), metricsManager);
     }
 
     public void updateStreamConfig(String streamConfig) throws IOException, PlanBuilderException {
