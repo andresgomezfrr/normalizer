@@ -200,17 +200,15 @@ public class DiffCounterStoreMapperUnitTest {
         expected2.put("A", "VALUE-A");
         expected2.put("B", "VALUE-B");
         expected2.put("C", 1234567890L);
-        expected2.put("X", 1500L);
         expected2.put("time", 1122334655L);
-        expected2.put("last_timestamp", 1122334455L);
 
         KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
         assertEquals(key1, result1.key);
         assertEquals(expected1, result1.value);
 
-        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key2, message1);
+        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key2, message2);
         assertEquals(key2, result2.key);
-        assertEquals(expected1, result2.value);
+        assertEquals(expected2, result2.value);
     }
 
     @Test
@@ -228,8 +226,8 @@ public class DiffCounterStoreMapperUnitTest {
         message1.put("time", 1122334455L);
 
         Map<String, Object> message2 = new HashMap<>();
-        message1.put("gateway", "gateway_1");
-        message1.put("interface", "interface_1");
+        message2.put("gateway", "gateway_1");
+        message2.put("interface", "interface_1");
         message2.put("A", "VALUE-A");
         message2.put("B", "VALUE-B");
         message2.put("C", 1234567890L);
@@ -250,7 +248,7 @@ public class DiffCounterStoreMapperUnitTest {
         expected2.put("A", "VALUE-A");
         expected2.put("B", "VALUE-B");
         expected2.put("C", 1234567890L);
-        expected2.put("X", 1500L);
+        expected2.put("X", 0L);
         expected2.put("time", 1122334655L);
         expected2.put("last_timestamp", 1122334455L);
 
@@ -258,9 +256,9 @@ public class DiffCounterStoreMapperUnitTest {
         assertEquals(key1, result1.key);
         assertEquals(expected1, result1.value);
 
-        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key2, message1);
+        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key2, message2);
         assertEquals(key2, result2.key);
-        assertEquals(expected1, result2.value);
+        assertEquals(expected2, result2.value);
     }
 
     @Test
