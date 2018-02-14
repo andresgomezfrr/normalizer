@@ -2,7 +2,6 @@ package rb.ks.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import rb.ks.funcs.Function;
 
 import java.util.List;
 
