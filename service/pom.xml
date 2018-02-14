@@ -11,40 +11,67 @@
 
     <artifactId>service</artifactId>
 
+    <properties>
+        <type.scope>compile</type.scope>
+        <type.name>selfcontainer</type.name>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>with-dependencies</id>
+
+            <properties>
+                <type.scope>compile</type.scope>
+                <type.name>selfcontainer</type.name>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>nodependencies</id>
+
+            <properties>
+                <type.scope>provided</type.scope>
+                <type.name>nodependency</type.name>
+            </properties>
+        </profile>
+    </profiles>
+
+
+
     <dependencies>
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
             <version>3.1.0</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-jvm</artifactId>
             <version>3.1.0</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
             <version>0.10.0.1</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.9.4</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
         <dependency>
             <groupId>net.thisptr</groupId>
             <artifactId>jackson-jq</artifactId>
             <version>0.0.5</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
         <!-- Testing -->
@@ -53,7 +80,7 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
 
@@ -62,7 +89,6 @@
             <artifactId>kafka-streams</artifactId>
             <version>0.10.0.1</version>
             <classifier>test</classifier>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -92,7 +118,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>1.3</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -100,7 +126,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>provided</scope>
+            <scope>${type.scope}</scope>
         </dependency>
 
     </dependencies>
@@ -109,22 +135,27 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>${project.parent.artifactId}-${project.version}-nodependency</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <archive>
-                        <manifest>
-                            <mainClass>ks.Ks</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
                 <executions>
                     <execution>
+
                         <id>make-assembly</id>
+
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+
+                            <finalName>${project.parent.artifactId}-${project.version}-${type.name}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <archive>
+                                <manifest>
+                                    <mainClass>rb.ks.Normalizer</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+
                         <phase>package</phase>
+
                         <goals>
                             <goal>single</goal>
                         </goals>
