@@ -1,0 +1,42 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myMapper",
+          "className":"rb.ks.funcs.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath":["A","B","C"], "as":"X"},
+              {"dimPath":["Y","W","Z"], "as":"Q"},
+              {"dimPath":["timestamp"]}
+            ]
+          }
+        },
+        {
+          "name":"diffCounterMapper",
+          "className":"rb.ks.funcs.DiffCounterStoreMapper",
+          "properties": {
+            "counters": ["X"]
+          },
+          "stores":["counter-store"]
+        },
+        {
+          "name":"splitterFlatMapper",
+          "className":"rb.ks.funcs.SplitterFlatMapper",
+          "properties": {
+            "dimension": ["A", "B", "C", "D"]
+          }
+        }
+      ],
+      "timestamper":{"dimension":"timestamp", "format":"iso"},
+      "sinks":[
+        {"topic":"output", "partitionBy":"Q"},
+        {"topic":"output1"}
+      ]
+    }
+  }
+}
