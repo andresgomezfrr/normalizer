@@ -1,0 +1,11 @@
+{
+  "application.id": "${APPLICATION_ID}",
+  "bootstrap.servers": "${KAFKA_BOOTSTRAP_SERVER}",
+  "zookeeper.connect": "${ZOOKEEPER_CONNECT}",
+  "num.stream.threads": 1,
+  "bootstraper.classname": "rb.ks.builder.bootstrap.KafkaBootstraper",
+  "metric.enable": true,
+  "metric.listeners": ["rb.ks.metrics.KafkaMetricListener"],
+  "metric.interval": 60000,
+  "multi.id": false
+}

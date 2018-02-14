@@ -26,13 +26,12 @@
                 <version>2.6</version>
 
                 <configuration>
-                    <executable>tar.gz</executable>
 
                     <descriptors>
                         <descriptor>src/assembly/assembly.xml</descriptor>
                     </descriptors>
 
-                    <finalName>${project.parent.artifactId}-${project.parent.version}</finalName>
+                    <finalName>${project.parent.artifactId}</finalName>
 
                 </configuration>
 
