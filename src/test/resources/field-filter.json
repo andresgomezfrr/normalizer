@@ -1,0 +1,30 @@
+{
+  "inputs":{
+    "topic1":["stream1", "stream2"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"myFilter",
+          "className":"rb.ks.funcs.impl.FieldFilter",
+          "properties": {
+              "dimension":"FILTER-DIMENSION",
+              "value":"FILTER-VALUE"
+          }
+        },
+        {
+          "name":"myFilterKey",
+          "className":"rb.ks.funcs.impl.FieldFilter",
+          "properties": {
+            "dimension":"__KEY",
+            "value":"FILTER-kEY"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}
