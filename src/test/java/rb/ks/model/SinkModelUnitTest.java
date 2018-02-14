@@ -12,7 +12,7 @@ public class SinkModelUnitTest {
         String topic = "output";
         String partitionBy = "Q";
 
-        SinkModel sinkModelObject = new SinkModel(topic, partitionBy);
+        SinkModel sinkModelObject = new SinkModel(topic, SinkModel.KAFKA_TYPE, partitionBy);
 
         assertNotNull(sinkModelObject.topic);
         assertEquals(sinkModelObject.getTopic(), topic);
@@ -25,7 +25,7 @@ public class SinkModelUnitTest {
     public void partitionByIsNullTest() {
         String topic = "output1";
 
-        SinkModel sinkModelObject = new SinkModel(topic, null);
+        SinkModel sinkModelObject = new SinkModel(topic, SinkModel.KAFKA_TYPE, null);
 
         assertNotNull(sinkModelObject.topic);
         assertEquals(sinkModelObject.getTopic(), topic);
@@ -39,14 +39,14 @@ public class SinkModelUnitTest {
         String topic = "output2";
         String partitionBy = "N";
 
-        SinkModel sinkModelObject = new SinkModel(topic, partitionBy);
+        SinkModel sinkModelObject = new SinkModel(topic, SinkModel.KAFKA_TYPE, partitionBy);
         assertNotNull(sinkModelObject.topic);
         assertEquals(sinkModelObject.getTopic(), topic);
 
         assertNotNull(sinkModelObject.partitionBy);
         assertEquals(sinkModelObject.getPartitionBy(), partitionBy);
 
-        assertEquals(sinkModelObject.toString(), "{topic: output2, partitionBy: N}");
+        assertEquals("{topic: output2, type: kafka, partitionBy: N}", sinkModelObject.toString());
     }
 
 }
