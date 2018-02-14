@@ -1,0 +1,73 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myFieldConverterMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.FieldTypeConverterMapper",
+          "properties": {
+            "conversions": [
+              {
+                "dimension": "dimension-A",
+                "from": "number",
+                "to": "string"
+              },
+              {
+                "dimension": "dimension-B",
+                "from": "boolean",
+                "to": "string"
+              },
+              {
+                "dimension": "dimension-C",
+                "from": "string",
+                "to": "string"
+              },
+              {
+                "dimension": "dimension-D",
+                "from": "boolean",
+                "to": "number"
+              },
+              {
+                "dimension": "dimension-E",
+                "from": "string",
+                "to": "number"
+              },
+              {
+                "dimension": "dimension-F",
+                "from": "number",
+                "to": "number"
+              },
+              {
+                "dimension": "dimension-G",
+                "from": "number",
+                "to": "boolean"
+              },
+              {
+                "dimension": "dimension-H",
+                "from": "string",
+                "to": "boolean"
+              },
+              {
+                "dimension": "dimension-I",
+                "from": "boolean",
+                "to": "boolean"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
+
+
