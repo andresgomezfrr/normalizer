@@ -1,4 +1,4 @@
-package rb.ks.funcs;
+package rb.ks.funcs.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.streams.KeyValue;
@@ -9,6 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import rb.ks.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
+import rb.ks.funcs.FlatMapperFunction;
+import rb.ks.funcs.Function;
+import rb.ks.funcs.impl.SplitterFlatMapper;
 import rb.ks.model.PlanModel;
 
 import java.io.File;
@@ -33,7 +36,7 @@ public class SplitterFlatMapperUnitTest {
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("stream.json").getFile());
+        File file = new File(classLoader.getResource("splitter-mapper.json").getFile());
 
         ObjectMapper objectMapper = new ObjectMapper();
         PlanModel model = objectMapper.readValue(file, PlanModel.class);
