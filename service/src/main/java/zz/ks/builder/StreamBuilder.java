@@ -42,6 +42,7 @@ public class StreamBuilder {
 
     private Map<String, KStream<String, Map<String, Object>>> kStreams = new HashMap<>();
     private Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
+    private Map<String, Map<String, FilterFunc>> streamFilters = new HashMap<>();
     private Set<String> usedStores = new HashSet<>();
     private Set<String> addedFuncsToStreams = new HashSet<>();
     private Set<String> addedSinksToStreams = new HashSet<>();
@@ -71,6 +72,10 @@ public class StreamBuilder {
 
     public Map<String, Function> getFunctions(String streamName) {
         return streamFunctions.get(streamName);
+    }
+
+    public Map<String, FilterFunc> getFilters(String streamName) {
+        return streamFilters.get(streamName);
     }
 
     public Set<String> usedStores() {
@@ -179,6 +184,7 @@ public class StreamBuilder {
     private void addSinksToStreams(PlanModel model) throws TryToDoLoopException {
         List<String> generatedStreams = new ArrayList<>();
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
+            Map<String, FilterFunc> filters = new HashMap<>();
             if (!addedSinksToStreams.contains(streams.getKey()) && !generatedStreams.contains(streams.getKey())) {
                 List<SinkModel> sinks = streams.getValue().getSinks();
                 for (SinkModel sink : sinks) {
@@ -211,6 +217,7 @@ public class StreamBuilder {
                                 } else {
                                     kStream = kStream.filterNot(filter);
                                 }
+                                filters.put(String.format("%s-%s", sink.getType(), sink.getTopic()), filter);
                             } catch (ClassNotFoundException e) {
                                 log.error("Couldn't find the class associated with the function {}", className);
                             } catch (InstantiationException | IllegalAccessException e) {
@@ -255,6 +262,7 @@ public class StreamBuilder {
                                 );
                             }
                         }
+                        streamFilters.put(streams.getKey(), filters);
                         addedSinksToStreams.add(streams.getKey());
                     }
                 }
