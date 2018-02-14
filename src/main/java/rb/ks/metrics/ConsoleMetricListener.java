@@ -26,7 +26,8 @@ public class ConsoleMetricListener implements MetricListener {
         metric.put("value", metricValue);
 
         try {
-            log.info(mapper.writeValueAsString(metric));
+            if (metricValue != null)
+                log.info(mapper.writeValueAsString(metric));
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
         }
