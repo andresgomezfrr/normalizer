@@ -20,5 +20,7 @@ public class StreamBuilderTest {
         PlanModel model = objectMapper.readValue(file, PlanModel.class);
         StreamBuilder streamBuilder = new StreamBuilder("APP-ID-1");
         streamBuilder.builder(model);
+
+        streamBuilder.close();
     }
 }
