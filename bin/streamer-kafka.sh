@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 
-for file in ${NORMALIZER_HOME}/lib/*.jar;
+if [ $# -lt 1 ];
+then
+    echo "USAGE: $0 <bootstrap_kafka_server> <app_id> [stream_config_path]"
+    exit 1
+fi
+
+CURRENT=`pwd` && cd `dirname $0` && SOURCE=`pwd` && cd ${CURRENT} && PARENT=`dirname ${SOURCE}`
+
+for file in ${PARENT}/lib/*.jar;
 do
     CLASSPATH="$CLASSPATH":"$file"
 done
 
 if [ $# -eq 2 ]; then
-  java -cp ${CLASSPATH} rb.ks.utils.StreamerKafkaConfig $0 $1
+  java -cp ${CLASSPATH} rb.ks.utils.bootstrap.StreamerKafkaConfig $1 $2
 elif [ $# -eq 3 ]; then
-  java -cp ${CLASSPATH} rb.ks.utils.StreamerKafkaConfig $0 $1 $2
-else
-  echo -n 'streamer-kafka.sh <bootstrap_kafka_server> <app_id> [stream_config_path]'
+  java -cp ${CLASSPATH} rb.ks.utils.bootstrap.StreamerKafkaConfig $1 $2 $3
 fi
