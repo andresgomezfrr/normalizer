@@ -14,7 +14,6 @@ Example configuration file:
 {
   "application.id": "ks-normalizer-app-id",
   "bootstrap.servers": "localhost:9092",
-  "zookeeper.connect": "localhost:2181",
   "num.stream.threads": 1,
   "bootstrapper.classname": "io.wizzie.ks.normalizer.builder.bootstrap.KafkaBootstrapper",
   "metric.enable": true,

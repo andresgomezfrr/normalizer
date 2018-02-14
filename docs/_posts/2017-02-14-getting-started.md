@@ -118,7 +118,6 @@ We need to modify the config file that is inside the folder `config/sample_confi
 {
   "application.id": "my-first-normalizer-app",
   "bootstrap.servers": "localhost:9092",
-  "zookeeper.connect": "localhost:2181",
   "num.stream.threads": 1,
   "bootstraper.classname": "io.wizzie.ks.normalizer.builder.bootstrap.FileBootstraper",
   "file.bootstraper.path": "/etc/normalizer/my-stream-tutorial.json",
