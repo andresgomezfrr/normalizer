@@ -87,7 +87,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 .append("counters: ").append(counterFields).append(", ")
                 .append("sendIfZero: ").append(sendIfZero).append(", ")
                 .append("stores: ").append(storeCounter.name()).append(", ")
-                .append("tiemstamp: ").append(timestamp)
+                .append("timestamp: ").append(timestamp)
                 .append("} ");
 
         return builder.toString();
