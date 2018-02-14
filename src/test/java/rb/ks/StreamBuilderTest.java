@@ -2,6 +2,7 @@ package rb.ks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import rb.ks.builder.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.exceptions.TryToDoLoopException;
 import rb.ks.model.PlanModel;
