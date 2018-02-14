@@ -7,14 +7,14 @@
       "funcs":[
         {
           "name":"myKeyStartWithFilter",
-          "className":"io.wizzie.ks.funcs.impl.StartWithFilter",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.StartWithFilter",
           "properties": {
             "dimension": "__KEY",
             "start_with": "FILTER"
           }
         },{
           "name":"myValueStartWithFilter",
-          "className":"io.wizzie.ks.funcs.impl.StartWithFilter",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.StartWithFilter",
           "properties": {
             "dimension": "TYPE",
             "start_with": "YES"
