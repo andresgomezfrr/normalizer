@@ -4,10 +4,7 @@ import io.wizzie.ks.normalizer.funcs.MapperFunction;
 import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
@@ -34,7 +31,6 @@ public class JoinMapper extends MapperFunction {
 
         dimensionsToJoin.forEach(map -> {
             checkNotNull(map.get(FROM_DIMENSION), String.format(ERROR_MESSAGE_PATTERN, FROM_DIMENSION));
-            checkNotNull(map.get(OR_DEFAULT), String.format(ERROR_MESSAGE_PATTERN, OR_DEFAULT));
         });
 
         delimitier = (String) properties.getOrDefault(DELIMITIER, "-");
@@ -50,9 +46,11 @@ public class JoinMapper extends MapperFunction {
             String joined = dimensionsToJoin.stream()
                     .map(m ->
                     {
-                        Object objectValue = (boolean) m.getOrDefault(DELETE, false) ? value.remove(m.get(FROM_DIMENSION)) : value.get(m.get(FROM_DIMENSION));
-                        return (objectValue != null ? objectValue : m.get(OR_DEFAULT)).toString();
+                        String objectValue = (boolean) m.getOrDefault(DELETE, false) ?
+                                (String) value.remove(m.get(FROM_DIMENSION)) : (String) value.get(m.get(FROM_DIMENSION));
+                        return (objectValue != null ? objectValue : (String) m.get(OR_DEFAULT));
                     })
+                    .filter(Objects::nonNull)
                     .collect(Collectors.joining(delimitier));
 
             value.put(newDimension, joined);

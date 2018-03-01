@@ -172,7 +172,7 @@ The JoinMapper is a function that allow us join as many values as us want and as
   "name":"myJoinMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.JoinMapper",
   "properties": { 
-    "newDimension":"myNewDimension",
+    "dimensionName":"myNewDimension",
     "values": [
      {"fromDimension":"dimension1", "orDefault":"defaultValue1", "delete": false},
      {"fromDimension":"dimension2", "orDefault":"defaultValue2", "delete": true},
@@ -183,9 +183,9 @@ The JoinMapper is a function that allow us join as many values as us want and as
 }
 ```
 
-The JoinMapper has three properties that are called `newDimension`, `values` and `delimitier`:
+The JoinMapper has three properties that are called `dimensionName`, `values` and `delimitier`:
 
-* `newDimension`: Name of new dimension where all join values will be assign. This parameter can't be null.
+* `dimensionName`: Name of new dimension where all join values will be assign. This parameter can't be null.
 * `values`: Array of values, contains a sequence of items with two parameters `fromDimension` and `orDefault`.
  * `fromDimension`: Dimension where we get the value to join. This parameter can't be null.
  * `orDefault`: Default value if value of `fromDimension` doesn't exists. This parameter can't be null.
