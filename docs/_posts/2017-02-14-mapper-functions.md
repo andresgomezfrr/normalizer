@@ -22,8 +22,8 @@ The mapper functions transforms the stream one message to another message `1 to 
 * [FieldTypeConverterMapper](#fieldTypeConverterMapper)
 * [ArithmeticMapper](#arithmeticMapper)
 * [SimpleArrayMapper](#simpleArrayMapper)
+* [RenameMapper](#renameMapper)
 * [ArrayDecompositionMapper](#arrayDecompositionMapper)
-
 
 
 ### <a name="fieldMapper"></a> FieldMapper [ [Top](#index) ]
@@ -851,6 +851,40 @@ Example:
 {"timestamp": 123456789, "a":"ABC", "b":123, "c":"CDX"}
 ```
 
+### <a name="renameMapper"></a> RenameMapper [ [Top](#index) ]
+
+The RenameMapper is a function that allow us to rename fields from JSON Object.
+
+```json
+{
+  "name":"myMapper",
+  "className":"io.wizzie.ks.normalizer.funcs.impl.RenameMapper",
+  "properties": { 
+    "maps": [
+      {"dimPath":["C"], "as":"X"},
+      {"dimPath":["Z"], "as":"Q"}
+    ]
+  }
+}
+```
+
+The RenameMapper has one property that is called `maps` on this property you define the fields that you want to rename:
+
+```json
+{
+  "C": "MyValue",
+  "D": "A",
+  "Z": "MyOtherValue",
+  "timestamp": 123456788
+}
+```
+
+If we use this message using the RenameMapper that is defined on the above example, we get this output:
+
+```json
+{"X":"MyValue", "Q":"MyOtherValue", "D":"A", "timestamp": 123456788}
+```
+
 ### <a name="arrayDecompositionMapper"></a> ArrayDecompositionMapper [ [Top](#index) ]
 
 The ArrayDecompositionMapper is a function that allows us to map an array to a specific dimensions:
@@ -863,10 +897,10 @@ The ArrayDecompositionMapper is a function that allows us to map an array to a s
     "dimensionToBuild": ["dim1", "dim2", "dim3"],
     "dimension": "array-dim",
     "delete_dimension": true
-  }
+   }
 }
-```
-
+```  
+   
 The ArrayDecompositionMapper has three properties:
 
  * `dimension`: The dimension that indicate the array that we want to map.
@@ -883,7 +917,7 @@ If we have this json message:
 }
 ```
 
-If we use this message using the ReplaceMapper that is defined on the above example, we get this output:
+If we use this message using the ArrayDecompositionMapper that is defined on the above example, we get this output:
 
 ```json
 {
