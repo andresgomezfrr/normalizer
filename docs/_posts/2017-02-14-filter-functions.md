@@ -299,3 +299,80 @@ If we have this JSON message:
 
 The OrFilter match and return true because the dimension `FILTER-DIMENSION` contains value `FILTER-VALUE`
 
+### IsStringFilter
+
+The IsStringFilter is a filter that allow us filter if a concrete dimension is a String class.
+
+```json
+{
+  "name":"isString",
+  "className":"io.wizzie.ks.normalizer.funcs.impl.IsStringFilter",
+  "properties": {
+    "dimension":"string-dimension"
+  }
+}
+```
+
+The IsStringFilter has two properties that are called `dimension` and `value`:
+- `dimension`: The dimension to check the value.
+
+If we have next JSON message:
+
+```json
+{
+  "DIM-A":"VALUE-A", 
+  "DIM-B":10, 
+  "string-dimension": 2
+}
+```
+
+The IsStringFilter doesn't match and return `false` value. Bu if we have next message:
+
+```json
+{
+  "DIM-A": "VALUE-A",
+  "DIM-B": 10,
+  "string-dimension": "FILTER_VALUE"
+}
+```
+
+The IsStringFilter match and return `true` value
+
+### IsListFilter
+
+The IsListFilter is a filter that allow us filter if a concrete dimension is a List class.
+
+```json
+{
+  "name":"isList",
+  "className":"io.wizzie.ks.normalizer.funcs.impl.IsListFilter",
+  "properties": {
+      "dimension":"list-dimension"
+  }
+}
+```
+
+The IsListFilter has two properties that are called `dimension` and `value`:
+- `dimension`: The dimension to check the value.
+
+If we have next JSON message:
+
+```json
+{
+  "DIM-A":"VALUE-A", 
+  "DIM-B":10, 
+  "list-dimension": 2
+}
+```
+
+The IsListFilter doesn't match and return `false` value. Bu if we have next message:
+
+```json
+{
+  "DIM-A": "VALUE-A",
+  "DIM-B": 10,
+  "list-dimension": ["FILTER_VALUE", "b"]
+}
+```
+
+The IsListFilter match and return `true` value

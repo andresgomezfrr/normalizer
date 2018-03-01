@@ -1,0 +1,28 @@
+{
+  "inputs":{
+    "topic1":["stream1", "stream2"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name":"isList",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.IsListFilter",
+          "properties": {
+              "dimension":"list-dimension"
+          }
+        },
+        {
+          "name":"isString",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.IsStringFilter",
+          "properties": {
+            "dimension":"string-dimension"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output"}
+      ]
+    }
+  }
+}
