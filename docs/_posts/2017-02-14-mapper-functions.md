@@ -22,6 +22,7 @@ The mapper functions transforms the stream one message to another message `1 to 
 * [FieldTypeConverterMapper](#fieldTypeConverterMapper)
 * [ArithmeticMapper](#arithmeticMapper)
 * [SimpleArrayMapper](#simpleArrayMapper)
+* [ArrayDecompositionMapper](#arrayDecompositionMapper)
 
 
 
@@ -850,3 +851,46 @@ Example:
 {"timestamp": 123456789, "a":"ABC", "b":123, "c":"CDX"}
 ```
 
+### <a name="arrayDecompositionMapper"></a> ArrayDecompositionMapper [ [Top](#index) ]
+
+The ArrayDecompositionMapper is a function that allows us to map an array to a specific dimensions:
+
+```json
+{
+  "name":"arrayDecompositionMapper",
+  "className":"io.wizzie.ks.normalizer.funcs.impl.ArrayDecompositionMapper",
+  "properties": {
+    "dimensionToBuild": ["dim1", "dim2", "dim3"],
+    "dimension": "array-dim",
+    "delete_dimension": true
+  }
+}
+```
+
+The ArrayDecompositionMapper has three properties:
+
+ * `dimension`: The dimension that indicate the array that we want to map.
+ * `dimensionToBuild`: The output dimension that the mapper generates using the dimension array.
+ * `delete_dimension`: Option to delete the dimension or not.
+ 
+If we have this json message:
+
+```json
+{
+  "dimension":"VALUE-1",
+  "otherDimension":"VALUE-2",
+  "array-dim": ["A", "B", "C"]
+}
+```
+
+If we use this message using the ReplaceMapper that is defined on the above example, we get this output:
+
+```json
+{
+  "dimension":"VALUE-1",
+  "otherDimension":"VALUE-2",
+  "dim1":"A",
+  "dim2":"B",
+  "dim3":"C"
+}
+```
