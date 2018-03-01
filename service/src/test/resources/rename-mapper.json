@@ -1,0 +1,25 @@
+{
+  "inputs":{
+    "topic1":["stream1", "stream2"]
+  },
+  "streams":{
+    "stream1":{
+        "funcs":[
+              {
+                "name":"myMapper",
+                "className":"io.wizzie.ks.normalizer.funcs.impl.RenameMapper",
+                "properties": { 
+                  "maps": [
+                    {"dimPath":["C"], "as":"X"},
+                    {"dimPath":["Z"], "as":"Q"}
+                  ]
+                }
+              }
+        ],
+        "sinks":[
+            {"topic":"output", "partitionBy":"X"},
+            {"topic":"output1"}
+        ]
+    }
+  }
+}
