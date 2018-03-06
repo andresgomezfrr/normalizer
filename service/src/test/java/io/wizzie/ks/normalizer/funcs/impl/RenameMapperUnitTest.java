@@ -80,6 +80,36 @@ public class RenameMapperUnitTest {
         assertEquals("lalala", value.get("Q"));
         assertEquals("test", value.get("B"));
         assertEquals(123456789, value.get("timestamp"));
+        assertNull(value.get("C"));
+        assertNull(value.get("Z"));
+
+    }
+
+    @Test
+    public void processSimpleMessageNoDelete() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream3");
+        Function myFunc = functions.get("myMapper2");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof RenameMapper);
+        RenameMapper myMapper = (RenameMapper) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("timestamp", 123456789);
+        message.put("C", "TEST-C");
+        message.put("Z", "lalala");
+        message.put("B", "test");
+
+        KeyValue<String, Map<String, Object>> mapMessage = myMapper.process("key1", message);
+        assertEquals("key1", mapMessage.key);
+
+        Map<String, Object> value = mapMessage.value;
+        assertEquals("TEST-C", value.get("X"));
+        assertEquals("lalala", value.get("Q"));
+        assertEquals("test", value.get("B"));
+        assertEquals(123456789, value.get("timestamp"));
+        assertNotNull(value.get("C"));
+        assertNotNull(value.get("Z"));
 
     }
 
@@ -106,6 +136,8 @@ public class RenameMapperUnitTest {
         assertEquals("lalala", value.get("Q"));
         assertEquals("test", value.get("B"));
         assertEquals(123456789, value.get("timestamp"));
+        assertNull(value.get("C"));
+        assertNull(value.get("Z"));
     }
 
     @Test

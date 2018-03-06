@@ -176,7 +176,7 @@ public class MultiIdIntegrationTest {
 
         List<KeyValue> expectedResult_B = Arrays.asList(new KeyValue("KEY_B", expectedData), new KeyValue("KEY_B", expectedData2));
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput_B = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1_B, 1);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput_B = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1_B, 2);
 
         assertEquals(expectedResult_B, receivedMessagesFromOutput_B);
 
