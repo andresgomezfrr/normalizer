@@ -1,6 +1,7 @@
 {
   "inputs":{
-    "topic1":["stream1", "stream2"]
+    "topic1":["stream1", "stream2"],
+    "topic2":["stream3"]
   },
   "streams":{
     "stream1":{
@@ -20,6 +21,25 @@
             {"topic":"output", "partitionBy":"X"},
             {"topic":"output1"}
         ]
+    },
+    "stream3":{
+      "funcs":[
+        {
+          "name":"myMapper2",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.RenameMapper",
+          "properties": {
+            "deleteOldField": false,
+            "maps": [
+              {"dimPath":["C"], "as":"X"},
+              {"dimPath":["Z"], "as":"Q"}
+            ]
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output", "partitionBy":"X"},
+        {"topic":"output1"}
+      ]
     }
   }
 }

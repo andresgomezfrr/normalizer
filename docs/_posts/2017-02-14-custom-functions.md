@@ -90,3 +90,9 @@ The base abstract class that you need to implement your own FilterFunction is [F
         // some process that return a boolean
     }
 ```
+
+## Functions Library
+
+Currently there are custom functions developed for specific purposes. They allow you to process different kind of information.
+
+You can check them at: [Normalizer functions](http://wizzie.io/normalizer-functions/)
