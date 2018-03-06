@@ -11,10 +11,11 @@ import java.util.stream.Collectors;
 
 public class RenameMapper extends MapperFunction {
     List<MapperModel> mappers;
-
+    boolean deleteOldField;
     @Override
     public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         List<Map<String, Object>> maps = (List<Map<String, Object>>) properties.get("maps");
+        deleteOldField = (boolean) properties.getOrDefault("deleteOldField", true);
         mappers = maps.stream()
                 .map(map -> new MapperModel((List<String>) map.get("dimPath"), (String) map.get("as")))
                 .collect(Collectors.toList());
@@ -32,12 +33,17 @@ public class RenameMapper extends MapperFunction {
                 for (Integer level = 0; level < depth; level++) {
                     if (levelPath != null) {
                         levelPath = (Map<String, Object>) levelPath.remove(mapper.dimPath.get(level));
+                    }else{
+                        break;
                     }
                 }
 
                 if (levelPath != null) {
                     Object newValue = levelPath.remove(mapper.dimPath.get(depth));
-                    if (newValue != null) newEvent.put(mapper.as, newValue);
+                    if (newValue != null){
+                        newEvent.put(mapper.as, newValue);
+                        if(deleteOldField) newEvent.remove(mapper.dimPath.get(0));
+                    }
                 }
             });
 
