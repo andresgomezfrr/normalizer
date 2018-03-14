@@ -1,0 +1,34 @@
+{
+  "inputs":{
+    "input1":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myMap",
+          "className":"rb.ks.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath":["A","B","C"], "as":"X"},
+              {"dimPath":["timestamp"]}
+              ]
+          }
+        },
+        {
+          "name":"myDiffCounter",
+          "className":"rb.ks.funcs.impl.DiffCounterStoreMapper",
+          "properties": {
+            "counters": ["X"],
+            "timestamp": "timestamp",
+            "firsttimeview": false
+          },
+          "stores": ["counter-store"]
+        }
+      ],
+      "sinks":[
+        {"topic":"output1"}
+      ]
+    }
+  }
+}
