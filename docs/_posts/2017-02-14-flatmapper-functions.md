@@ -8,7 +8,14 @@ order: 2
 
 The flat mapper functions transforms stream one message to zero or many messages `1 to zero OR 1 to many`.
 
-### JqFlatMapper
+### <a name="index"></a> FlatMapper Functions
+* [JqFlatMapper](#jqFlatMapper)
+* [SplitterFlatMapper](#splitterFlatMapper)
+* [ArrayFlattenMapper](#arrayFlattenMapper)
+* [FormatterFlatMapper](#formatterFlatMapper)
+
+
+### <a name="jqFlatMapper"></a> JqFlatMapper [[Top](#index)]
 
 The JqFlatMapper is a special mapper that allow us to use [Jq Syntax](https://stedolan.github.io/jq/), internally the mapper uses [eiiches/jackson-jq](https://github.com/eiiches/jackson-jq) library to build the jq query.
 
@@ -36,7 +43,7 @@ You only need to set he property `jqQuery` where you must to define a new JSON. 
 {"ids": [112, 115, 123], "name": "jackson"}
 ```
 
-### SplitterFlatMapper
+### <a name="splitterFlatMapper"></a> SplitterFlatMapper [[Top](#index)]
 
 The SplitterFlatMapper is a flatMapper that process a single message and produce one or more messages. This flatMapper split a message into multiples messages based on the difference of time.
 
@@ -73,7 +80,7 @@ This mapper process a message and divide the `bytes` and `pkts` counters across 
 {"timestamp": 1477379967, "bytes": 60, "pkts": 30}
 ```
 
-### ArrayFlattenMapper
+### <a name="arrayFlattenMapper"></a> ArrayFlattenMapper [[Top](#index)]
 
 This flatMapper allow us do a flatten array using all the other message fields. 
 
@@ -102,7 +109,7 @@ On this flatMapper, you only need to specify the property `flat_dimension`, **th
 {"timestamp": 1477379967, "outside_field":"outside_value", "other_first": 1, "other_second": 2}
 ```
 
-### FormatterFlatMapper
+### <a name="formatterFlatMapper"></a> FormatterFlatMapper [[Top](#index)]
 
 The formatterFlatMapper allow us generate one or more message from a unique message. It allows us to select the different dimensions to build the new output messages.
 
