@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import rb.ks.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
-import rb.ks.funcs.FilterFunc;
 import rb.ks.funcs.FlatMapperFunction;
 import rb.ks.funcs.Function;
 import rb.ks.model.PlanModel;
