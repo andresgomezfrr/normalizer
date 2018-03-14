@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class TimeStamperModelUnitTest {
 
@@ -13,7 +14,7 @@ public class TimeStamperModelUnitTest {
         TimestamperModel timestamperModelObject = new TimestamperModel(null, null);
 
         assertNotNull(timestamperModelObject.getFormat());
-        assertEquals(timestamperModelObject.getFormat(), "generate");
+        assertEquals(timestamperModelObject.getFormat(), "none");
 
         assertNotNull(timestamperModelObject.getTimestampDim());
         assertEquals(timestamperModelObject.getTimestampDim(), "timestamp");
@@ -29,8 +30,8 @@ public class TimeStamperModelUnitTest {
         assertNotNull(timestamperModelObject.getTimestampDim());
         assertEquals(timestamperModelObject.getTimestampDim(), timestamp);
 
-        assertNotNull(timestamperModelObject.getFormat(), "generate");
-        assertEquals(timestamperModelObject.generateTimestamp(new Object()), Long.valueOf(System.currentTimeMillis()/1000L));
+        assertNotNull("none", timestamperModelObject.getFormat());
+        assertNull(timestamperModelObject.generateTimestamp(new Object()));
 
     }
 
