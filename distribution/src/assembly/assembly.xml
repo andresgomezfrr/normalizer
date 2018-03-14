@@ -30,12 +30,20 @@
             </includes>
         </fileSet>
 
+        <fileSet>
+            <directory>${project.parent.basedir}/service/target/dependencies</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
 
      <files>
 
         <file>
-            <source>${project.parent.basedir}/service/target/${project.parent.artifactId}-${project.version}-selfcontained.jar</source>
+            <source>${project.parent.basedir}/service/target/${project.parent.artifactId}-${project.version}-nodependency.jar</source>
             <outputDirectory>lib</outputDirectory>
         </file>
 
