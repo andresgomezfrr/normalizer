@@ -1,0 +1,63 @@
+
+{
+  "inputs": {
+    "input1": ["filter-stream"]
+  },
+  "streams": {
+    "filter-stream":{
+      "sinks": [
+        {"topic": "mapper-stream", "type": "stream", "filter": {
+        "name": "myFilter",
+        "className": "rb.ks.funcs.impl.ContainsDimensionFilter",
+        "properties": {
+          "dimensions": ["A"]
+        }
+      }},
+        {"topic": "diff-splitter-stream", "type": "stream", "filter": {
+          "name": "myFilter",
+          "className": "rb.ks.funcs.impl.ContainsDimensionFilter",
+          "properties": {
+            "dimensions": ["A"],
+            "__MATCH": false
+          }}}
+      ]
+    },
+    "mapper-stream": {
+      "funcs": [
+        {
+          "name": "myMapper",
+          "className": "rb.ks.funcs.impl.SimpleMapper",
+          "properties": {
+            "maps": [
+              {"dimPath": ["A", "B"], "as": "X"},
+              {"dimPath": ["timestamp"]}
+            ]
+
+          }
+        }
+      ],
+      "sinks": [{"topic": "output1"}]
+    },
+    "diff-splitter-stream": {
+      "funcs": [
+        {
+          "name": "myDiffCounter",
+          "className": "rb.ks.funcs.impl.DiffCounterStoreMapper",
+          "properties": {
+            "counters": ["D"],
+            "timestamp": "timestamp"
+          },
+          "stores": ["counter-store"]
+        },
+        {
+          "name": "mySplitter",
+          "className": "rb.ks.funcs.impl.SplitterFlatMapper",
+          "properties": {
+            "dimensions": ["D"]
+          }
+        }
+      ],
+      "sinks": [{"topic": "output2"}]
+    }
+  }
+}
