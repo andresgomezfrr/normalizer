@@ -15,10 +15,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.mockito.Mockito;
 import zz.ks.builder.StreamBuilder;
 import zz.ks.builder.config.Config;
 import zz.ks.exceptions.PlanBuilderException;
+import zz.ks.funcs.Function;
+import zz.ks.funcs.MapperFunction;
 import zz.ks.model.PlanModel;
 import zz.ks.serializers.JsonDeserializer;
 import zz.ks.serializers.JsonSerde;
@@ -29,9 +30,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.times;
+import static org.junit.Assert.*;
 
 public class SimpleMapperIntegrationTest {
     private final static int NUM_BROKERS = 1;
@@ -72,7 +71,7 @@ public class SimpleMapperIntegrationTest {
         PlanModel model = null;
 
         try {
-            model = Mockito.spy(objectMapper.readValue(file, PlanModel.class));
+            model = objectMapper.readValue(file, PlanModel.class);
         } catch (IOException e) {
             fail("Exception : " + e.getMessage());
         }
@@ -80,7 +79,7 @@ public class SimpleMapperIntegrationTest {
         Config config = new Config();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "app-id-1");
 
-        StreamBuilder streamBuilder = Mockito.spy(new StreamBuilder(config, null));
+        StreamBuilder streamBuilder = new StreamBuilder(config, null);
 
         KafkaStreams streams = null;
 
@@ -90,10 +89,11 @@ public class SimpleMapperIntegrationTest {
             fail("Exception : " + e.getMessage());
         }
 
-        // Get inputs?
-        Mockito.verify(model).getInputs();
-        // Call getStreams method three times? (addSinks, createFuncs)
-        Mockito.verify(model, times(2)).getStreams();
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function simpleMapperFunction = functions.get("myMapper");
+
+        assertNotNull(simpleMapperFunction);
+        assertTrue(simpleMapperFunction instanceof MapperFunction);
 
         streams.start();
 
