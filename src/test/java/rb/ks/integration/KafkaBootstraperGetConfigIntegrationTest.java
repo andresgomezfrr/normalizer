@@ -29,7 +29,8 @@ import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.junit.Assert.assertEquals;
 import static rb.ks.builder.config.Config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
 
-public class KafkaBootstraperIntegrationTest {
+public class KafkaBootstraperGetConfigIntegrationTest {
+
 
     @ClassRule
     public static final EmbeddedSingleNodeKafkaCluster CLUSTER = new EmbeddedSingleNodeKafkaCluster();
@@ -71,7 +72,7 @@ public class KafkaBootstraperIntegrationTest {
     }
 
     @Test
-    public void kafkaBootstraperShouldWork() throws Exception {
+    public void kafkaBootstraperGetConfigAndShouldWork() throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         File file = new File(classLoader.getResource("kafka-bootstraper-integration-test-1.json").getFile());
 
@@ -89,9 +90,12 @@ public class KafkaBootstraperIntegrationTest {
         Config configuration = new Config(streamsConfiguration);
         configuration.put(BOOTSTRAPER_CLASSNAME, "rb.ks.builder.bootstrap.KafkaBootstraper");
 
+        Builder builder = new Builder(configuration);
+
         String jsonConfig = getFileContent(file);
 
         KeyValue<String, String> jsonConfigKv = new KeyValue<>(appId, jsonConfig);
+
 
         producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
@@ -102,9 +106,6 @@ public class KafkaBootstraperIntegrationTest {
         List<KeyValue<String, String>> receivedMessagesFromConfig = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
 
         assertEquals(Collections.singletonList(jsonConfig), receivedMessagesFromConfig);
-
-        Builder builder = new Builder(configuration);
-
 
         Map<String, Object> b1 = new HashMap<>();
         b1.put("C", 6000L);
@@ -149,6 +150,7 @@ public class KafkaBootstraperIntegrationTest {
 
         assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput);
     }
+
 
     @AfterClass
     public static void stopKafkaCluster() {

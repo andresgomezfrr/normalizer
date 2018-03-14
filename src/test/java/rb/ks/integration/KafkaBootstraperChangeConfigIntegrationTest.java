@@ -24,12 +24,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.junit.Assert.assertEquals;
 import static rb.ks.builder.config.Config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
 
-public class KafkaBootstraperIntegrationTest {
+public class KafkaBootstraperChangeConfigIntegrationTest {
 
     @ClassRule
     public static final EmbeddedSingleNodeKafkaCluster CLUSTER = new EmbeddedSingleNodeKafkaCluster();
@@ -71,7 +72,8 @@ public class KafkaBootstraperIntegrationTest {
     }
 
     @Test
-    public void kafkaBootstraperShouldWork() throws Exception {
+    public void kafkaBoostraperShouldWorkAfterChangeConfiguration() throws Exception {
+
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         File file = new File(classLoader.getResource("kafka-bootstraper-integration-test-1.json").getFile());
 
@@ -89,22 +91,21 @@ public class KafkaBootstraperIntegrationTest {
         Config configuration = new Config(streamsConfiguration);
         configuration.put(BOOTSTRAPER_CLASSNAME, "rb.ks.builder.bootstrap.KafkaBootstraper");
 
-        String jsonConfig = getFileContent(file);
+        Builder builder = new Builder(configuration);
 
-        KeyValue<String, String> jsonConfigKv = new KeyValue<>(appId, jsonConfig);
+        String jsonConfig1 = getFileContent(file);
+
+        KeyValue<String, String> jsonConfig1Kv = new KeyValue<>(appId, jsonConfig1);
 
         producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfigKv), producerConfig);
+        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfig1Kv), producerConfig);
 
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        List<KeyValue<String, String>> receivedMessagesFromConfig = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
+        List<KeyValue<String, String>> receivedMessagesFromConfig1 = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
 
-        assertEquals(Collections.singletonList(jsonConfig), receivedMessagesFromConfig);
-
-        Builder builder = new Builder(configuration);
-
+        assertEquals(Collections.singletonList(jsonConfig1), receivedMessagesFromConfig1);
 
         Map<String, Object> b1 = new HashMap<>();
         b1.put("C", 6000L);
@@ -148,6 +149,82 @@ public class KafkaBootstraperIntegrationTest {
         List<KeyValue<String, Map>> receivedMessagesFromOutput = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
 
         assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput);
+
+        // Second configuration
+
+        file = new File(classLoader.getResource("kafka-bootstraper-integration-test-2.json").getFile());
+
+        String jsonConfig2 = getFileContent(file);
+
+        KeyValue<String, String> jsonConfig2Kv = new KeyValue<>(appId, jsonConfig2);
+
+        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfig2Kv), producerConfig);
+
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+
+        List<KeyValue<String, String>> receivedMessagesFromConfig2 = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
+
+        assertEquals(Collections.singletonList(jsonConfig2), receivedMessagesFromConfig2);
+
+        TimeUnit.SECONDS.sleep(15);
+
+        Map<String, Object> message3 = new HashMap<>();
+        message3.put("B", "VALUE-B");
+        message3.put("timestamp", 1122334455);
+
+        KeyValue<String, Map<String, Object>> kvStream3 = new KeyValue<>("KEY_B", message3);
+
+        Map<String, Object> message4 = new HashMap<>();
+        message4.put("A", 1000);
+        message4.put("timestamp", 1122334555);
+        message4.put("last_timestamp", 1122334355);
+
+        KeyValue<String, Map<String, Object>> kvStream4 = new KeyValue<>("KEY_A", message4);
+
+        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Arrays.asList(kvStream3), producerConfig);
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Arrays.asList(kvStream4), producerConfig);
+
+
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+
+        List<KeyValue<String, Object>> receivedFilteredMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC2, 1);
+
+        assertEquals(Collections.singletonList(kvStream3), receivedFilteredMessage);
+
+        List<KeyValue<String, Object>> receivedSplitterMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
+
+        List<KeyValue<String, Map<String, Object>>> expectedSplitterArray = new ArrayList<>();
+
+        Map<String, Object> expectedMap = new HashMap<>();
+        expectedMap.put("A", 125);
+        expectedMap.put("timestamp", 1122334355);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        expectedMap = new HashMap<>();
+        expectedMap.put("A", 300);
+        expectedMap.put("timestamp", 1122334380);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        expectedMap = new HashMap<>();
+        expectedMap.put("A", 300);
+        expectedMap.put("timestamp", 1122334440);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        expectedMap = new HashMap<>();
+        expectedMap.put("A", 275);
+        expectedMap.put("timestamp", 1122334500);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        assertEquals(expectedSplitterArray, receivedSplitterMessage);
+
     }
 
     @AfterClass

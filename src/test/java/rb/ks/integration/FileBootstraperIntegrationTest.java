@@ -4,7 +4,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.integration.utils.EmbeddedSingleNodeKafkaCluster;
@@ -29,7 +28,7 @@ import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.junit.Assert.assertEquals;
 import static rb.ks.builder.config.Config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
 
-public class KafkaBootstraperIntegrationTest {
+public class FileBootstraperIntegrationTest {
 
     @ClassRule
     public static final EmbeddedSingleNodeKafkaCluster CLUSTER = new EmbeddedSingleNodeKafkaCluster();
@@ -71,10 +70,7 @@ public class KafkaBootstraperIntegrationTest {
     }
 
     @Test
-    public void kafkaBootstraperShouldWork() throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("kafka-bootstraper-integration-test-1.json").getFile());
-
+    public void fileBootstraperShouldWork() throws Exception {
         Map<String, Object> streamsConfiguration = new HashMap<>();
 
         String appId = UUID.randomUUID().toString();
@@ -86,25 +82,14 @@ public class KafkaBootstraperIntegrationTest {
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
 
+        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+
         Config configuration = new Config(streamsConfiguration);
-        configuration.put(BOOTSTRAPER_CLASSNAME, "rb.ks.builder.bootstrap.KafkaBootstraper");
-
-        String jsonConfig = getFileContent(file);
-
-        KeyValue<String, String> jsonConfigKv = new KeyValue<>(appId, jsonConfig);
-
-        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
-        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfigKv), producerConfig);
-
-        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-
-        List<KeyValue<String, String>> receivedMessagesFromConfig = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
-
-        assertEquals(Collections.singletonList(jsonConfig), receivedMessagesFromConfig);
+        configuration.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("kafka-bootstraper-integration-test-1.json").getFile());
+        configuration.put(BOOTSTRAPER_CLASSNAME, "rb.ks.builder.bootstrap.FileBootstraper");
 
         Builder builder = new Builder(configuration);
-
 
         Map<String, Object> b1 = new HashMap<>();
         b1.put("C", 6000L);
@@ -132,8 +117,6 @@ public class KafkaBootstraperIntegrationTest {
 
         KeyValue<String, Map<String, Object>> kvStream2 = new KeyValue<>("KEY_A", message2);
 
-        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
         IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Arrays.asList(kvStream1, kvStream2), producerConfig);
 
         Map<String, Object> expectedData = new HashMap<>();
@@ -143,11 +126,10 @@ public class KafkaBootstraperIntegrationTest {
 
         KeyValue<String, Map<String, Object>> expectedDataKv = new KeyValue<>("KEY_A", expectedData);
 
-        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
+        assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput1);
 
-        assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput);
     }
 
     @AfterClass
