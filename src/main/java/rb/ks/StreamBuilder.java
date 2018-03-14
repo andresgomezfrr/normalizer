@@ -56,25 +56,38 @@ public class StreamBuilder {
     }
 
     private void createInputs(KStreamBuilder builder, PlanModel model) {
+        // For each defined input
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
+            // Get <topic>
             String topic = inputs.getKey();
+            // Create new KStream<K,V> with source <topic>
             KStream<String, Map<String, Object>> kstream = builder.stream(topic);
+            // Add KStream<K,V> to Map with <stream> id
             for (String stream : inputs.getValue()) kStreams.put(stream, kstream);
         }
     }
 
     private void createFuncs(KStreamBuilder builder, PlanModel model) {
+        // For each defined stream
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
+            // Get all defined functions
             List<FunctionModel> funcModels = streams.getValue().getFuncs();
 
             if (funcModels != null) {
+                // For each defined function
                 for (FunctionModel funcModel : funcModels) {
+                    // Get KStream<K,V> for defined stream
                     KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
 
+                    // Get function name
                     String name = funcModel.getName();
+                    // Get class name
                     String className = funcModel.getClassName();
+                    // Get properties for defined function
                     Map<String, Object> properties = funcModel.getProperties();
+                    // Get all stores
                     List<String> stores = funcModel.getStores();
+
                     if (stores != null) {
                         properties.put("__STORES", stores);
                         stores.forEach(store -> {
@@ -92,10 +105,13 @@ public class StreamBuilder {
                     }
 
                     try {
+                        // Instance of new function class
                         Class funcClass = Class.forName(className);
                         Function func = (Function) funcClass.newInstance();
+                        // Init with properties
                         func.init(properties);
 
+                        // According to class
                         if (func instanceof MapperFunction) {
                             kStream = kStream.map((MapperFunction) func);
                         } else if (func instanceof FlatMapperFunction) {
@@ -106,6 +122,7 @@ public class StreamBuilder {
                             );
                         }
 
+                        // Get functions from defined stream
                         Map<String, Function> functions = streamFunctions.get(streams.getKey());
                         if (functions == null) functions = new HashMap<>();
                         functions.put(name, func);
