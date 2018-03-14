@@ -11,6 +11,7 @@ import rb.ks.StreamBuilder;
 import rb.ks.exceptions.PlanBuilderException;
 import rb.ks.model.PlanModel;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -31,34 +32,11 @@ public class SplitterFlatMapperUnitTest {
 
     @BeforeClass
     public static void initTest() throws IOException, PlanBuilderException {
-        String json = "{\n" +
-                "  \"inputs\":{\n" +
-                "    \"topic1\":[\"stream1\", \"stream2\"]\n" +
-                "  },\n" +
-                "  \"streams\":{\n" +
-                "    \"stream1\":{\n" +
-                "        \"funcs\":[\n" +
-                "              {\n" +
-                "                \"name\":\"mySplitMapper\",\n" +
-                "                \"className\":\"rb.ks.funcs.SplitterFlatMapper\",\n" +
-                "                \"properties\": {\n" +
-                "                  \"splitter\": {\n" +
-                "                       \"dimensions\": [\"A\", \"B\", \"C\", \"D\"]\n"+
-                "                   }\n"+
-                "                }\n" +
-                "              }\n" +
-                "        ],\n" +
-                "        \"timestamper\":{\"dimension\":\"timestamp\", \"format\":\"generate\"},\n" +
-                "        \"sinks\":[\n" +
-                "            {\"topic\":\"output\", \"partitionBy\":\"X\"},\n" +
-                "            {\"topic\":\"output1\"}\n" +
-                "        ]\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("stream.json").getFile());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        PlanModel model = objectMapper.readValue(json, PlanModel.class);
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
         streamBuilder.builder(model);
     }
 
@@ -77,7 +55,7 @@ public class SplitterFlatMapperUnitTest {
     @Test
     public void withoutFirstSwitched() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
-        Function myFunc = functions.get("mySplitMapper");
+        Function myFunc = functions.get("mySplitterFlatMapper");
 
         Map<String, Object> message = new HashMap<>();
         message.put("timestamp", secs(currentTime));
@@ -92,7 +70,7 @@ public class SplitterFlatMapperUnitTest {
     @Test
     public void withoutTimestamp() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
-        Function myFunc = functions.get("mySplitMapper");
+        Function myFunc = functions.get("mySplitterFlatMapper");
 
         Map<String, Object> message = new HashMap<>();
         message.put("A", 999);
@@ -111,7 +89,7 @@ public class SplitterFlatMapperUnitTest {
     @Test
     public void lessThanAMinute() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
-        Function myFunc = functions.get("mySplitMapper");
+        Function myFunc = functions.get("mySplitterFlatMapper");
 
         Map<String, Object> message = new HashMap<>();
         DateTime firstSwitchDate = formatter.withZoneUTC().parseDateTime("2014-01-01 22:10:12");
@@ -137,7 +115,7 @@ public class SplitterFlatMapperUnitTest {
     @Test
     public void higherThanAMinute() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
-        Function myFunc = functions.get("mySplitMapper");
+        Function myFunc = functions.get("mySplitterFlatMapper");
 
         Map<String, Object> message = new HashMap<>();
         DateTime firstSwitchDate = formatter.withZoneUTC().parseDateTime("2014-01-01 22:10:12");
@@ -188,7 +166,7 @@ public class SplitterFlatMapperUnitTest {
     @Test
     public void basicSpli() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
-        Function myFunc = functions.get("mySplitMapper");
+        Function myFunc = functions.get("mySplitterFlatMapper");
 
         Map<String, Object> message = new HashMap<>();
         DateTime firstSwitchDate = formatter.withZoneUTC().parseDateTime("2016-04-06 10:01:26");
@@ -254,7 +232,7 @@ public class SplitterFlatMapperUnitTest {
     @Test
     public void numberFormatExceptions() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
-        Function myFunc = functions.get("mySplitMapper");
+        Function myFunc = functions.get("mySplitterFlatMapper");
 
         Map<String, Object> message = new HashMap<>();
 
