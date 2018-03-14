@@ -41,8 +41,18 @@ public class Config {
         return ret;
     }
 
-    public Config put(String property, Object value) {
+    public <T> T getOrDefault(String property, T defaultValue) {
+        T ret = null;
 
+        if (config != null && config.get(property) != null)
+            ret = (T) config.get(property);
+        else
+            ret = defaultValue;
+
+        return ret;
+    }
+
+    public Config put(String property, Object value) {
         config.put(property, value);
 
         return this;
