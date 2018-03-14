@@ -73,6 +73,8 @@ public class KafkaMetricListenerIntegrationTest {
         List<KeyValue<String, Map>> result = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, INPUT_TOPIC, 1);
 
         assertTrue(!result.isEmpty());
+
+        builder.close();
     }
 
     @AfterClass
