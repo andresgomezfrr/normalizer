@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"mySplitterFlatMapper",
-          "className":"io.wizzie.ks.funcs.impl.SplitterFlatMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.SplitterFlatMapper",
           "properties": {
             "dimensions": ["A", "B", "C", "D"]
           }

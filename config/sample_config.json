@@ -3,9 +3,9 @@
   "bootstrap.servers": "localhost:9092",
   "zookeeper.connect": "localhost:2181",
   "num.stream.threads": 1,
-  "bootstraper.classname": "io.wizzie.ks.builder.bootstrap.KafkaBootstraper",
+  "bootstraper.classname": "io.wizzie.ks.normalizer.builder.bootstrap.KafkaBootstraper",
   "metric.enable": true,
-  "metric.listeners": ["io.wizzie.ks.metrics.ConsoleMetricListener"],
+  "metric.listeners": ["io.wizzie.ks.normalizer.metrics.ConsoleMetricListener"],
   "metric.interval": 60000,
   "multi.id": false
 }
