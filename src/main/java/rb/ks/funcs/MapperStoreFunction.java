@@ -7,12 +7,12 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rb.ks.funcs.impl.SimpleMapper;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static rb.ks.utils.Constants.*;
 public abstract class MapperStoreFunction implements Function<KeyValue<String, Map<String, Object>>>,
         Transformer<String, Map<String, Object>, KeyValue<String, Map<String, Object>>> {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -23,8 +23,8 @@ public abstract class MapperStoreFunction implements Function<KeyValue<String, M
 
     @Override
     public void init(Map<String, Object> properties) {
-        this.availableStores = (List<String>) properties.get("__STORES");
-        this.appId = (String) properties.get("__APP_ID");
+        this.availableStores = (List<String>) properties.get(__STORES);
+        this.appId = (String) properties.get(__APP_ID);
         this.properties = properties;
     }
 
