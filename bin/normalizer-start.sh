@@ -8,9 +8,10 @@ fi
 
 CURRENT=`pwd` && cd `dirname $0` && SOURCE=`pwd` && cd ${CURRENT} && PARENT=`dirname ${SOURCE}`
 
+CLASSPATH=${CLASSPATH}:${PARENT}/config
 for file in ${PARENT}/lib/*.jar;
 do
-    CLASSPATH="$CLASSPATH":"$file"
+    CLASSPATH=${CLASSPATH}:${file}
 done
 
 java -cp ${CLASSPATH} rb.ks.Normalizer $1
