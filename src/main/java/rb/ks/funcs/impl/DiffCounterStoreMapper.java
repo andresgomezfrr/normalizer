@@ -122,4 +122,10 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
 
         return builder.toString();
     }
+
+    @Override
+    public KeyValue<String, Map<String, Object>> window(long timestamp) {
+        //Nothing to do.
+        return null;
+    }
 }
