@@ -44,9 +44,6 @@ public class KafkaMetricListenerIntegrationTest {
     @Test
     public void kafkaMetricListenerShouldWork() throws Exception {
 
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("dummy-stream.json").getFile());
-
         Map<String, Object> streamsConfiguration = new HashMap<>();
 
         String appId = UUID.randomUUID().toString();
