@@ -54,9 +54,9 @@ public class SplitterFlatMapperIntegrationTest {
     }
 
     @Test
-    public void shouldWorkTest() throws InterruptedException {
+    public void shouldWorkWithKafkaTest() throws InterruptedException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("splitter-mapper.json").getFile());
+        File file = new File(classLoader.getResource("splitter-flat-mapper-integration.json").getFile());
 
         Properties streamsConfiguration = new Properties();
 
