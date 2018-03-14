@@ -193,7 +193,11 @@ public class StreamBuilder {
                             String className = filterModel.getClassName();
                             try {
                                 FilterFunc filter = (FilterFunc) makeFunction(className, filterModel.getProperties());
-                                kStream = kStream.filter(filter);
+                                if (filter.match()) {
+                                    kStream = kStream.filter(filter);
+                                } else {
+                                    kStream = kStream.filterNot(filter);
+                                }
                             } catch (ClassNotFoundException e) {
                                 log.error("Couldn't find the class associated with the function {}", className);
                             } catch (InstantiationException | IllegalAccessException e) {
