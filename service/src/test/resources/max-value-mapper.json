@@ -1,0 +1,22 @@
+{
+  "inputs":{
+    "input1":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myMaxValueMapper",
+          "className":"io.wizzie.ks.normalizer.funcs.impl.MaxValueMapper",
+          "properties": {
+            "dimension": "measures",
+            "max_dimension_name": "max_measure"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output1"}
+      ]
+    }
+  }
+}
