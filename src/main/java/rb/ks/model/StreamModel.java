@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class StreamModel {
-    List<FunctionModel> funcs;
-    List<SinkModel> sinks;
+    private List<FunctionModel> funcs;
+    private List<SinkModel> sinks;
 
     @JsonCreator
     public StreamModel(

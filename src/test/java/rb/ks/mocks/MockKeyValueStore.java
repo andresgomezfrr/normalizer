@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MockKeyValueStore<K, V> implements KeyValueStore<K, V> {
-    Map<K, V> cache = new HashMap<>();
+    private Map<K, V> cache = new HashMap<>();
 
     @Override
     public V get(K key) {
