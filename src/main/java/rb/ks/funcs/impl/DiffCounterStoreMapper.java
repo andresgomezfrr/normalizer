@@ -31,6 +31,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
         Map<String, Long> newCounters = new HashMap<>();
+        Map<String, Long> newTimestamp = new HashMap<>();
 
         for (String counterField : counterFields) {
             Long counter = toLong(value.remove(counterField));
@@ -40,9 +41,10 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
         Long timestamp = toLong(value.remove(this.timestamp));
 
         if(timestamp != null) {
-            newCounters.put(this.timestamp, timestamp);
+            newTimestamp.put(this.timestamp, timestamp);
         } else {
-            newCounters.put(this.timestamp, System.currentTimeMillis()/1000);
+            timestamp = System.currentTimeMillis()/1000;
+            newTimestamp.put(this.timestamp, timestamp);
         }
 
         Map<String, Long> counters = storeCounter.get(key);
@@ -65,9 +67,12 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             }
 
             counters.putAll(newCounters);
+            counters.putAll(newTimestamp);
 
         } else {
+            value.put(this.timestamp, timestamp);
             counters = newCounters;
+            counters.putAll(newTimestamp);
         }
 
         storeCounter.put(key, counters);
