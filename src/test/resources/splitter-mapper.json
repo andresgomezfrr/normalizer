@@ -13,9 +13,8 @@
           }
         }
       ],
-      "timestamper":{"dimension":"timestamp", "format":"iso"},
+      "timestamper":{"dimension":"timestamp", "format":"sec"},
       "sinks":[
-        {"topic":"output", "partitionBy":"Q"},
         {"topic":"output1"}
       ]
     }
