@@ -92,38 +92,38 @@ public class MetricsManager extends Thread {
             try {
 
                 // PRODUCER
-                registerMetric("producer." + i + ".messages_send_per_sec",
+                registry.register("producer." + i + ".messages_send_per_sec",
                         new JmxAttributeGauge(new ObjectName("kafka.producer:type=producer-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-producer"), "record-send-rate"));
 
-                registerMetric("producer." + i + ".output_bytes_per_sec",
+                registry.register("producer." + i + ".output_bytes_per_sec",
                         new JmxAttributeGauge(new ObjectName("kafka.producer:type=producer-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-producer"), "outgoing-byte-rate"));
 
-                registerMetric("producer." + i + ".incoming_bytes_per_sec",
+                registry.register("producer." + i + ".incoming_bytes_per_sec",
                         new JmxAttributeGauge(new ObjectName("kafka.producer:type=producer-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-producer"), "incoming-byte-rate"));
 
                 // CONSUMER
-                registerMetric("consumer." + i + ".max_lag",
+                registry.register("consumer." + i + ".max_lag",
                         new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-fetch-manager-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-consumer"), "records-lag-max"));
 
-                registerMetric("consumer." + i + ".output_bytes_per_sec",
+                registry.register("consumer." + i + ".output_bytes_per_sec",
                         new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-consumer"), "outgoing-byte-rate"));
 
-                registerMetric("consumer." + i + ".incoming_bytes_per_sec",
+                registry.register("consumer." + i + ".incoming_bytes_per_sec",
                         new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-consumer"), "incoming-byte-rate"));
 
-                registerMetric("consumer." + i + ".records_per_sec",
+                registry.register("consumer." + i + ".records_per_sec",
                         new JmxAttributeGauge(new ObjectName("kafka.consumer:type=consumer-fetch-manager-metrics,client-id="
                                 + app_id + "-1-StreamThread-"
                                 + i + "-consumer"), "records-consumed-rate"));
