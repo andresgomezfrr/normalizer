@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class DiffCounterStoreMapperUnitTest {
     private static StreamBuilder streamBuilder = new StreamBuilder("app-id-1");
@@ -47,7 +48,46 @@ public class DiffCounterStoreMapperUnitTest {
     }
 
     @Test
+    public void firstTimeViewIsFalse() {
+        diffCounterStoreMapper.sendIfZero = true;
+        diffCounterStoreMapper.firstTimeView = false;
+
+        String key1 = randomKey();
+        Map<String, Object> message1 = new HashMap<>();
+        message1.put("A", "VALUE-A");
+        message1.put("B", "VALUE-B");
+        message1.put("C", 1234567890L);
+        message1.put("X", 1000L);
+        message1.put("time", 1122334455L);
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("A", "VALUE-A");
+        message2.put("B", "VALUE-B");
+        message2.put("C", 1234567890L);
+        message2.put("X", 1000L);
+        message2.put("time", 1122334655L);
+
+        Map<String, Object> expected2 = new HashMap<>();
+        expected2.put("A", "VALUE-A");
+        expected2.put("B", "VALUE-B");
+        expected2.put("C", 1234567890L);
+        expected2.put("X", 0L);
+        expected2.put("time", 1122334655L);
+        expected2.put("last_timestamp", 1122334455L);
+
+        KeyValue<String, Map<String, Object>> result1 = diffCounterStoreMapper.process(key1, message1);
+        assertNull(result1.value);
+        assertEquals(key1, result1.key);
+
+        KeyValue<String, Map<String, Object>> result2 = diffCounterStoreMapper.process(key1, message2);
+        assertEquals(key1, result2.key);
+        assertEquals(expected2, result2.value);
+    }
+
+    @Test
     public void processSimpleMessage() {
+        diffCounterStoreMapper.firstTimeView = true;
+
         String key1 = randomKey();
 
         Map<String, Object> message1 = new HashMap<>();
@@ -90,6 +130,7 @@ public class DiffCounterStoreMapperUnitTest {
     @Test
     public void sendZeroIfIsEnabled() {
         diffCounterStoreMapper.sendIfZero = true;
+        diffCounterStoreMapper.firstTimeView = true;
 
         String key1 = randomKey();
         Map<String, Object> message1 = new HashMap<>();
@@ -132,6 +173,7 @@ public class DiffCounterStoreMapperUnitTest {
     @Test
     public void NotSendZeroIfIsEnabled() {
         diffCounterStoreMapper.sendIfZero = false;
+        diffCounterStoreMapper.firstTimeView = true;
 
         String key1 = randomKey();
         Map<String, Object> message1 = new HashMap<>();
@@ -173,6 +215,8 @@ public class DiffCounterStoreMapperUnitTest {
 
     @Test
     public void sendDifferentsKeys() {
+        diffCounterStoreMapper.firstTimeView = true;
+
         String key1 = randomKey();
         String key2 = randomKey();
 
@@ -213,6 +257,8 @@ public class DiffCounterStoreMapperUnitTest {
 
     @Test
     public void sendWithKeyDefinition() {
+        diffCounterStoreMapper.firstTimeView = true;
+
         String key1 = randomKey();
         String key2 = randomKey();
 
@@ -263,6 +309,8 @@ public class DiffCounterStoreMapperUnitTest {
 
     @Test
     public void processMessageWithNullField() {
+        diffCounterStoreMapper.firstTimeView = true;
+
         String key1 = randomKey();
 
         Map<String, Object> message1 = new HashMap<>();
@@ -321,6 +369,8 @@ public class DiffCounterStoreMapperUnitTest {
 
     @Test
     public void processMessageWithSecondNullTimestamp() {
+        diffCounterStoreMapper.firstTimeView = true;
+
         String key1 = randomKey();
 
         Map<String, Object> message1 = new HashMap<>();
@@ -360,6 +410,8 @@ public class DiffCounterStoreMapperUnitTest {
 
     @Test
     public void processMessageWithoutTimestamp() {
+        diffCounterStoreMapper.firstTimeView = true;
+
         String key1 = randomKey();
 
         Map<String, Object> message1 = new HashMap<>();
@@ -398,6 +450,8 @@ public class DiffCounterStoreMapperUnitTest {
 
     @Test
     public void processMessageWithFirstNullTimestamp() {
+        diffCounterStoreMapper.firstTimeView = true;
+
         String key1 = randomKey();
 
         Map<String, Object> message1 = new HashMap<>();
@@ -438,7 +492,7 @@ public class DiffCounterStoreMapperUnitTest {
     @Test
     public void toStringTest(){
         assertNotNull(diffCounterStoreMapper);
-        assertEquals(" {counters: [X], sendIfZero: true, stores: mock-key-value-store, timestamp: time, keys: [gateway, interface]} ",
+        assertEquals(" {counters: [X], sendIfZero: true, stores: mock-key-value-store, timestamp: time, keys: [gateway, interface], firsttimeview: true} ",
                 diffCounterStoreMapper.toString());
     }
 
