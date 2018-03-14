@@ -1,6 +1,5 @@
 package io.wizzie.ks.normalizer.integration;
 
-
 import io.wizzie.ks.normalizer.builder.Builder;
 import io.wizzie.ks.normalizer.builder.config.Config;
 import io.wizzie.ks.normalizer.serializers.JsonDeserializer;
@@ -25,7 +24,8 @@ import java.util.*;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.junit.Assert.assertEquals;
 
-public class MultiIdIntegrationTest {
+public class MultiIdWithAutocreatedTopicsIntegrationTest {
+
     private final static int NUM_BROKERS = 1;
 
     @ClassRule
@@ -34,12 +34,12 @@ public class MultiIdIntegrationTest {
 
     private static final int REPLICATION_FACTOR = 1;
 
-    private static final String INPUT_TOPIC_A = "myapp_A_input1";
-    private static final String INPUT_TOPIC_B = "myapp_B_input1";
+    private static final String INPUT_TOPIC_X = "myapp_X_input1";
+    private static final String INPUT_TOPIC_Y = "myapp_Y_input1";
 
-    private static final String OUTPUT_TOPIC1_A = "myapp_A_output1";
+    private static final String OUTPUT_TOPIC_X = "myapp_X_output1";
 
-    private static final String OUTPUT_TOPIC1_B = "myapp_B_output1";
+    private static final String OUTPUT_TOPIC_Y = "myapp_Y_output1";
 
     private static final String BOOTSTRAP_TOPIC = "__normalizer_bootstrap";
 
@@ -49,13 +49,6 @@ public class MultiIdIntegrationTest {
 
     @BeforeClass
     public static void startKafkaCluster() throws Exception {
-        CLUSTER.createTopic(INPUT_TOPIC_A, 2, REPLICATION_FACTOR);
-        CLUSTER.createTopic(INPUT_TOPIC_B, 2, REPLICATION_FACTOR);
-
-        CLUSTER.createTopic(OUTPUT_TOPIC1_A, 2, REPLICATION_FACTOR);
-
-        CLUSTER.createTopic(OUTPUT_TOPIC1_B, 2, REPLICATION_FACTOR);
-
         CLUSTER.createTopic(BOOTSTRAP_TOPIC, 1, REPLICATION_FACTOR);
 
 
@@ -74,7 +67,7 @@ public class MultiIdIntegrationTest {
     }
 
     @Test
-    public void multiIdShouldWork() throws Exception {
+    public void multiIdWithAutocreatedTopicsShouldWorks() throws Exception {
         Map<String, Object> streamsConfiguration = new HashMap<>();
 
         String appId = UUID.randomUUID().toString();
@@ -89,75 +82,75 @@ public class MultiIdIntegrationTest {
         producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        Config config_A = new Config(streamsConfiguration);
-        config_A.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("multi-id-integration-test.json").getFile());
-        config_A.put(Config.ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.ks.normalizer.builder.bootstrap.FileBootstraper");
-        config_A.put("metric.enabled", false);
-        config_A.put("multi.id", true);
-        config_A.put("application.id", "myapp_A");
+        Config config_X = new Config(streamsConfiguration);
+        config_X.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("multi-id-integration-test.json").getFile());
+        config_X.put(Config.ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.ks.normalizer.builder.bootstrap.FileBootstraper");
+        config_X.put("metric.enabled", false);
+        config_X.put("multi.id", true);
+        config_X.put("application.id", "myapp_X");
 
-        Config config_B = config_A.clone();
-        config_B.put("application.id", "myapp_B");
+        Config config_Y = config_X.clone();
+        config_Y.put("application.id", "myapp_Y");
 
-        Builder builder_A = new Builder(config_A);
+        Builder builder_X = new Builder(config_X);
 
-        Builder builder_B = new Builder(config_B);
+        Builder builder_Y = new Builder(config_Y);
 
-        Map<String, Object> b1_A = new HashMap<>();
-        b1_A.put("C", 6000L);
+        Map<String, Object> b1_X = new HashMap<>();
+        b1_X.put("C", 6000L);
 
-        Map<String, Object> a1_A = new HashMap<>();
-        a1_A.put("B", b1_A);
+        Map<String, Object> a1_X = new HashMap<>();
+        a1_X.put("B", b1_X);
 
-        Map<String, Object> message1_A = new HashMap<>();
-        message1_A.put("A", a1_A);
+        Map<String, Object> message1_X = new HashMap<>();
+        message1_X.put("A", a1_X);
 
-        message1_A.put("timestamp", 1122334455L);
+        message1_X.put("timestamp", 1122334455L);
 
-        KeyValue<String, Map<String, Object>> kvStream1_A = new KeyValue<>("KEY_A", message1_A);
+        KeyValue<String, Map<String, Object>> kvStream1_X = new KeyValue<>("KEY_X", message1_X);
 
-        Map<String, Object> b2_A = new HashMap<>();
-        b2_A.put("C", 9000L);
+        Map<String, Object> b2_X = new HashMap<>();
+        b2_X.put("C", 9000L);
 
-        Map<String, Object> a2_A = new HashMap<>();
-        a2_A.put("B", b2_A);
+        Map<String, Object> a2_X = new HashMap<>();
+        a2_X.put("B", b2_X);
 
-        Map<String, Object> message2_A = new HashMap<>();
-        message2_A.put("A", a2_A);
+        Map<String, Object> message2_X = new HashMap<>();
+        message2_X.put("A", a2_X);
 
-        message2_A.put("timestamp", 1122334655L);
+        message2_X.put("timestamp", 1122334655L);
 
-        KeyValue<String, Map<String, Object>> kvStream2_A = new KeyValue<>("KEY_A", message2_A);
+        KeyValue<String, Map<String, Object>> kvStream2_X = new KeyValue<>("KEY_X", message2_X);
 
-        Map<String, Object> b1_B = new HashMap<>();
-        b1_B.put("C", 6000L);
+        Map<String, Object> b1_Y = new HashMap<>();
+        b1_Y.put("C", 6000L);
 
-        Map<String, Object> a1_B = new HashMap<>();
-        a1_B.put("B", b1_B);
+        Map<String, Object> a1_Y = new HashMap<>();
+        a1_Y.put("B", b1_Y);
 
-        Map<String, Object> message1_B = new HashMap<>();
-        message1_B.put("A", a1_B);
+        Map<String, Object> message1_Y = new HashMap<>();
+        message1_Y.put("A", a1_Y);
 
-        message1_B.put("timestamp", 1122334455L);
+        message1_Y.put("timestamp", 1122334455L);
 
-        KeyValue<String, Map<String, Object>> kvStream1_B = new KeyValue<>("KEY_B", message1_B);
+        KeyValue<String, Map<String, Object>> kvStream1_Y = new KeyValue<>("KEY_Y", message1_Y);
 
-        Map<String, Object> b2_B = new HashMap<>();
-        b2_B.put("C", 9000L);
+        Map<String, Object> b2_Y = new HashMap<>();
+        b2_Y.put("C", 9000L);
 
-        Map<String, Object> a2_B = new HashMap<>();
-        a2_B.put("B", b2_B);
+        Map<String, Object> a2_Y = new HashMap<>();
+        a2_Y.put("B", b2_Y);
 
-        Map<String, Object> message2_B = new HashMap<>();
-        message2_B.put("A", a2_B);
+        Map<String, Object> message2_Y = new HashMap<>();
+        message2_Y.put("A", a2_Y);
 
-        message2_B.put("timestamp", 1122334655L);
+        message2_Y.put("timestamp", 1122334655L);
 
-        KeyValue<String, Map<String, Object>> kvStream2_B = new KeyValue<>("KEY_B", message2_B);
+        KeyValue<String, Map<String, Object>> kvStream2_Y = new KeyValue<>("KEY_Y", message2_Y);
 
 
-        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC_A, Arrays.asList(kvStream1_A, kvStream2_A), producerConfig, MOCK_TIME);
-        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC_B, Arrays.asList(kvStream1_B, kvStream2_B), producerConfig, MOCK_TIME);
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC_X, Arrays.asList(kvStream1_X, kvStream2_X), producerConfig, MOCK_TIME);
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC_Y, Arrays.asList(kvStream1_Y, kvStream2_Y), producerConfig, MOCK_TIME);
 
 
         Map<String, Object> expectedData = new HashMap<>();
@@ -168,23 +161,23 @@ public class MultiIdIntegrationTest {
         expectedData2.put("X", 9000);
         expectedData2.put("timestamp", 1122334655);
 
-        List<KeyValue> expectedResult_A = Arrays.asList(new KeyValue("KEY_A", expectedData), new KeyValue("KEY_A", expectedData2));
+        List<KeyValue> expectedResult_X = Arrays.asList(new KeyValue("KEY_X", expectedData), new KeyValue("KEY_X", expectedData2));
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput_A = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1_A, 1);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput_A = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC_X, 1);
 
-        assertEquals(expectedResult_A, receivedMessagesFromOutput_A);
+        assertEquals(expectedResult_X, receivedMessagesFromOutput_A);
 
-        List<KeyValue> expectedResult_B = Arrays.asList(new KeyValue("KEY_B", expectedData), new KeyValue("KEY_B", expectedData2));
+        List<KeyValue> expectedResult_Y = Arrays.asList(new KeyValue("KEY_Y", expectedData), new KeyValue("KEY_Y", expectedData2));
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput_B = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1_B, 1);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput_B = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC_Y, 1);
 
-        assertEquals(expectedResult_B, receivedMessagesFromOutput_B);
-
+        assertEquals(expectedResult_Y, receivedMessagesFromOutput_B);
     }
 
     @AfterClass
     public static void stopKafkaCluster() {
         CLUSTER.stop();
     }
+
 
 }

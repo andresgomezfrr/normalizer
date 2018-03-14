@@ -10,6 +10,11 @@ import io.wizzie.ks.normalizer.model.PlanModel;
 import io.wizzie.ks.normalizer.model.SinkModel;
 import io.wizzie.ks.normalizer.model.StreamModel;
 import io.wizzie.ks.normalizer.serializers.JsonSerde;
+import kafka.admin.TopicCommand;
+import kafka.utils.ZKStringSerializer$;
+import kafka.utils.ZkUtils;
+import org.I0Itec.zkclient.ZkClient;
+import org.I0Itec.zkclient.ZkConnection;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.streams.KeyValue;
@@ -21,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static io.wizzie.ks.normalizer.utils.Constants.__APP_ID;
@@ -31,11 +37,26 @@ public class StreamBuilder {
     String appId;
     MetricsManager metricsManager;
     Config config;
+    ZkUtils zkUtils;
+    ZkClient zkClient;
+
+    final String ZK_CONNECT;
+    final String PARTITIONS = "4";
+    final String REPLICATION_FACTOR = "1";
+
+    final int ZK_TIMEOUT = (int) TimeUnit.SECONDS.toMillis(30);
 
     public StreamBuilder(Config config, MetricsManager metricsManager) {
+        ZK_CONNECT = config.get("zookeeper.connect");
+
         this.appId = config.get(APPLICATION_ID_CONFIG);
         this.config = config;
         this.metricsManager = metricsManager;
+
+        if(ZK_CONNECT != null) {
+            zkClient = createZkClient();
+            zkUtils = new ZkUtils(zkClient, new ZkConnection(ZK_CONNECT),false);
+        }
     }
 
     private static final Logger log = LoggerFactory.getLogger(StreamBuilder.class);
@@ -87,6 +108,28 @@ public class StreamBuilder {
         clean();
     }
 
+    private ZkClient createZkClient(){
+        return new ZkClient(ZK_CONNECT, ZK_TIMEOUT, ZK_TIMEOUT, ZKStringSerializer$.MODULE$);
+    }
+
+    private void createTopicIfNotExists(String topic) {
+        if(zkClient != null && zkUtils != null) {
+            String[] topicArgs = {
+                    "--zookeeper", ZK_CONNECT,
+                    "--partitions", PARTITIONS,
+                    "--replication-factor", REPLICATION_FACTOR,
+                    "--create",
+                    "--topic", topic,
+                    "--if-not-exists"
+            };
+
+            TopicCommand.TopicCommandOptions options = new TopicCommand.TopicCommandOptions(topicArgs);
+            options.checkArgs();
+
+            TopicCommand.createTopic(zkUtils, options);
+        }
+    }
+
     private void createInputStreams(KStreamBuilder builder, PlanModel model) {
         for (Map.Entry<String, List<String>> inputs : model.getInputs().entrySet()) {
             String topic = inputs.getKey();
@@ -94,6 +137,8 @@ public class StreamBuilder {
             if (config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
                 topic = String.format("%s_%s", appId, topic);
             }
+
+            createTopicIfNotExists(topic);
 
             KStream<String, Map<String, Object>> kstream = builder.stream(topic);
             for (String stream : inputs.getValue()) {
@@ -231,6 +276,8 @@ public class StreamBuilder {
                             if (config.getOrDefault(Config.ConfigProperties.MULTI_ID, false)) {
                                 topic = String.format("%s_%s", appId, topic);
                             }
+
+                            createTopicIfNotExists(topic);
 
                             kStream.to(
                                     (key, value, numPartitions) ->
