@@ -15,6 +15,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     KeyValueStore<String, Map<String, Long>> storeCounter;
     Boolean sendIfZero;
     String timestamp;
+    String key = "__KEY";
 
     @Override
     public void prepare(Map<String, Object> properties) {
@@ -22,6 +23,10 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
         storeCounter = getStore("counter-store");
         sendIfZero = (Boolean) properties.get("sendIfZero");
         timestamp = String.valueOf(properties.get("timestamp"));
+        List<String> keys = (List<String>) properties.get("key");
+
+
+        if(keys != null) key = keys.stream().reduce("", String::concat);
 
         if (sendIfZero == null) sendIfZero = true;
 
@@ -59,7 +64,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
                 }
             }
 
-            Long lastTimestamp = counters.get(this.timestamp);
+            Long lastTimestamp = toLong(counters.get(this.timestamp));
 
             if(lastTimestamp != null) {
                 value.put("last_timestamp", lastTimestamp);
@@ -75,7 +80,10 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             counters.putAll(newTimestamp);
         }
 
-        storeCounter.put(key, counters);
+        if(this.key.equals("__KEY"))
+            storeCounter.put(key, counters);
+        else
+            storeCounter.put(this.key, counters);
 
         return new KeyValue<>(key, value);
     }
