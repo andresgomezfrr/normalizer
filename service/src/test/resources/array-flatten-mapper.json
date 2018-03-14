@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myArrayFlatMapper",
-          "className":"zz.ks.funcs.impl.ArrayFlattenMapper",
+          "className":"io.wizzie.ks.funcs.impl.ArrayFlattenMapper",
           "properties": {
             "flat_dimension": "ARRAY"
           }
