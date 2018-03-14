@@ -17,18 +17,10 @@
           }
         },
         {
-          "name":"diffCounterMapper",
-          "className":"rb.ks.funcs.DiffCounterStoreMapper",
-          "properties": {
-            "counters": ["X"]
-          },
-          "stores":["counter-store"]
-        },
-        {
-          "name":"splitterFlatMapper",
+          "name":"mySplitterFlatMapper",
           "className":"rb.ks.funcs.SplitterFlatMapper",
           "properties": {
-            "dimension": ["A", "B", "C", "D"]
+            "dimensions": ["A", "B", "C", "D"]
           }
         }
       ],
