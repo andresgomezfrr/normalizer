@@ -73,11 +73,10 @@ public class StreamBuilder {
     private void createFuncs(KStreamBuilder builder, PlanModel model) {
         for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
             List<FunctionModel> funcModels = streams.getValue().getFuncs();
-
-            if (funcModels != null) {
-                for (FunctionModel funcModel : funcModels) {
-                    KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
-                    if (kStream != null && !processedFuncs.contains(streams.getKey())) {
+            if (!processedFuncs.contains(streams.getKey())) {
+                if (funcModels != null) {
+                    for (FunctionModel funcModel : funcModels) {
+                        KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
                         String name = funcModel.getName();
                         String className = funcModel.getClassName();
                         Map<String, Object> properties = funcModel.getProperties();
@@ -100,10 +99,7 @@ public class StreamBuilder {
                         }
 
                         try {
-                            Class funcClass = Class.forName(className);
-                            Function func = (Function) funcClass.newInstance();
-                            func.init(properties);
-
+                            Function func = makeFunction(className, properties);
                             if (func instanceof MapperFunction) {
                                 kStream = kStream.map((MapperFunction) func);
                             } else if (func instanceof FlatMapperFunction) {
@@ -120,19 +116,20 @@ public class StreamBuilder {
                             if (functions == null) functions = new HashMap<>();
                             functions.put(name, func);
 
+                            log.info("Added function {} to stream {}", name, streams.getKey());
                             streamFunctions.put(streams.getKey(), functions);
                             kStreams.put(streams.getKey(), kStream);
                         } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                            log.error("Couldn't find the class associated with the function {}", className);
                         } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
+                            log.error("Couldn't create the instance associated with the function " + className, e);
                         }
 
-                        processedFuncs.add(streams.getKey());
-                    } else {
-                        if (kStream == null) log.info("Stream {} is to the next iteration.", streams.getKey());
                     }
                 }
+                processedFuncs.add(streams.getKey());
+            } else {
+                log.info("Stream {} is to the next iteration.", streams.getKey());
             }
         }
     }
@@ -187,6 +184,19 @@ public class StreamBuilder {
                             );
                         }
 
+                        FunctionModel filterModel = sink.getFilter();
+                        if (filterModel != null) {
+                            String className = filterModel.getClassName();
+                            try {
+                                FilterFunc filter = (FilterFunc) makeFunction(className, filterModel.getProperties());
+                                kStream = kStream.filter(filter);
+                            } catch (ClassNotFoundException e) {
+                                log.error("Couldn't find the class associated with the function {}", className);
+                            } catch (InstantiationException | IllegalAccessException e) {
+                                log.error("Couldn't create the instance associated with the function " + className, e);
+                            }
+                        }
+
                         if (sink.getType().equals(SinkModel.KAFKA_TYPE)) {
                             kStream.to(
                                     (key, value, numPartitions) ->
@@ -209,5 +219,13 @@ public class StreamBuilder {
 
     private void clean() {
         kStreams.clear();
+    }
+
+    private Function makeFunction(String className, Map<String, Object> properties)
+            throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+        Class funcClass = Class.forName(className);
+        Function func = (Function) funcClass.newInstance();
+        func.init(properties);
+        return func;
     }
 }
