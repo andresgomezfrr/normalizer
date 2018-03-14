@@ -1,20 +1,18 @@
 package rb.ks.model;
 
 import org.junit.Test;
-
 import rb.ks.exceptions.PlanBuilderException;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 public class PlanModelUnitTest {
-
-    @Test
-    public void stringIsCorrect() {
-
-    }
 
     @Test
     public void throwExceptionInDuplicatedStreamsTest() {
@@ -22,15 +20,22 @@ public class PlanModelUnitTest {
         inputs.put("topic1", Arrays.asList("stream1", "stream1"));
 
         // StreamModel mock
-        StreamModel streamModelObjectMock = mock(StreamModel.class);
+        StreamModel streamModelMockObject = mock(StreamModel.class);
 
         Map<String, StreamModel> streams = new HashMap<>();
-        streams.put("stream1", streamModelObjectMock);
+        streams.put("stream1", streamModelMockObject);
 
         PlanModel planModelObject = new PlanModel(inputs, streams);
 
+        assertNotNull(planModelObject.getInputs());
+        assertEquals(planModelObject.getInputs(), inputs);
+
+        assertNotNull(planModelObject.getStreams());
+        assertEquals(planModelObject.getStreams(), streams);
+
         try {
             planModelObject.validate();
+            assertNotNull(planModelObject.getDefinedStreams());
         } catch (PlanBuilderException e) {
             assertEquals(e.getMessage(), "Stream[stream1]: Duplicated");
         }
@@ -49,11 +54,35 @@ public class PlanModelUnitTest {
 
         PlanModel planModelObject = new PlanModel(inputs, streams);
 
+        assertNotNull(planModelObject.getInputs());
+        assertEquals(planModelObject.getInputs(), inputs);
+
+        assertNotNull(planModelObject.getStreams());
+        assertEquals(planModelObject.getStreams(), streams);
+
         try {
             planModelObject.validate();
+            assertNotNull(planModelObject.getDefinedStreams());
         } catch (PlanBuilderException e) {
             assertEquals(e.getMessage(), "Stream[notValidStream]: Not defined on inputs. Available inputs {topic1=[stream1, stream2]}");
         }
     }
+
+   /* @Test
+    public void avoidNullParameters() {
+        PlanModel planModelObject = new PlanModel(null, null);
+
+        assertNotNull(planModelObject.getInputs());
+        assertNotNull(planModelObject.getStreams());
+
+        assertTrue(planModelObject.getInputs().isEmpty());
+        assertTrue(planModelObject.getStreams().isEmpty());
+
+        try {
+            planModelObject.validate();
+        } catch (PlanBuilderException e) {
+            e.printStackTrace();
+        }
+    }*/
 
 }
