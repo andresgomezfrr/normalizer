@@ -7,6 +7,7 @@ import rb.ks.funcs.MapperStoreFunction;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static rb.ks.utils.ConversionUtils.toLong;
 
@@ -23,7 +24,7 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
         storeCounter = getStore("counter-store");
         sendIfZero = (Boolean) properties.get("sendIfZero");
         timestamp = String.valueOf(properties.get("timestamp"));
-        keys = (List<String>) properties.get("key");
+        keys = (List<String>) properties.get("keys");
 
         if (sendIfZero == null) sendIfZero = true;
 
@@ -33,11 +34,19 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
     @Override
     public KeyValue<String, Map<String, Object>> process(String key, Map<String, Object> value) {
 
-        String definedKey = "__KEY";
+            String definedKey = "__KEY";
 
-        if (keys != null) {
+        if (keys != null && !keys.isEmpty()) {
+
             definedKey = "";
-            for (String userKey : keys) definedKey.concat(userKey);
+
+            for(String keyElement : keys) {
+                if (value.containsKey(keyElement))
+                    definedKey += value.get(keyElement).toString();
+            }
+
+            if(definedKey.isEmpty())
+                definedKey = "__KEY";
         }
 
 
@@ -58,7 +67,11 @@ public class DiffCounterStoreMapper extends MapperStoreFunction {
             newTimestamp.put(this.timestamp, timestamp);
         }
 
-        Map<String, Long> counters = storeCounter.get(key);
+        Map<String, Long> counters;
+        if (definedKey.equals("__KEY"))
+            counters = storeCounter.get(key);
+        else
+            counters = storeCounter.get(definedKey);
 
         if (counters != null) {
 
