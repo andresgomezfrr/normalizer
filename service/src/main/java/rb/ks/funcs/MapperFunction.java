@@ -8,17 +8,30 @@ import rb.ks.metrics.MetricsManager;
 
 import java.util.Map;
 
-
+/**
+ * Abstract class mapper function
+ */
 public abstract class MapperFunction implements Function<KeyValue<String, Map<String, Object>>>,
         KeyValueMapper<String, Map<String, Object>, KeyValue<String, Map<String, Object>>> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    /**
+     * Initialize mapper function
+     * @param properties Properties for mapper function
+     * @param metricsManager MetricsManager object for mapper function
+     */
     @Override
     public void init(Map<String, Object> properties, MetricsManager metricsManager) {
         prepare(properties, metricsManager);
         log.info("   with {}", toString());
     }
 
+    /**
+     * Process Key-Value Kafka message
+     * @param key The key of Kafka message
+     * @param value The value of Kafka message
+     * @return A Key-Value object after apply mapper
+     */
     @Override
     public KeyValue<String, Map<String, Object>> apply(String key, Map<String, Object> value) {
         return process(key, value);
