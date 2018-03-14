@@ -1,4 +1,4 @@
-package integration;
+package rb.ks.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
