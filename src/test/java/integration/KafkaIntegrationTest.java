@@ -36,12 +36,10 @@ public class KafkaIntegrationTest {
     @BeforeClass
     public static void startKafkaCluster() throws Exception {
         // inputs
-        CLUSTER.createTopic("stream1", 2, REPLICATION_FACTOR);
-        CLUSTER.createTopic("stream2", 2, REPLICATION_FACTOR);
+        CLUSTER.createTopic("input1", 2, REPLICATION_FACTOR);
 
         // sinks
         CLUSTER.createTopic("output1", 4, REPLICATION_FACTOR);
-        CLUSTER.createTopic("output2", 4, REPLICATION_FACTOR);
     }
 
     @Test
@@ -49,7 +47,7 @@ public class KafkaIntegrationTest {
 
         String json = "{\n" +
                 "  \"inputs\":{\n" +
-                "    \"topic1\":[\"stream1\"]\n" +
+                "    \"input1\":[\"stream1\"]\n" +
                 "  },\n" +
                 "  \"streams\":{\n" +
                 "    \"stream1\":{\n" +
@@ -114,7 +112,7 @@ public class KafkaIntegrationTest {
         producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
         try {
-            IntegrationTestUtils.produceKeyValuesSynchronously("stream1", Collections.singletonList(kvStream1), producerConfig);
+            IntegrationTestUtils.produceKeyValuesSynchronously("input1", Collections.singletonList(kvStream1), producerConfig);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -136,13 +134,9 @@ public class KafkaIntegrationTest {
         consumerConfigB.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfigB.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        List<KeyValue<String, Map>> receivedMessagesFromStream1 = IntegrationTestUtils.readKeyValues("stream1", consumerConfigA, 1);
-
-        System.out.println(receivedMessagesFromStream1);
+        List<KeyValue<String, Map>> receivedMessagesFromStream1 = IntegrationTestUtils.readKeyValues("topic1", consumerConfigA, 1);
 
         List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfigA,"output1", 1);
-
-        System.out.println(receivedMessagesFromOutput1);
 
     }
 
