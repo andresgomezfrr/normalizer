@@ -1,0 +1,55 @@
+{
+  "inputs":{
+    "topic1":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+        "funcs":[
+              {
+                "name":"jqFlatMapper",
+                "className":"rb.ks.funcs.impl.JqFlatMapper",
+                "properties": { 
+                  "jqQuery": "{id,name}"
+                }
+              }
+        ],
+        "timestamper":{"dimension":"timestamp", "format":"generate"},
+        "sinks":[
+          {"topic":"stream3", "type":"stream", "partitionBy":"name"},
+          {"topic":"stream2", "type":"stream", "partitionBy":"name"},
+          {"topic":"output", "type":"kafka", "partitionBy":"name"}
+        ]
+    },
+    "stream2":{
+      "funcs":[
+        {
+          "name":"jqFlatMapper",
+          "className":"rb.ks.funcs.impl.JqFlatMapper",
+          "properties": {
+            "jqQuery": "{id}"
+          }
+        }
+      ],
+      "timestamper":{"dimension":"timestamp", "format":"generate"},
+      "sinks":[
+        {"topic":"output", "type":"kafka", "partitionBy":"id"}
+      ]
+    },
+    "stream3":{
+      "funcs":[
+        {
+          "name":"jqFlatMapper",
+          "className":"rb.ks.funcs.impl.JqFlatMapper",
+          "properties": {
+            "jqQuery": "{name}"
+          }
+        }
+      ],
+      "timestamper":{"dimension":"timestamp", "format":"generate"},
+      "sinks":[
+        {"topic":"output", "type":"kafka", "partitionBy":"name"}
+      ]
+    }
+
+  }
+}
