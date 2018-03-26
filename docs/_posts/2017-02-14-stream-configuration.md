@@ -28,7 +28,7 @@ This section is used to define the mapper between streams and Kafka topic.
 }
 ```
 
-This example defines a three streams `stream1`and `stream2` is reading Kafka topic `topic1`, and `stream3` that is reading Kafka topic `topic2`. Later, you can use the defined streams inside the stream section.
+This example defines a three streams `stream1` and `stream2` is reading Kafka topic `topic1`, and `stream3` that is reading Kafka topic `topic2`. Later, you can use the defined streams inside the stream section.
 
 ### streams
 
@@ -63,7 +63,7 @@ The streams objects are made by a key and a body. The key is the stream's name t
 The `funcs` is a JSON Array where you define different [functions](https://github.com/wizzie-io/normalizer/wiki/Functions) to transforms the stream. The **transformations are sequential** so the order when you are defining the functions is so important!!
 
 #### sinks
-The `funcs` is a JSON Array where you define sinks. You can define two types of sinks:
+The `sinks` is a JSON Array where you define sinks. You can define two types of sinks:
 
 * `kafka` : kafka sink is used to send the data into kafka topic.
 * `stream` :  stream sink is used to create a new stream that you can use later on the `streams` section.

@@ -77,13 +77,13 @@ By default the FieldMapper will not overwrite the values if you don't specify th
 
 ### <a name="simpleMapper"></a> SimpleMapper [ [Top](#index) ]
 
-The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it. 
+The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it.
 
 ```json
 {
   "name":"myMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
-  "properties": { 
+  "properties": {
     "maps": [
       {"dimPath":["A","B","C"], "as":"X"},
       {"dimPath":["Y","W","Z"], "as":"Q"},
@@ -128,7 +128,7 @@ The ReplaceMapper is a function that allows us replace current values of message
 {
   "name":"myReplaceMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.ReplaceMapper",
-  "properties": { 
+  "properties": {
     "dimension":"myDimension",
     "replacements": {
       "currentvalue1":"replaceValue1",
@@ -141,9 +141,9 @@ The ReplaceMapper is a function that allows us replace current values of message
 
 The ReplaceMapper has two properties that are called `dimension` and `replacements`:
 
- * `dimension`: The dimension that indicate the current value to replace
+ * `dimension`: The dimension that indicate the current value to replace.
  * `replacements`: Key-Value pairs for replace the current value. `Key` must be lowercase text.
- 
+
 If we have this json message:
 
 ```json
@@ -171,7 +171,7 @@ The JoinMapper is a function that allow us join as many values as us want and as
 {
   "name":"myJoinMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.JoinMapper",
-  "properties": { 
+  "properties": {
     "dimensionName":"myNewDimension",
     "values": [
      {"fromDimension":"dimension1", "orDefault":"defaultValue1", "delete": false},
@@ -220,7 +220,7 @@ The MaxValueMapper is a function that allow us from an array of numbers which is
 {
   "name":"myMaxValueMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.MaxValueMapper",
-  "properties": { 
+  "properties": {
     "dimension": "measures",
     "max_dimension_name": "max_measure"
   }
@@ -260,7 +260,7 @@ The MinValueMapper is like MaxValueMapper function, except that this function lo
 {
   "name":"myMinValueMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.MinValueMapper",
-  "properties": { 
+  "properties": {
     "dimension": "measures",
     "min_dimension_name": "min_measure"
   }
@@ -294,7 +294,7 @@ If we use this message using the MinValueMapper that is defined on the above exa
 
 ### <a name="classificationMapper"></a> ClassificationMapper [ [Top](#index) ]
 
-The ClassficationMapper allows us classify a numeric value. 
+The ClassficationMapper allows us classify a numeric value.
 
 ```json
 {
@@ -359,7 +359,7 @@ The StringSplitterMapper allows us to split one dimension into multiple dimensio
 
 This mapper has some properties:
 
-* `dimension`: The dimension field that you want to split. 
+* `dimension`: The dimension field that you want to split.
 * `delimitier`:  The character that the mapper uses to split.
 * `fields`: The new fields to the splitter dimensions. This is a JSON Array.
 * `delete_dimension`: This is a boolean to indicate if you want to delete the original dimension. Default: false
@@ -391,15 +391,15 @@ The StringReplaceMapper replaces the dimension string value to another one.
           }
         }
 ```
- 
+
 This mapper has some properties:
 
 * `dimension`: The dimension that you want to transform.
 * `target_string`: The string sequence that you want to replace.
 * `replacement_string`: The string sequence that you want to use on the change.
- 
+
 **Input**:
- 
+
 ```json
 {"timestamp": 1477379967, "DIM-C": "00-00-AA-FF-11-33"}
 ```
@@ -682,7 +682,7 @@ The FieldTypeConverterMapper allows us to convert value types of several dimensi
 
 This mapper has some properties:
 
-* `conversions`: Set of conversions that you want to apply. 
+* `conversions`: Set of conversions that you want to apply.
 	* `dimension`:  The dimension field which contains the value that you want to convert.
 	* `from`: The source type: `NUMBER`, `STRING` or `BOOLEAN`.
 	* `to`: The destiny type: `NUMBER`, `STRING` or `BOOLEAN`.
@@ -817,7 +817,7 @@ Some of the operations supported are:
 
 ### <a name="simpleArrayMapper"></a> SimpleArrayMapper [ [Top](#index) ]
 
-The SimpleArrayMapper is a function that allow us to make new dimension from an ArrayList. 
+The SimpleArrayMapper is a function that allow us to make new dimension from an ArrayList.
 
 ```json
   {
@@ -835,9 +835,9 @@ This mapper has some properties:
 
 * `dimensionToIndex` : On this property you define the fields that you want to make based on array index.
 * `dimension` : The array list dimension to process.
-* `deleteDimension` : If you want to remove the source dimension. Default: true. 
+* `deleteDimension` : If you want to remove the source dimension. Default: true.
 
-Example: 
+Example:
 
 * Input:
 
@@ -859,7 +859,7 @@ The RenameMapper is a function that allow us to rename fields from JSON Object.
 {
   "name":"myMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.RenameMapper",
-  "properties": { 
+  "properties": {
     "maps": [
       {"dimPath":["C"], "as":"X"},
       {"dimPath":["Z"], "as":"Q"}
@@ -900,13 +900,13 @@ The ArrayDecompositionMapper is a function that allows us to map an array to a s
    }
 }
 ```  
-   
+
 The ArrayDecompositionMapper has three properties:
 
  * `dimension`: The dimension that indicate the array that we want to map.
  * `dimensionToBuild`: The output dimension that the mapper generates using the dimension array.
  * `delete_dimension`: Option to delete the dimension or not.
- 
+
 If we have this json message:
 
 ```json
