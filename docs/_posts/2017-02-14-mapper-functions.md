@@ -77,7 +77,7 @@ By default the FieldMapper will not overwrite the values if you don't specify th
 
 ### <a name="simpleMapper"></a> SimpleMapper [ [Top](#index) ]
 
-The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it.
+The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it. The not selected fields will be removed.
 
 ```json
 {
