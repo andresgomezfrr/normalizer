@@ -20,6 +20,7 @@ import javax.management.ObjectName;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static io.wizzie.ks.normalizer.base.builder.config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
@@ -151,7 +152,7 @@ public class Builder implements Listener{
         if (streams != null) {
             metricsManager.clean();
             streamBuilder.close();
-            streams.close();
+            streams.close(1, TimeUnit.MINUTES);
             log.info("Clean Normalizer process");
         }
         try {
