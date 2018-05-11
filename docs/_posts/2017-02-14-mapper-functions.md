@@ -77,7 +77,7 @@ By default the FieldMapper will not overwrite the values if you don't specify th
 
 ### <a name="simpleMapper"></a> SimpleMapper [ [Top](#index) ]
 
-The SimpleMapper is a function that allow us to simplify the JSON Object into one level. it also selects different fields from JSON Object and rename it. The not selected fields will be removed.
+The SimpleMapper is a function that allows us to simplify the JSON Object into one level. It also selects different fields from JSON Object and renames it. The not selected fields will be removed.
 
 ```json
 {
@@ -122,7 +122,7 @@ If we use this message using the SimpleMapper that is defined on the above examp
 
 ### <a name="replaceMapper"></a> ReplaceMapper [ [Top](#index) ]
 
-The ReplaceMapper is a function that allows us replace current values of messages by others that define by us. The replace value should exists.
+The ReplaceMapper is a function that allows us to replace current values of messages by others that define by us. The replace value should exists.
 
 ```json
 {
@@ -165,7 +165,7 @@ If we use this message using the ReplaceMapper that is defined on the above exam
 ```
 
 ### <a name="joinMapper"></a> JoinMapper
-The JoinMapper is a function that allow us join as many values as us want and assign them in other dimension.
+The JoinMapper is a function that allows us to join as many values as we want and assign them in other dimension.
 
 ```json
 {
@@ -294,7 +294,7 @@ If we use this message using the MinValueMapper that is defined on the above exa
 
 ### <a name="classificationMapper"></a> ClassificationMapper [ [Top](#index) ]
 
-The ClassficationMapper allows us classify a numeric value.
+The ClassficationMapper allows us to classify a numeric value.
 
 ```json
 {
@@ -412,7 +412,7 @@ This mapper has some properties:
 
 ### <a name="timeMapper"></a> TimeMapper [ [Top](#index) ]
 
-The StringReplaceMapper converts different time formats to a specified format.
+The TimeMapper converts different time formats to a specified format.
 
 ```json
         {
@@ -817,7 +817,7 @@ Some of the operations supported are:
 
 ### <a name="simpleArrayMapper"></a> SimpleArrayMapper [ [Top](#index) ]
 
-The SimpleArrayMapper is a function that allow us to make new dimension from an ArrayList.
+The SimpleArrayMapper is a function that allows us to create new dimensions from an ArrayList.
 
 ```json
   {
@@ -833,7 +833,7 @@ The SimpleArrayMapper is a function that allow us to make new dimension from an 
 
 This mapper has some properties:
 
-* `dimensionToIndex` : On this property you define the fields that you want to make based on array index.
+* `dimensionToIndex` : On this property you define the dimensions you want to create based on array index.
 * `dimension` : The array list dimension to process.
 * `deleteDimension` : If you want to remove the source dimension. Default: true.
 
@@ -853,7 +853,7 @@ Example:
 
 ### <a name="renameMapper"></a> RenameMapper [ [Top](#index) ]
 
-The RenameMapper is a function that allow us to rename fields from JSON Object.
+The RenameMapper is a function that allows us to rename fields from JSON Object.
 
 ```json
 {

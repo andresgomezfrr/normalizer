@@ -17,19 +17,19 @@ The flat mapper functions transforms stream one message to zero or many messages
 
 ### <a name="jqFlatMapper"></a> JqFlatMapper [[Top](#index)]
 
-The JqFlatMapper is a special mapper that allow us to use [Jq Syntax](https://stedolan.github.io/jq/), internally the mapper uses [eiiches/jackson-jq](https://github.com/eiiches/jackson-jq) library to build the jq query.
+The JqFlatMapper is a special mapper that allows us to use [Jq Syntax](https://stedolan.github.io/jq/), internally the mapper uses [eiiches/jackson-jq](https://github.com/eiiches/jackson-jq) library to build the jq query.
 
 ```json
 {
   "name":"jqFlatMapper",
   "className":"io.wizzie.ks.normalizer.funcs.impl.JqFlatMapper",
-  "properties": { 
+  "properties": {
     "jqQuery": "{ids:[.ids|split(\",\")[]|tonumber|.+100],name}"
   }
 }
 ```
 
-You only need to set he property `jqQuery` where you must to define a new JSON. The above function transform this input message into this output message.
+You only need to set he property `jqQuery` where you must define a new JSON. The above function transform this input message into this output message.
 
 **Input:**
 
@@ -82,7 +82,7 @@ This mapper process a message and divide the `bytes` and `pkts` counters across 
 
 ### <a name="arrayFlattenMapper"></a> ArrayFlattenMapper [[Top](#index)]
 
-This flatMapper allow us do a flatten array using all the other message fields. 
+This flatMapper allows us to do a flatten array using all the other message fields.
 
 ```json
 {
@@ -111,11 +111,11 @@ On this flatMapper, you only need to specify the property `flat_dimension`, **th
 
 ### <a name="formatterFlatMapper"></a> FormatterFlatMapper [[Top](#index)]
 
-The formatterFlatMapper allow us generate one or more message from a unique message. It allows us to select the different dimensions to build the new output messages.
+The formatterFlatMapper allows us to generate one or more message from a unique message. It allows us to select the different dimensions to build the new output messages.
 
 On this flatMapper you have three properties:
 
- * `commonFields`: The dimension that the mapper must to select on the input message and put on all output messages.
+ * `commonFields`: The dimension that the mapper must select on the input message and put on all output messages.
  * `filters`: This mapper allows us to apply filter to create multiple stream branches into the function.
  * `generators`: The generators apply on each input message transforming it on a new output message. Currently, there are two generators:
     * **constant**: The `constant` generator is used to add constant value to the output message.
