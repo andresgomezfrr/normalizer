@@ -3,13 +3,17 @@ package io.wizzie.ks.normalizer.funcs.impl;
 import io.wizzie.ks.normalizer.funcs.MapperFunction;
 import io.wizzie.metrics.MetricsManager;
 import org.apache.kafka.streams.KeyValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import static com.cookingfox.guava_preconditions.Preconditions.checkNotNull;
 
 public class StringSplitterMapper extends MapperFunction {
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     String dimension;
     String delimitier;
@@ -31,7 +35,7 @@ public class StringSplitterMapper extends MapperFunction {
             if(value.containsKey(dimension)) {
                 String data = (String) (removeDimension ? value.remove(dimension) : value.get(dimension));
 
-                String [] tokens = data.split(delimitier);
+                String [] tokens = data.split(delimitier, fieldNames.size());
 
                 for(int i = 0; i < tokens.length; i++)
                     value.put(fieldNames.get(i), tokens[i].trim());
