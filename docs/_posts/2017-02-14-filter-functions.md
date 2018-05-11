@@ -6,15 +6,15 @@ date: 2017-02-14 12:58:42
 order: 4
 ---
 
-The filter functions are used to filter out messages from the stream. 
+The filter functions are used to filter out messages from the stream.
 
-All the filters has a common property that is called `__MATCH`. The `__MATCH` property allow us filter out the messages that do match with the filter or the messages that don't do match with the filter.
+All the filters has a common property that is called `__MATCH`. The `__MATCH` property allows us to filter out the messages that either matches the filter or does not.
  * `__MATCH: true` The filter filters out the messages that satisfy the filter.
  * `__MATCH: false` The filter filters out the messages that don't satisfy the filter.
 
 ### FieldFilter
 
-The FieldFilter is a filter that allow us filter if a concrete dimension contains a concrete value match.
+The FieldFilter is a filter that allows us to filter if a specific dimension contains a specific value match.
 
 ```json
 {
@@ -34,8 +34,8 @@ If we have next JSON message:
 
 ```json
 {
-  "DIM-A":"VALUE-A", 
-  "DIM-B":10, 
+  "DIM-A":"VALUE-A",
+  "DIM-B":10,
   "FILTER_DIMENSION": "FILTER_VAL"
 }
 ```
@@ -56,7 +56,7 @@ If you use `__KEY` dimension the filter checks the message key.
 
 ### MultiValueFieldFilter
 
-The MultiValueFieldFilter is a filter that allow us filter if a concrete dimension contains some value from a list.
+The MultiValueFieldFilter is a filter that allows us to filter if a specific dimension contains some value from a list.
 
 ```json
 {
@@ -76,8 +76,8 @@ If we have next JSON message:
 
 ```json
 {
-  "DIM-A":"VALUE-A", 
-  "DIM-B":10, 
+  "DIM-A":"VALUE-A",
+  "DIM-B":10,
   "FILTER_DIMENSION": "FILTER_VAL"
 }
 ```
@@ -108,7 +108,7 @@ If you use `__KEY` dimension the filter checks the message key.
 
 
 ### ContainsDimensionFilter
-The ContainsDimensionFilter is a filter that allow us filter of a JSON contains concrete dimensions defined by us.
+The ContainsDimensionFilter is a filter that allows us to filter if a JSON contains specific dimensions defined by us.
 
 ```json
 {
@@ -142,9 +142,9 @@ The ContainsDimensionFilter doesn't match. But if we have next JSON message:
 ```
 
 The ContainsDimensionFilter match.
- 
+
 ### StartWithFilter
-The StartWithFilter is a filter that allow us filter if a concrete dimension contains a value that start with a concrete string.
+The StartWithFilter is a filter that allows us to filter if a specific dimension contains a value that start with a specific string.
 
 ```json
 {
@@ -183,7 +183,7 @@ If we have next JSON message:
   "DIM-B":"NOT-FILTER-B",
   "DIM-C":"NOT-FILTER-C"
 }
-``` 
+```
 
 The StartWithFilter doesn't match. But if we have next JSON message:
 
@@ -193,19 +193,19 @@ The StartWithFilter doesn't match. But if we have next JSON message:
   "DIM-B":"FILTER-B",
   "DIM-C":"NOT-FILTER-C"
 }
-``` 
+```
 
 The StartWithFilter match and return `true`.
 
 ### AndFilter
 
-The AndFilter is a filter that allow us apply as many filters as us want. If all filters do match then AndFilter return `true` else return `false`.
+The AndFilter is a filter that allows us to apply as many filters as we want. If all filters match then AndFilter return `true` else return `false`.
 
 ```json
 {
   "name":"myAndFilter",
   "className":"io.wizzie.ks.normalizer.funcs.impl.AndFilter",
-  "properties": { 
+  "properties": {
     "filters": [
       {
         "name": "myFieldFilter",
@@ -256,13 +256,13 @@ The AndFilter matchs and return `true` because all defined filters have been mat
 
 ### OrFilter
 
-The OrFilter is a filter that allow us apply as many filters as us want. If any filter do match then OrFilter return `true` else return `false`.
+The OrFilter is a filter that allows us to apply as many filters as we want. If any filter matches then OrFilter return `true` else return `false`.
 
 ```json
 {
   "name":"myOrFilter",
   "className":"io.wizzie.ks.normalizer.funcs.impl.OrFilter",
-  "properties": { 
+  "properties": {
     "filters": [
       {
         "name": "myFieldFilter",
@@ -301,7 +301,7 @@ The OrFilter match and return true because the dimension `FILTER-DIMENSION` cont
 
 ### IsStringFilter
 
-The IsStringFilter is a filter that allow us filter if a concrete dimension is a String class.
+The IsStringFilter is a filter that allows us to filter if a specific dimension is a String class.
 
 ```json
 {
@@ -320,8 +320,8 @@ If we have next JSON message:
 
 ```json
 {
-  "DIM-A":"VALUE-A", 
-  "DIM-B":10, 
+  "DIM-A":"VALUE-A",
+  "DIM-B":10,
   "string-dimension": 2
 }
 ```
@@ -340,7 +340,7 @@ The IsStringFilter match and return `true` value
 
 ### IsListFilter
 
-The IsListFilter is a filter that allow us filter if a concrete dimension is a List class.
+The IsListFilter is a filter that allows us to filter if a specific dimension is a List class.
 
 ```json
 {
@@ -359,8 +359,8 @@ If we have next JSON message:
 
 ```json
 {
-  "DIM-A":"VALUE-A", 
-  "DIM-B":10, 
+  "DIM-A":"VALUE-A",
+  "DIM-B":10,
   "list-dimension": 2
 }
 ```
