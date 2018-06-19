@@ -1,6 +1,13 @@
-[![CircleCI](https://circleci.com/gh/wizzie-io/normalizer/tree/master.svg?style=shield&circle-token=f543e7c1376dbb7783d7c08abc945acf28e22c46)](https://circleci.com/gh/wizzie-io/normalizer/tree/master)
 
-# Normalizer
+
+<p align="center">
+    <img src="docs/assets/img/normalizer.logo.svg" alt="Normalizer" title="Normalizer" width="250%"/>
+</p>
+
+[![wizzie-io](https://img.shields.io/badge/powered%20by-wizzie.io-F68D2E.svg)](https://github.com/wizzie-io/)
+[![CircleCI](https://circleci.com/gh/wizzie-io/normalizer/tree/master.svg?style=shield&circle-token=f543e7c1376dbb7783d7c08abc945acf28e22c46)](https://circleci.com/gh/wizzie-io/normalizer/tree/master)
+[![Docs](https://img.shields.io/badge/docs-current-brightgreen.svg)](https://wizzie-io.github.io/normalizer/) 
+[![GitHub release](https://img.shields.io/github/release/wizzie-io/normalizer.svg)](https://github.com/wizzie-io/normalizer/releases/latest) 
 
 Normalizer is a stream processing engine based of Kafka Streams. Normalizer does maps (staless and stafull), flatmaps and filters by us. You only need to define a JSON stream where you specify the process logic and how the message are transformed.
 
