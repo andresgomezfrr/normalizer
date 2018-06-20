@@ -27,6 +27,6 @@ ENV GENERAL_LOG_LEVEL info
 
 ENV JVM_OPTIONS -Xmx512m -Xms512m
 
-CMD /bin/normalizer-start.sh
+CMD exec /bin/normalizer-start.sh
 
 
