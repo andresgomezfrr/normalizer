@@ -97,7 +97,7 @@ public class StreamBuilder {
             KStream<String, Map<String, Object>> kstream = builder.stream(topic);
             for (String stream : inputs.getValue()) {
                 log.info("Creating stream [{}]", stream);
-                kStreams.put(stream, kstream);
+                kStreams.put(stream, kstream.filter((key, value) -> key != null || value != null));
             }
         }
     }
@@ -189,6 +189,7 @@ public class StreamBuilder {
                 for (SinkModel sink : sinks) {
                     KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
                     if (kStream != null) {
+                        kStream = kStream.filter((key, value) -> key != null || value != null);
                         log.info("Send to {} [{}]", sink.getType(), sink.getTopic());
 
                         if (!sink.getPartitionBy().equals(SinkModel.PARTITION_BY_KEY)) {
