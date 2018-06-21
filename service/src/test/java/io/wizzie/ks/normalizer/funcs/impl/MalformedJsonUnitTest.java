@@ -142,6 +142,17 @@ public class MalformedJsonUnitTest {
 
         assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput1);
 
+        try {
+            IntegrationTestUtils.produceKeyValuesSynchronously("input1", Collections.singletonList(new KeyValue<>(null, null)), producerConfig, MOCK_TIME);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<KeyValue<String, Map>> receivedMessagesFromOutput2 = IntegrationTestUtils.readValues("output1", consumerConfigA, 30000, 1);
+        assertTrue(receivedMessagesFromOutput2.isEmpty());
+
         streams.close();
         streamBuilder.close();
 
