@@ -181,24 +181,30 @@ The result will be:
 The ReplaceMapper is a function that allows us to replace current values of messages by others that define by us. The replace value should exists.
 
 ```json
-{
-  "name":"myReplaceMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.ReplaceMapper",
-  "properties": {
-    "dimension":"myDimension",
-    "replacements": {
-      "currentvalue1":"replaceValue1",
-      "currentvalue2":"replaceValue2",
-      "currentvalue3":"replaceValue3"
-    }
-  }
-}
+        {
+          "name": "myReplaceMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.ReplaceMapper",
+          "properties": {
+            "replacements":[
+              {
+                "dimension": "TYPE",
+                "replacements": [
+                  {"from": "ver", "to": "version"},
+                  {"from": "v", "to": "version"},
+                  {"from": "vrsn", "to": "version"},
+                  {"from": 9, "to": 10},
+                  {"from": "nine", "to": 9}
+                ]
+              }
+            ]
+          }
+        }
 ```
 
-The ReplaceMapper has two properties that are called `dimension` and `replacements`:
+The ReplaceMapper has one property that is called `replacements`. It is an array where we define the replace values:
 
  * `dimension`: The dimension that indicate the current value to replace.
- * `replacements`: Key-Value pairs for replace the current value. `Key` must be lowercase text.
+ * `replacements`: Key-Value pairs for replace the current value. The value from `from` will be replace with the one at `to`.
 
 If we have this json message:
 
@@ -219,6 +225,8 @@ If we use this message using the ReplaceMapper that is defined on the above exam
   "myDimension":"replaceValue2"
 }
 ```
+
+Note: this function supports strings, numbers or boolean replacements. You can use them at your convenience.
 
 ### <a name="joinMapper"></a> JoinMapper
 The JoinMapper is a function that allows us to join as many values as we want and assign them in other dimension.
