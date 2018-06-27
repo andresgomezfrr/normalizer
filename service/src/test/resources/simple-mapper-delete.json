@@ -1,0 +1,27 @@
+{
+  "inputs":{
+    "topic1":["stream1", "stream2"]
+  },
+  "streams":{
+    "stream1":{
+        "funcs":[
+              {
+                "name":"myMapper",
+                "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+                "properties": { 
+                  "maps": [
+                    {"dimPath":["A","B","C"]},
+                    {"dimPath":["Y","W","Z"]},
+                    {"dimPath":["Y","W","M"]}
+                  ],
+                  "deleteMode": true
+                }
+              }
+        ],
+        "sinks":[
+            {"topic":"output", "partitionBy":"X"},
+            {"topic":"output1"}
+        ]
+    }
+  }
+}
