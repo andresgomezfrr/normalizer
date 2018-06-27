@@ -1,25 +1,50 @@
 {
-  "inputs":{
-    "topic1":["stream1"]
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
   },
-  "streams":{
-    "stream1":{
-      "funcs":[
+  "streams": {
+    "stream1": {
+      "funcs": [
         {
-          "name":"myReplaceMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.ReplaceMapper",
+          "name": "myReplaceMapper",
+          "className": "io.wizzie.ks.normalizer.funcs.impl.ReplaceMapper",
           "properties": {
-            "replacements": {
-              "ver": "version",
-              "v": "version",
-              "vrsn": "version"
-            },
-            "dimension": "TYPE"
+            "replacements":[
+              {
+                "dimension": "TYPE",
+                "replacements": [
+                  {
+                    "from": "ver",
+                    "to": "version"
+                  },
+                  {
+                    "from": "v",
+                    "to": "version"
+                  },
+                  {
+                    "from": "vrsn",
+                    "to": "version"
+                  },
+                  {
+                    "from": 9,
+                    "to": 10
+                  },
+                  {
+                    "from": "nine",
+                    "to": 9
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "sinks":[
-        {"topic":"output"}
+      "sinks": [
+        {
+          "topic": "output"
+        }
       ]
     }
   }

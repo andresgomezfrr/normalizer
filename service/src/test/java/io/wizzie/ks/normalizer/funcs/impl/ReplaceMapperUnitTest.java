@@ -16,6 +16,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -49,15 +51,49 @@ public class ReplaceMapperUnitTest {
         assertTrue(myFunc instanceof MapperFunction);
         ReplaceMapper myReplaceMapper = (ReplaceMapper) myFunc;
 
-        assertEquals("TYPE", myReplaceMapper.dimension);
-        assertNotNull(myReplaceMapper.replacements);
+        List<Map<String, Object>> replacements = new LinkedList<>();
+        Map<String, Map<Object, Object>> replacementsMap = new HashMap<>();
 
-        Map<String, String> replacements = new HashMap<>();
-        replacements.put("v", "version");
-        replacements.put("ver", "version");
-        replacements.put("vrsn", "version");
+        Map<String, Object> replacement1 = new HashMap<>();
+        replacement1.put("from", "ver");
+        replacement1.put("to", "version");
+        Map<String, Object> replacement2 = new HashMap<>();
+        replacement2.put("from", "v");
+        replacement2.put("to", "version");
+        Map<String, Object> replacement3 = new HashMap<>();
+        replacement3.put("from", "vrsn");
+        replacement3.put("to", "version");
+        Map<String, Object> replacement4 = new HashMap<>();
+        replacement4.put("from", 9);
+        replacement4.put("to", 10);
+        Map<String, Object> replacement5 = new HashMap<>();
+        replacement5.put("from", "nine");
+        replacement5.put("to", 9);
 
+        List<Map<String, Object>> replacementList  = new LinkedList<>();
+        replacementList.add(replacement1);
+        replacementList.add(replacement2);
+        replacementList.add(replacement3);
+        replacementList.add(replacement4);
+        replacementList.add(replacement5);
+
+        Map<String, Object> replace1 = new HashMap<>();
+        replace1.put("dimension", "TYPE");
+        replace1.put("replacements", replacementList);
+
+        replacements.add(replace1);
         assertEquals(replacements, myReplaceMapper.replacements);
+
+        Map<Object, Object> allReplacements = new HashMap<>();
+        allReplacements.put("vrsn", "version");
+        allReplacements.put("v", "version");
+        allReplacements.put("ver", "version");
+        allReplacements.put(9, 10);
+        allReplacements.put("nine", 9);
+
+        replacementsMap.put("TYPE", allReplacements);
+
+        assertEquals(replacementsMap, myReplaceMapper.replacementsMap);
     }
 
     @Test
@@ -96,6 +132,35 @@ public class ReplaceMapperUnitTest {
         KeyValue<String, Map<String, Object>> result2 = myReplaceMapper.process("KEY", message2);
 
         assertEquals(new KeyValue<>("KEY", expectedMessage2), result2);
+
+        Map<String, Object> message3 = new HashMap<>();
+        message3.put("timestamp", 123456789L);
+        message3.put("TYPE", 9);
+        message3.put("B", "VALUE-B");
+
+        Map<String, Object> expectedMessage3 = new HashMap<>();
+        expectedMessage3.put("timestamp", 123456789L);
+        expectedMessage3.put("TYPE", 10);
+        expectedMessage3.put("B", "VALUE-B");
+
+        KeyValue<String, Map<String, Object>> result3 = myReplaceMapper.process("KEY", message3);
+
+        assertEquals(new KeyValue<>("KEY", expectedMessage3), result3);
+
+        Map<String, Object> message4 = new HashMap<>();
+        message4.put("timestamp", 123456789L);
+        message4.put("TYPE", "nine");
+        message4.put("B", "VALUE-B");
+
+        Map<String, Object> expectedMessage4 = new HashMap<>();
+        expectedMessage4.put("timestamp", 123456789L);
+        expectedMessage4.put("TYPE", 9);
+        expectedMessage4.put("B", "VALUE-B");
+
+        KeyValue<String, Map<String, Object>> result4 = myReplaceMapper.process("KEY", message4);
+
+        assertEquals(new KeyValue<>("KEY", expectedMessage4), result4);
+
     }
 
     @Test
