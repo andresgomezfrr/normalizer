@@ -77,7 +77,7 @@ By default the FieldMapper will not overwrite the values if you don't specify th
 
 ### <a name="simpleMapper"></a> SimpleMapper [ [Top](#index) ]
 
-The SimpleMapper is a function that allows us to simplify the JSON Object into one level. It also selects different fields from JSON Object and renames it. The not selected fields will be removed.
+The SimpleMapper is a function that allows us to simplify the JSON Object into one level or to delete fields. It also selects different fields from JSON Object and renames it.
 
 ```json
 {
@@ -93,8 +93,12 @@ The SimpleMapper is a function that allows us to simplify the JSON Object into o
   }
 }
 ```
+The SimpleMapper has three properties that are called `maps`, `deleteMode` and `deleteEmpty`:
 
-The SimpleMapper has one property that is called `maps` on this property you define the fields that you want to select and if you want rename it. If we have this json message:
+* `maps`: on this property you define the fields that you want to select and if you want rename it..
+* `deleteMode`: a boolean value to switch to delete mode. On delete mode the dimensions at `maps` will be removed and the others will stay. It's `false` by default.
+* `deleteEmpty`: a boolean value to specify if, after deleting in delete mode, remove the resulting empty maps. By default it's true.
+
 
 ```json
 {
@@ -119,6 +123,58 @@ If we use this message using the SimpleMapper that is defined on the above examp
 ```json
 {"X":"MyValue", "Q":"MyOtherValue", "P": 123456, "timestamp": 123456788}
 ```
+
+If we define the next SimpleMapper:
+
+```json
+
+{
+  "name":"myMapper",
+  "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+  "properties": { 
+    "maps": [
+      {"dimPath":["timestamp"]},
+      {"dimPath":["value"]}
+    ],
+    "deleteMode": true
+  }
+}
+```
+And we have the next message:
+```json
+{"timestamp":"1234", "value":"myvalue", "P": 123456}
+```
+The result will be:
+```json
+{"P": 123456}
+```
+
+And if we define the next SimpleMapper:
+
+```json
+
+{
+  "name":"myMapper",
+  "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+  "properties": { 
+    "maps": [
+      {"dimPath":["A","B","C"]},
+      {"dimPath":["value"]}
+    ],
+    "deleteMode": true,
+    "deleteEmpty": false
+  }
+}
+```
+And we have the next message:
+```json
+{"timestamp":"1234", "value":"myvalue", "P": 123456, "A":{"B":{"C":{"myKey":"myValue"}}}}
+```
+The result will be:
+```json
+{"timestamp": "1234", "P":123456, "A":{"B":{"C":{}}}}
+```
+
 
 ### <a name="replaceMapper"></a> ReplaceMapper [ [Top](#index) ]
 
