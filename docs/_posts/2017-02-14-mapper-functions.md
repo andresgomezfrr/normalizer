@@ -172,7 +172,7 @@ And we have the next message:
 ```
 The result will be:
 ```json
-{"timestamp": "1234", "P":123456, "A":{"B":{"C":{}}}}
+{"timestamp": "1234", "P":123456, "A":{"B":{}}}
 ```
 
 
