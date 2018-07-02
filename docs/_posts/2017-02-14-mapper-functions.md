@@ -187,7 +187,7 @@ The ReplaceMapper is a function that allows us to replace current values of mess
           "properties": {
             "replacements":[
               {
-                "dimension": "TYPE",
+                "dimension": "type",
                 "replacements": [
                   {"from": "ver", "to": "version"},
                   {"from": "v", "to": "version"},
@@ -210,8 +210,8 @@ If we have this json message:
 
 ```json
 {
-  "dimension":"VALUE-1",
-  "otherDimension":"VALUE-2",
+  "type":"ver",
+  "myValue":"VALUE-2",
   "myDimension":"currentValue2"
 }
 ```
@@ -220,8 +220,8 @@ If we use this message using the ReplaceMapper that is defined on the above exam
 
 ```json
 {
-  "dimension":"VALUE-1",
-  "otherDimension":"VALUE-2",
+  "type":"version",
+  "myValue":"VALUE-2",
   "myDimension":"replaceValue2"
 }
 ```
