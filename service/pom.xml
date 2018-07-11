@@ -26,31 +26,49 @@
         <dependency>
             <groupId>io.wizzie.ks.normalizer</groupId>
             <artifactId>normalizer-base-functions</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.wizzie.ks.normalizer</groupId>
             <artifactId>normalizer-model</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.wizzie.ks.normalizer</groupId>
             <artifactId>normalizer-base</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.wizzie.metrics</groupId>
             <artifactId>metrics-library</artifactId>
             <version>${metrics-library.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka-clients</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>io.wizzie</groupId>
             <artifactId>config-bootstrapper</artifactId>
             <version>${config-bootstrapper.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka_2.12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version}</version>
         </dependency>
 
         <dependency>
@@ -86,19 +104,6 @@
             <artifactId>kafka-clients</artifactId>
             <version>${kafka.version}</version>
             <classifier>test</classifier>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.12</artifactId>
-            <version>${kafka.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.12</artifactId>
-            <version>${kafka.version}</version>
             <scope>test</scope>
         </dependency>
 
