@@ -35,8 +35,8 @@
         <jackson-jq.version>0.0.5</jackson-jq.version>
         <parsii.version>1.5</parsii.version>
         <kafka.version>1.1.0</kafka.version>
-        <metrics-library.version>0.0.2</metrics-library.version>
-        <config-bootstrapper.version>0.0.2</config-bootstrapper.version>
+        <metrics-library.version>0.0.3</metrics-library.version>
+        <config-bootstrapper.version>0.0.6</config-bootstrapper.version>
     </properties>
 
     <scm>
