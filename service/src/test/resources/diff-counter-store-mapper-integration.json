@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"diffCounterMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.DiffCounterStoreMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.DiffCounterStoreMapper",
           "properties": {
             "counters": ["X"],
             "timestamp": "time",

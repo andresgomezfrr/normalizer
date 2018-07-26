@@ -33,7 +33,7 @@ The FieldMapper is a function that allows us to add fields to one event.
 ```json
 {
   "name": "myFieldMapper",
-  "className": "io.wizzie.ks.normalizer.funcs.impl.FieldMapper",
+  "className": "io.wizzie.normalizer.funcs.impl.FieldMapper",
   "properties": {
    "dimensions": [
      {
@@ -82,7 +82,7 @@ The SimpleMapper is a function that allows us to simplify the JSON Object into o
 ```json
 {
   "name":"myMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.SimpleMapper",
   "properties": {
     "maps": [
       {"dimPath":["A","B","C"], "as":"X"},
@@ -130,7 +130,7 @@ If we define the next SimpleMapper:
 
 {
   "name":"myMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.SimpleMapper",
   "properties": { 
     "maps": [
       {"dimPath":["timestamp"]},
@@ -155,7 +155,7 @@ And if we define the next SimpleMapper:
 
 {
   "name":"myMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.SimpleMapper",
   "properties": { 
     "maps": [
       {"dimPath":["A","B","C"]},
@@ -183,7 +183,7 @@ The ReplaceMapper is a function that allows us to replace current values of mess
 ```json
         {
           "name": "myReplaceMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.ReplaceMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.ReplaceMapper",
           "properties": {
             "replacements":[
               {
@@ -234,7 +234,7 @@ The JoinMapper is a function that allows us to join as many values as we want an
 ```json
 {
   "name":"myJoinMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.JoinMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.JoinMapper",
   "properties": {
     "dimensionName":"myNewDimension",
     "values": [
@@ -283,7 +283,7 @@ The MaxValueMapper is a function that allow us from an array of numbers which is
 ```json
 {
   "name":"myMaxValueMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.MaxValueMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.MaxValueMapper",
   "properties": {
     "dimension": "measures",
     "max_dimension_name": "max_measure"
@@ -323,7 +323,7 @@ The MinValueMapper is like MaxValueMapper function, except that this function lo
 ```json
 {
   "name":"myMinValueMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.MinValueMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.MinValueMapper",
   "properties": {
     "dimension": "measures",
     "min_dimension_name": "min_measure"
@@ -363,7 +363,7 @@ The ClassficationMapper allows us to classify a numeric value.
 ```json
 {
   "name":"myClassificationMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.ClassificationMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.ClassificationMapper",
   "properties": {
     "dimension": "mark",
     "new_dimension": "classification",
@@ -412,7 +412,7 @@ The StringSplitterMapper allows us to split one dimension into multiple dimensio
 ```json
         {
           "name":"myStringSplitterFunction",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.StringSplitterMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.StringSplitterMapper",
           "properties": {
             "dimension": "DIM-H",
             "delimitier": ">",
@@ -447,7 +447,7 @@ The StringReplaceMapper replaces the dimension string value to another one.
 ```json
         {
           "name":"myStringReplacementFunction",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.StringReplaceMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.StringReplaceMapper",
           "properties": {
             "dimension": "DIM-C",
             "target_string": "-",
@@ -481,7 +481,7 @@ The TimeMapper converts different time formats to a specified format.
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"millis",
@@ -512,7 +512,7 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"millis",
@@ -540,7 +540,7 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"millis",
@@ -567,7 +567,7 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"ISO",
@@ -594,7 +594,7 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"secs",
@@ -621,7 +621,7 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"pattern: yyyy-MM-dd",
@@ -648,7 +648,7 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"millis",
@@ -676,7 +676,7 @@ If you choose "pattern: ..." as fromFormat or toFormat you have to specify a val
 ```json
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"millis",
@@ -707,7 +707,7 @@ The FieldTypeConverterMapper allows us to convert value types of several dimensi
 ```json
         {
           "name":"myFieldTypeConverterMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.FieldTypeConverterMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.FieldTypeConverterMapper",
           "properties": {
 			"conversions": [
 				{
@@ -788,7 +788,7 @@ The Arithmetic mapper allows to evaluate math expressions over the json fields.
 ```json
          {
           "name": "myArithmeticMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.ArithmeticMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.ArithmeticMapper",
           "properties": {
             "equations": [
               {
@@ -886,7 +886,7 @@ The SimpleArrayMapper is a function that allows us to create new dimensions from
 ```json
   {
     "name":"myArrayMapper",
-    "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleArrayMapper",
+    "className":"io.wizzie.normalizer.funcs.impl.SimpleArrayMapper",
     "properties": {
       "dimension": "dimArray",
       "dimensionToIndex":{"a": 0, "b": 1, "c": 2},
@@ -922,7 +922,7 @@ The RenameMapper is a function that allows us to rename fields from JSON Object.
 ```json
 {
   "name":"myMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.RenameMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.RenameMapper",
   "properties": {
     "maps": [
       {"dimPath":["C"], "as":"X"},
@@ -956,7 +956,7 @@ The ArrayDecompositionMapper is a function that allows us to map an array to a s
 ```json
 {
   "name":"arrayDecompositionMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.ArrayDecompositionMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.ArrayDecompositionMapper",
   "properties": {
     "dimensionToBuild": ["dim1", "dim2", "dim3"],
     "dimension": "array-dim",

@@ -9,7 +9,7 @@
       "funcs": [
         {
           "name": "myTimeMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.TimeMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.TimeMapper",
           "properties": {
             "dimension":"timestamp",
             "fromFormat":"pattern: yyyy-MM-dd",

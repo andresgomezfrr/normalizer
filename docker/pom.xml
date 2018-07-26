@@ -7,7 +7,7 @@
 
     <parent>
         <artifactId>normalizer</artifactId>
-        <groupId>io.wizzie.ks.normalizer</groupId>
+        <groupId>io.wizzie</groupId>
         <version>0.6.1-SNAPSHOT</version>
     </parent>
 
@@ -16,7 +16,8 @@
     <description>Docker packaging manager</description>
 
     <properties>
-        <docker.registry>gcr.io/wizzie-registry</docker.registry>
+        <docker.google.registry>gcr.io/wizzie-registry</docker.google.registry>
+        <docker.hub.registry>wizzieio</docker.hub.registry>
     </properties>
 
     <build>
@@ -66,7 +67,7 @@
                         </goals>
                         <configuration>
                             <image>${project.parent.artifactId}:${project.version}</image>
-                            <newName>${docker.registry}/${project.parent.artifactId}:${project.version}</newName>
+                            <newName>${docker.google.registry}/${project.parent.artifactId}:${project.version}</newName>
                         </configuration>
                     </execution>
 
@@ -78,29 +79,51 @@
                         </goals>
                         <configuration>
                             <image>${project.parent.artifactId}:latest</image>
-                            <newName>${docker.registry}/${project.parent.artifactId}:latest</newName>
+                            <newName>${docker.google.registry}/${project.parent.artifactId}:latest</newName>
                         </configuration>
                     </execution>
 
                     <execution>
-                        <id>push-image</id>
+                        <id>push-image-google</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
                         <configuration>
-                            <imageName>${docker.registry}/${project.parent.artifactId}:${project.version}</imageName>
+                            <imageName>${docker.google.registry}/${project.parent.artifactId}:${project.version}</imageName>
                         </configuration>
                     </execution>
 
                     <execution>
-                        <id>push-latest-image</id>
+                        <id>push-latest-image-google</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
                         <configuration>
-                            <imageName>${docker.registry}/${project.parent.artifactId}:latest</imageName>
+                            <imageName>${docker.google.registry}/${project.parent.artifactId}:latest</imageName>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>push-image-docker-hub</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <imageName>${docker.hub.registry}/${project.parent.artifactId}:${project.version}</imageName>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>push-latest-image-docker-hub</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <imageName>${docker.hub.registry}/${project.parent.artifactId}:latest</imageName>
                         </configuration>
                     </execution>
                 </executions>

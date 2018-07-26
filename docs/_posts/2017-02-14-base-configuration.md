@@ -15,7 +15,7 @@ Example configuration file:
   "application.id": "ks-normalizer-app-id",
   "bootstrap.servers": "localhost:9092",
   "num.stream.threads": 1,
-  "bootstrapper.classname": "io.wizzie.ks.normalizer.builder.bootstrap.KafkaBootstrapper",
+  "bootstrapper.classname": "io.wizzie.normalizer.builder.bootstrap.KafkaBootstrapper",
   "metric.enable": true,
   "metric.listeners": ["io.wizzie.metrics.listeners.ConsoleMetricListener"],
   "metric.interval": 60000,

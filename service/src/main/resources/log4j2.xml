@@ -19,7 +19,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="io.wizzie.ks.normalizer" level="info" additivity="false">
+        <Logger name="io.wizzie.normalizer" level="info" additivity="false">
             <AppenderRef ref="FileLogNormalizer"/>
             <AppenderRef ref="ConsoleNormalizer"/>
         </Logger>

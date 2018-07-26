@@ -19,7 +19,7 @@ The FieldFilter is a filter that allows us to filter if a specific dimension con
 ```json
 {
   "name": "myFieldFilter",
-  "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
+  "className": "io.wizzie.normalizer.funcs.impl.FieldFilter",
   "properties": {
     "dimension": "FILTER_DIMENSION",
     "value": "FILTER_VALUE"
@@ -61,7 +61,7 @@ The MultiValueFieldFilter is a filter that allows us to filter if a specific dim
 ```json
 {
   "name": "myFieldFilter",
-  "className": "io.wizzie.ks.normalizer.funcs.impl.MultiValueFieldfilter",
+  "className": "io.wizzie.normalizer.funcs.impl.MultiValueFieldfilter",
   "properties": {
     "dimension": "FILTER_DIMENSION",
     "values": ["FILTER_VALUE", "FILTER_VALUE_1"]
@@ -113,7 +113,7 @@ The ContainsDimensionFilter is a filter that allows us to filter if a JSON conta
 ```json
 {
   "name": "myContainsDimensionFilter",
-  "className": "io.wizzie.ks.normalizer.funcs.impl.ContainsDimensionFilter",
+  "className": "io.wizzie.normalizer.funcs.impl.ContainsDimensionFilter",
   "properties": {
     "dimensions": ["DIM-A", "DIM-B", "DIM-C"]
   }
@@ -156,7 +156,7 @@ The StartWithFilter is a filter that allows us to filter if a specific dimension
       "funcs":[
         {
           "name":"myKeyStartWithFilter",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.StartWithFilter",
+          "className":"io.wizzie.normalizer.funcs.impl.StartWithFilter",
           "properties": {
             "dimension": "DIM-B",
             "start_with": "FILTER"
@@ -204,12 +204,12 @@ The AndFilter is a filter that allows us to apply as many filters as we want. If
 ```json
 {
   "name":"myAndFilter",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.AndFilter",
+  "className":"io.wizzie.normalizer.funcs.impl.AndFilter",
   "properties": {
     "filters": [
       {
         "name": "myFieldFilter",
-        "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
+        "className": "io.wizzie.normalizer.funcs.impl.FieldFilter",
         "properties": {
           "dimension": "FILTER-DIMENSION",
           "value": "FILTER-VALUE"
@@ -217,7 +217,7 @@ The AndFilter is a filter that allows us to apply as many filters as we want. If
       },
       {
         "name": "myContainsFilter",
-        "className": "io.wizzie.ks.normalizer.funcs.impl.ContainsDimensionFilter",
+        "className": "io.wizzie.normalizer.funcs.impl.ContainsDimensionFilter",
         "properties": {
           "dimensions": ["A", "B", "C"]
         }
@@ -261,12 +261,12 @@ The OrFilter is a filter that allows us to apply as many filters as we want. If 
 ```json
 {
   "name":"myOrFilter",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.OrFilter",
+  "className":"io.wizzie.normalizer.funcs.impl.OrFilter",
   "properties": {
     "filters": [
       {
         "name": "myFieldFilter",
-        "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
+        "className": "io.wizzie.normalizer.funcs.impl.FieldFilter",
         "properties": {
           "dimension": "FILTER-DIMENSION",
           "value": "FILTER-VALUE"
@@ -274,7 +274,7 @@ The OrFilter is a filter that allows us to apply as many filters as we want. If 
       },
       {
         "name": "myContainsFilter",
-        "className": "io.wizzie.ks.normalizer.funcs.impl.ContainsDimensionFilter",
+        "className": "io.wizzie.normalizer.funcs.impl.ContainsDimensionFilter",
         "properties": {
           "dimensions": ["A", "B", "C"]
         }
@@ -306,7 +306,7 @@ The IsStringFilter is a filter that allows us to filter if a specific dimension 
 ```json
 {
   "name":"isString",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.IsStringFilter",
+  "className":"io.wizzie.normalizer.funcs.impl.IsStringFilter",
   "properties": {
     "dimension":"string-dimension"
   }
@@ -345,7 +345,7 @@ The IsListFilter is a filter that allows us to filter if a specific dimension is
 ```json
 {
   "name":"isList",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.IsListFilter",
+  "className":"io.wizzie.normalizer.funcs.impl.IsListFilter",
   "properties": {
       "dimension":"list-dimension"
   }

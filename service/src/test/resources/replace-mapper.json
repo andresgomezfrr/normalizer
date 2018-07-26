@@ -9,7 +9,7 @@
       "funcs": [
         {
           "name": "myReplaceMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.ReplaceMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.ReplaceMapper",
           "properties": {
             "replacements":[
               {

@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myMultipleValueFilter",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.MultiValueFieldFilter",
+          "className":"io.wizzie.normalizer.funcs.impl.MultiValueFieldFilter",
           "properties": {
               "dimension":"FILTER-DIMENSION",
               "values":["FILTER-VALUE", "FILTER-VALUE-1"]
@@ -15,7 +15,7 @@
         },
         {
           "name":"myMultiValueFilterKey",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.MultiValueFieldFilter",
+          "className":"io.wizzie.normalizer.funcs.impl.MultiValueFieldFilter",
           "properties": {
             "dimension":"__KEY",
             "values":["FILTER-KEY", "FILTER-KEY-1"]

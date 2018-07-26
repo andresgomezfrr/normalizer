@@ -66,7 +66,9 @@ jobs:
             gcloud config set project $GCLOUD_PROJECT
             docker tag ${APP_NAME}:latest gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
             gcloud auth configure-docker --quiet
-            docker push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:latest
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            mvn deploy -P docker -DskipTests
+
   tagged-deploy:
     <<: *preconfiguration
     steps:
@@ -83,7 +85,8 @@ jobs:
             gcloud config set project $GCLOUD_PROJECT
             docker tag ${APP_NAME}:latest gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable
             gcloud auth configure-docker --quiet
-            docker push gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            mvn deploy -P docker -DskipTests
             gcloud container images add-tag gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:stable gcr.io/${GCLOUD_PROJECT}/${APP_NAME}:${CIRCLE_TAG}
 workflows:
   version: 2

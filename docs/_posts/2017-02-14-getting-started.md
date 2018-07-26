@@ -22,7 +22,7 @@ First of all, we need define a stream for launch a normalizer application.
           "funcs":[
                 {
                   "name":"firstMapper",
-                  "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+                  "className":"io.wizzie.normalizer.funcs.impl.SimpleMapper",
                   "properties": {
                     "maps": [
                       {"dimPath":["body", "messages"]},
@@ -39,7 +39,7 @@ First of all, we need define a stream for launch a normalizer application.
           "funcs":[
                 {
                   "name":"flattenMessages",
-                  "className":"io.wizzie.ks.normalizer.funcs.impl.ArrayFlattenMapper",
+                  "className":"io.wizzie.normalizer.funcs.impl.ArrayFlattenMapper",
                   "properties": {
                     "flat_dimension": "messages"
                   }
@@ -122,7 +122,7 @@ We need to modify the config file that is inside the folder `config/sample_confi
   "bootstraper.classname": "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper",
   "file.bootstraper.path": "/etc/normalizer/my-stream-tutorial.json",
   "metric.enable": true,
-  "metric.listeners": ["io.wizzie.ks.metrics.ConsoleMetricListener"],
+  "metric.listeners": ["io.wizzie.metrics.ConsoleMetricListener"],
   "metric.interval": 60000
 }
 ```

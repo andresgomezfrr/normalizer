@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myClassificationMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.ClassificationMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.ClassificationMapper",
           "properties": {
             "dimension": "DIM-C",
             "new_dimension": "NEW-DIM",

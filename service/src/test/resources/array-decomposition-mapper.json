@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"arrayDecompositionMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.ArrayDecompositionMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.ArrayDecompositionMapper",
           "properties": {
             "dimensionToBuild": ["dim1", "dim2", "dim3"],
             "dimension": "array-dim",

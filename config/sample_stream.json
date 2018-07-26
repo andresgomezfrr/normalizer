@@ -7,7 +7,7 @@
         "funcs":[
               {
                 "name":"jqFlatMapper",
-                "className":"io.wizzie.ks.normalizer.funcs.impl.JqFlatMapper",
+                "className":"io.wizzie.normalizer.funcs.impl.JqFlatMapper",
                 "properties": { 
                   "jqQuery": "{id,name}"
                 }
@@ -23,7 +23,7 @@
       "funcs":[
         {
           "name":"jqFlatMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.JqFlatMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.JqFlatMapper",
           "properties": {
             "jqQuery": "{id}"
           }
@@ -37,7 +37,7 @@
       "funcs":[
         {
           "name":"jqFlatMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.JqFlatMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.JqFlatMapper",
           "properties": {
             "jqQuery": "{name}"
           }

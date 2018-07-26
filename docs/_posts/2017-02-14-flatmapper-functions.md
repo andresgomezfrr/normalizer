@@ -22,7 +22,7 @@ The JqFlatMapper is a special mapper that allows us to use [Jq Syntax](https://s
 ```json
 {
   "name":"jqFlatMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.JqFlatMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.JqFlatMapper",
   "properties": {
     "jqQuery": "{ids:[.ids|split(\",\")[]|tonumber|.+100],name}"
   }
@@ -50,7 +50,7 @@ The SplitterFlatMapper is a flatMapper that process a single message and produce
 ```json
 {
   "name":"mySplitterFlatMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.SplitterFlatMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.SplitterFlatMapper",
   "properties": {
     "dimensions": ["bytes", "pkts"],
     "timestampDim": "timestamp",
@@ -87,7 +87,7 @@ This flatMapper allows us to do a flatten array using all the other message fiel
 ```json
 {
   "name":"myArrayFlatMapper",
-  "className":"io.wizzie.ks.normalizer.funcs.impl.ArrayFlattenMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.ArrayFlattenMapper",
   "properties": {
     "flat_dimension": "my_array_dim"
   }
@@ -134,12 +134,12 @@ On this flatMapper you have three properties:
       "funcs": [
         {
           "name": "myFormatterFlatMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.FormatterFlatMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.FormatterFlatMapper",
           "properties": {
             "commonFields": ["timestamp", "user_id"],
             "filters": [
-              {"name": "inside", "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "location", "value": "inside"}},
-              {"name": "outside", "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "location", "value": "outside"}}
+              {"name": "inside", "className": "io.wizzie.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "location", "value": "inside"}},
+              {"name": "outside", "className": "io.wizzie.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "location", "value": "outside"}}
             ],
             "generators": [
               {

@@ -9,13 +9,13 @@
       "funcs": [
         {
           "name": "myFormatterFlatMapperWithPass",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.FormatterFlatMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.FormatterFlatMapper",
           "properties": {
             "commonFields": ["timestamp", "Q"],
             "passIfNotApply": true,
             "filters": [
-              {"name": "typeAFilter", "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "type", "value": "A"}},
-              {"name": "typeBFilter", "className": "io.wizzie.ks.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "type", "value": "B"}}
+              {"name": "typeAFilter", "className": "io.wizzie.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "type", "value": "A"}},
+              {"name": "typeBFilter", "className": "io.wizzie.normalizer.funcs.impl.FieldFilter", "properties": {"dimension": "type", "value": "B"}}
             ],
             "generators": [
               {

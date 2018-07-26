@@ -41,7 +41,7 @@ The `streams` section is made by streams (json objects):
         "funcs":[
               {
                 "name":"myMapper",
-                "className":"io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+                "className":"io.wizzie.normalizer.funcs.impl.SimpleMapper",
                 "properties": {
                   "maps": [
                     {"dimPath":["timestamp"]}
@@ -76,14 +76,14 @@ Sinks also have the option to configure a filter that is apply to the stream bef
       "sinks": [
         {"topic": "mapper-stream", "type": "stream", "filter": {
         "name": "myFilter",
-        "className": "io.wizzie.ks.normalizer.funcs.impl.ContainsDimensionFilter",
+        "className": "io.wizzie.normalizer.funcs.impl.ContainsDimensionFilter",
         "properties": {
           "dimensions": ["A"]
         }
       }},
         {"topic": "diff-splitter-stream", "type": "stream", "filter": {
           "name": "myFilter",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.ContainsDimensionFilter",
+          "className": "io.wizzie.normalizer.funcs.impl.ContainsDimensionFilter",
           "properties": {
             "dimensions": ["A"],
             "__MATCH": false
@@ -139,7 +139,7 @@ The `streams_folder` must have only the files that you want to be used by this t
       "funcs": [
         {
           "name": "flowNormMap",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {"dimPath": ["client_name"],"as": "user_id"},
@@ -149,7 +149,7 @@ The `streams_folder` must have only the files that you want to be used by this t
         },
         {
           "name": "flowNormField",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.FieldMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.FieldMapper",
           "properties": {
             "dimensions": [
               {
@@ -183,7 +183,7 @@ The `streams_folder` must have only the files that you want to be used by this t
       "funcs": [
         {
           "name": "ntopNormMap",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {"dimPath": ["APPLICATION_ID"], "as":"application"},
@@ -218,7 +218,7 @@ The `streams_folder` must have only the files that you want to be used by this t
       "funcs": [
         {
           "name": "flowNormMap",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {
@@ -238,7 +238,7 @@ The `streams_folder` must have only the files that you want to be used by this t
         },
         {
           "name": "flowNormField",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.FieldMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.FieldMapper",
           "properties": {
             "dimensions": [
               {
@@ -262,7 +262,7 @@ The `streams_folder` must have only the files that you want to be used by this t
       "funcs": [
         {
           "name": "ntopNormMap",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.SimpleMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.SimpleMapper",
           "properties": {
             "maps": [
               {

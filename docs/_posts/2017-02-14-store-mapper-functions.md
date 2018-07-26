@@ -32,7 +32,7 @@ Also, you must add the `"stores":["counter-store"]` because this store is used b
       "funcs":[
         {
           "name":"diffCounterMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.DiffCounterStoreMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.DiffCounterStoreMapper",
           "properties": {
             "counters": ["value"],
             "timestamp": "timestamp",

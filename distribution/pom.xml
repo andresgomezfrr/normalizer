@@ -7,7 +7,7 @@
 
     <parent>
         <artifactId>normalizer</artifactId>
-        <groupId>io.wizzie.ks.normalizer</groupId>
+        <groupId>io.wizzie</groupId>
         <version>0.6.1-SNAPSHOT</version>
     </parent>
 

@@ -8,7 +8,7 @@
         "funcs":[
               {
                 "name":"myMapper",
-                "className":"io.wizzie.ks.normalizer.funcs.impl.RenameMapper",
+                "className":"io.wizzie.normalizer.funcs.impl.RenameMapper",
                 "properties": { 
                   "maps": [
                     {"dimPath":["C"], "as":"X"},
@@ -26,7 +26,7 @@
       "funcs":[
         {
           "name":"myMapper2",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.RenameMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.RenameMapper",
           "properties": {
             "deleteOldField": false,
             "maps": [

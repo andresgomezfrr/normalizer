@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myMinValueMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.MinValueMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.MinValueMapper",
           "properties": {
             "dimension": "measures",
             "min_dimension_name": "min_measure"

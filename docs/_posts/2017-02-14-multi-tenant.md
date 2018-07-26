@@ -20,7 +20,7 @@ On this mode when you define a stream definition, for example:
       "funcs":[
         {
           "name":"myFilter",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
+          "className":"io.wizzie.normalizer.funcs.impl.FieldFilter",
           "properties": {
               "dimension":"FILTER-DIMENSION",
               "value":"FILTER-VALUE"
@@ -28,7 +28,7 @@ On this mode when you define a stream definition, for example:
         },
         {
           "name":"myFilterKey",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.FieldFilter",
+          "className":"io.wizzie.normalizer.funcs.impl.FieldFilter",
           "properties": {
             "dimension":"__KEY",
             "value":"FILTER-kEY"

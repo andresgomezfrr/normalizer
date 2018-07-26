@@ -10,7 +10,7 @@
       "funcs": [
         {
           "name": "myMapper",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.ArithmeticMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.ArithmeticMapper",
           "properties": {
             "equations": [
               {
@@ -55,7 +55,7 @@
       "funcs": [
         {
           "name": "myMapper2",
-          "className": "io.wizzie.ks.normalizer.funcs.impl.ArithmeticMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.ArithmeticMapper",
           "properties": {
             "equations": [
               {

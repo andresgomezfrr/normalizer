@@ -7,7 +7,7 @@
       "funcs":[
         {
           "name":"myMaxValueMapper",
-          "className":"io.wizzie.ks.normalizer.funcs.impl.MaxValueMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.MaxValueMapper",
           "properties": {
             "dimension": "measures",
             "max_dimension_name": "max_measure"
