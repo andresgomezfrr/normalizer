@@ -8,8 +8,8 @@ order: 1
 
 The bootstrapper is the mechanism that is used to load stream config into normalizer. You can configure the boostrapper class on the config file, using `bootstrapper.classname` property. Currently, the normalizer has two bootstrappers:
 
-* [FileBootstrapper](https://wizzie.io/normalizer/bootstrapper/file-boostrapper.html)
-* [KafkaBootstrapper](https://wizzie.io/normalizer/bootstrapper/kafka-boostrapper.html)
+* [FileBootstrapper](https://wizzie-io.github.io/normalizer/bootstrapper/file-boostrapper.html)
+* [KafkaBootstrapper](https://wizzie-io.github.io/normalizer/bootstrapper/kafka-boostrapper.html)
 
 If you want you can extend the bootstrappers using the [ThreadBootstrapper](https://github.com/wizzie-io/normalizer/blob/master/service/src/main/java/io/wizzie/ks/normalizer/builder/bootstrap/ThreadBootstrapper.java) abstract class. 
 

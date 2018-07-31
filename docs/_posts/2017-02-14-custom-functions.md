@@ -10,7 +10,7 @@ order: 5
 
 Currently there are custom functions developed for specific purposes. They allow you to process different kind of information.
 
-You can check them at: [Normalizer functions](http://wizzie.io/normalizer-functions/)
+You can check them at: [Normalizer functions](http://wizzie-io.github.io/normalizer-functions/)
 
 
 ## Development
@@ -95,4 +95,4 @@ The base abstract class that you need to implement your own FilterFunction is [F
 
 Currently there are custom functions developed for specific purposes. They allow you to process different kind of information.
 
-You can check them at: [Normalizer functions](http://wizzie.io/normalizer-functions/)
+You can check them at: [Normalizer functions](http://wizzie-io.github.io/normalizer-functions/)

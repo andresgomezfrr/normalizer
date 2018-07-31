@@ -5,12 +5,12 @@ category: docker
 date: 2017-08-17 10:57:26
 ---
 
-Normalizer image: `gcr.io/wizzie-registry/normalizer:0.1.0`
+Normalizer image: `wizzieio/normalizer:latest`
 
 ## How to get Normalizer image
 You can pull the docker image from our registry:
 ```
-$ docker pull gcr.io/wizzie-registry/normalizer:0.1.0
+$ docker pull wizzieio/normalizer:latest
 ```
 
 ## How to use this image
@@ -41,9 +41,10 @@ You can found more information about `wurstmeister/kafka` image [here](https://h
 Once kafka broker is up, we can start a Normalizer container and link it to the kafka broker, and configuring the APPLICATION_ID environment variable with our custom app name:
 
 ```
-$ docker run --rm --name my-normalizer --net=host -e APPLICATION_ID=my-normalizer-app -e KAFKA_BOOTSTRAP_SERVER=localhost:9092 gcr.io/wizzie-registry/normalizer:0.1.0
+$ docker run --rm --name my-normalizer --net=host -e APPLICATION_ID=my-normalizer-app -e KAFKA_BOOTSTRAP_SERVER=localhost:9092 wizzieio/normalizer:latest
 ```
-Now you can follow the [base tutorial](http://www.wizzie.io/normalizer/getting/getting-started.html) to test Normalizer!
+
+Now you can follow the [base tutorial](http://wizzie-io.github.io/normalizer/getting/getting-started.html) to test Normalizer!
 
 ### Using environment variables in normalizer configuration
 
@@ -56,7 +57,7 @@ You can configure the docker image using these environment properties:
 | `NUM_STREAM_THREADS` |  Number parallelism | 1|
 | `METRIC_ENABLE` | Enable the metrics |  true  |
 | `METRIC_INTERVAL`|The interval time to report metrics (milliseconds) | 60000 |
-| `MULTI_ID`| Configure the `multi.id` property [Multi Tenant](http://www.wizzie.io/normalizer/conf/multi-tenant.html) | false |
+| `MULTI_ID`| Configure the `multi.id` property [Multi Tenant](http://wizzie-io.github.io/normalizer/conf/multi-tenant.html) | false |
 | `MAX_OUTPUT_KAFKA_TOPICS`| Max limit of output kafka topics | 500 |
 
-You can found more information about base configuration [here](http://www.wizzie.io/normalizer/conf/base-configuration.html)
+You can found more information about base configuration [here](http://wizzie-io.github.io/normalizer/conf/base-configuration.html)
