@@ -28,7 +28,6 @@
                 <version>1.0.0</version>
 
                 <configuration>
-                    <useConfigFile>true</useConfigFile>
                     <forceTags>true</forceTags>
 
                     <imageName>${project.parent.artifactId}</imageName>
@@ -60,7 +59,7 @@
                     </execution>
 
                     <execution>
-                        <id>tag-image</id>
+                        <id>tag-google-image</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>tag</goal>
@@ -72,7 +71,7 @@
                     </execution>
 
                     <execution>
-                        <id>tag-latest-image</id>
+                        <id>tag-google-latest-image</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>tag</goal>
@@ -80,6 +79,30 @@
                         <configuration>
                             <image>${project.parent.artifactId}:latest</image>
                             <newName>${docker.google.registry}/${project.parent.artifactId}:latest</newName>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>tag-image</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                        <configuration>
+                            <image>${project.parent.artifactId}:${project.version}</image>
+                            <newName>${docker.hub.registry}/${project.parent.artifactId}:${project.version}</newName>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>tag-latest-image</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                        <configuration>
+                            <image>${project.parent.artifactId}:latest</image>
+                            <newName>${docker.hub.registry}/${project.parent.artifactId}:latest</newName>
                         </configuration>
                     </execution>
 
@@ -113,6 +136,8 @@
                         </goals>
                         <configuration>
                             <imageName>${docker.hub.registry}/${project.parent.artifactId}:${project.version}</imageName>
+                            <serverId>docker-hub</serverId>
+                            <registryUrl>https://index.docker.io/v1/</registryUrl>
                         </configuration>
                     </execution>
 
@@ -124,6 +149,8 @@
                         </goals>
                         <configuration>
                             <imageName>${docker.hub.registry}/${project.parent.artifactId}:latest</imageName>
+                            <serverId>docker-hub</serverId>
+                            <registryUrl>https://index.docker.io/v1/</registryUrl>
                         </configuration>
                     </execution>
                 </executions>
