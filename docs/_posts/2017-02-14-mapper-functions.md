@@ -24,6 +24,7 @@ The mapper functions transforms the stream one message to another message `1 to 
 * [SimpleArrayMapper](#simpleArrayMapper)
 * [RenameMapper](#renameMapper)
 * [ArrayDecompositionMapper](#arrayDecompositionMapper)
+* [RegexMapper](#regexMapper)
 
 
 ### <a name="fieldMapper"></a> FieldMapper [ [Top](#index) ]
@@ -990,5 +991,47 @@ If we use this message using the ArrayDecompositionMapper that is defined on the
   "dim1":"A",
   "dim2":"B",
   "dim3":"C"
+}
+```
+
+### <a name="regexMapper"></a> RegexMapper [ [Top](#index) ]
+
+The RegexMapper is a function that allows us to extract new dimension from String using regex rules.
+
+```json
+        {
+          "name": "myRegexMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.RegexMapper",
+          "properties": {
+            "generateDimensions":["dim1", "dim2", "dim3"],
+            "regexPattern": "test test (?<dim1>.*) test (?<dim2>.*) test (?<dim3>.*) test",
+            "parseDimension": "message"          }
+        }
+```  
+
+The RegexMapper has three properties:
+
+ * `generateDimensions`: The new dimensions generated from the String
+ * `regexPattern`: The regex pattern to extract the dimensions. You must use groups `(...)` and group names. `?<...>`
+ * `parseDimension`: The string that is checked with the regexPattern.
+
+If we have this json message:
+
+```json
+{
+  "timestamp": 123456789,
+  "message": "test test hello1 test hello2 test hello3 test"
+}
+```
+
+If we use this message using the RegexMapper that is defined on the above example, we get this output:
+
+```json
+{
+  "timestamp": 123456789,
+  "message": "test test hello1 test hello2 test hello3 test"
+  "dim1":"hello1",
+  "dim2":"hello2",
+  "dim3":"hello3"
 }
 ```

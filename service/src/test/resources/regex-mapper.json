@@ -1,0 +1,27 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myRegexMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.RegexMapper",
+          "properties": {
+            "generateDimensions":["dim1", "dim2", "dim3"],
+            "regexPattern": "test test (?<dim1>.*) test (?<dim2>.*) test (?<dim3>.*) test",
+            "parseDimension": "message"
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}
