@@ -116,6 +116,41 @@ public class SimpleMapperUnitTest {
     }
 
     @Test
+    public void processMessageWithoutDimension() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myMapper");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof SimpleMapper);
+        SimpleMapper myMapper = (SimpleMapper) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("timestamp", 123456789);
+
+        Map<String, Object> a = new HashMap<>();
+        Map<String, Object> b = new HashMap<>();
+        a.put("B", b);
+        message.put("A", a);
+
+
+        Map<String, Object> y = new HashMap<>();
+        Map<String, Object> w = new HashMap<>();
+        w.put("Z", "TEST-Z");
+        w.put("P", "TEST-P");
+        y.put("W", w);
+        message.put("Y", y);
+
+        KeyValue<String, Map<String, Object>> mapMessage = myMapper.process("key1", message);
+        assertEquals("key1", mapMessage.key);
+
+        Map<String, Object> value = mapMessage.value;
+        assertFalse(value.containsKey("X"));
+        assertEquals("TEST-Z", value.get("Q"));
+        assertEquals("TEST-P", value.get("P"));
+        assertEquals(123456789, value.get("timestamp"));
+    }
+
+    @Test
     public void processSimpleMessageShouldWork() {
         Map<String, Function> functions = streamBuilder.getFunctions("stream1");
         Function myFunc = functions.get("myMapper");

@@ -69,7 +69,7 @@ public class SimpleMapper extends MapperFunction {
                     }
                 }
 
-                if(depth == 0){
+                if (depth == 0) {
                     newEvent.remove(mapper.dimPath.get(depth));
                 }
                 if (deleteEmpty && deleteMode && parents.size() > 1) {
@@ -86,7 +86,7 @@ public class SimpleMapper extends MapperFunction {
 
                 if (levelPath != null && !deleteMode) {
                     Object newValue = levelPath.get(mapper.dimPath.get(depth));
-                    newEvent.put(mapper.as, newValue);
+                    if (newValue != null) newEvent.put(mapper.as, newValue);
                 }
             });
 
