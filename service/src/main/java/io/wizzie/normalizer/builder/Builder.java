@@ -14,9 +14,12 @@ import io.wizzie.normalizer.base.utils.Utils;
 import io.wizzie.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.normalizer.model.PlanModel;
 import io.wizzie.normalizer.serializers.JsonSerde;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +28,7 @@ import javax.management.ObjectName;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import static io.wizzie.normalizer.base.builder.config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
@@ -33,7 +37,7 @@ import static org.apache.kafka.streams.StreamsConfig.CLIENT_ID_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.NUM_STREAM_THREADS_CONFIG;
 
 
-public class Builder implements Listener{
+public class Builder implements Listener {
     private static final Logger log = LoggerFactory.getLogger(Builder.class);
     Config config;
     StreamBuilder streamBuilder;
@@ -84,7 +88,7 @@ public class Builder implements Listener{
             try {
 
                 // PRODUCER
-               log.info(" * {}", "producer." + i + ".messages_send_per_sec");
+                log.info(" * {}", "producer." + i + ".messages_send_per_sec");
                 metricsManager.registerMetric("producer.stream-" + i + ".messages_send_per_sec",
                         new JmxAttributeGauge(new ObjectName("kafka.producer:type=producer-metrics,client-id="
                                 + String.format("%s_%s", appId, "normalizer") + "-StreamThread-"
@@ -172,9 +176,28 @@ public class Builder implements Listener{
             String appId = configWithNewAppId.get(APPLICATION_ID_CONFIG);
             configWithNewAppId.put(APPLICATION_ID_CONFIG, String.format("%s_%s", appId, "normalizer"));
             configWithNewAppId.put(CLIENT_ID_CONFIG, String.format("%s_%s", appId, "normalizer"));
-            streams = new KafkaStreams(builder.build(), configWithNewAppId.getProperties());
 
-            streams.setUncaughtExceptionHandler((thread, exception) -> log.error(exception.getMessage(), exception));
+            Properties properties = configWithNewAppId.getProperties();
+
+            properties.put(StreamsConfig.producerPrefix(ProducerConfig.RETRIES_CONFIG), Integer.MAX_VALUE);
+            properties.put(StreamsConfig.producerPrefix(ProducerConfig.MAX_BLOCK_MS_CONFIG), Integer.MAX_VALUE);
+            properties.put(StreamsConfig.REQUEST_TIMEOUT_MS_CONFIG, 305000);
+            properties.put(StreamsConfig.consumerPrefix(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG),
+                    Integer.MAX_VALUE);
+
+            streams = new KafkaStreams(builder.build(), properties);
+
+            streams.setUncaughtExceptionHandler((thread, exception) -> {
+                log.error(exception.getMessage(), exception);
+
+                try {
+                    log.info("Stopping normalizer service");
+                    close();
+                    log.info("Closing normalizer service");
+                } catch (Exception e) {
+                    log.error(exception.getMessage(), exception);
+                }
+            });
             streams.start();
 
             registerKafkaMetrics(config, metricsManager);
