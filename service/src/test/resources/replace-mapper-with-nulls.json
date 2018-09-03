@@ -1,0 +1,39 @@
+{
+  "inputs": {
+    "topic1": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs": [
+        {
+          "name": "myReplaceMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.ReplaceMapper",
+          "properties": {
+            "replacements":[
+              {
+                "dimension": "TYPE",
+                "replacements": [
+                  {
+                    "from": null,
+                    "to": "version"
+                  },
+                  {
+                    "from": "v",
+                    "to": null
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "sinks": [
+        {
+          "topic": "output"
+        }
+      ]
+    }
+  }
+}

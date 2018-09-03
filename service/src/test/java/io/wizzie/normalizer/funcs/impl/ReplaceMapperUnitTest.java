@@ -165,6 +165,22 @@ public class ReplaceMapperUnitTest {
 
         assertEquals(new KeyValue<>("KEY", expectedMessage4), result4);
 
+        Map<String, Object> message5 = new HashMap<>();
+        message5.put("timestamp", 123456789L);
+        message5.put("TYPE", null);
+        message5.put("B", "VALUE-B");
+
+        Map<String, Object> expectedMessage5 = new HashMap<>();
+        expectedMessage5.put("timestamp", 123456789L);
+        expectedMessage5.put("TYPE", null);
+        expectedMessage5.put("B", "VALUE-B");
+
+        KeyValue<String, Map<String, Object>> result5 = myReplaceMapper.process("KEY", message5);
+
+        assertEquals(new KeyValue<>("KEY", expectedMessage5), result5);
+
+
+
     }
 
     @Test
@@ -260,6 +276,65 @@ public class ReplaceMapperUnitTest {
         KeyValue<String, Map<String, Object>> result = myReplaceMapper.process("KEY", message);
 
         assertEquals(new KeyValue<>("KEY", message), result);
+    }
+
+    @Test
+    public void processWithNulls() {
+
+        StreamBuilder streamBuilder2 = new StreamBuilder(config, null);
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("replace-mapper-with-nulls.json").getFile());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PlanModel model = null;
+        try {
+            model = objectMapper.readValue(file, PlanModel.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            streamBuilder2.builder(model);
+        } catch (PlanBuilderException e) {
+            e.printStackTrace();
+        }
+
+        Map<String, Function> functions = streamBuilder2.getFunctions("stream1");
+        Function myReplaceFunc = functions.get("myReplaceMapper");
+
+        assertNotNull(myReplaceFunc);
+        assertTrue(myReplaceFunc instanceof MapperFunction);
+        MapperFunction myReplaceMapper = (MapperFunction) myReplaceFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("timestamp", 123456789L);
+        message.put("TYPE", null);
+        message.put("A", "VALUE-A");
+
+        KeyValue<String, Map<String, Object>> result = myReplaceMapper.process("KEY", message);
+
+        Map<String, Object> msgExpected = new HashMap<>();
+        msgExpected.put("timestamp", 123456789L);
+        msgExpected.put("TYPE", "version");
+        msgExpected.put("A", "VALUE-A");
+
+        assertEquals(msgExpected, result.value);
+
+        Map<String, Object> message2 = new HashMap<>();
+        message2.put("timestamp", 123456789L);
+        message2.put("TYPE", "v");
+        message2.put("A", "VALUE-A");
+
+        KeyValue<String, Map<String, Object>> result2 = myReplaceMapper.process("KEY", message2);
+
+        Map<String, Object> msgExpected2 = new HashMap<>();
+        msgExpected2.put("timestamp", 123456789L);
+        msgExpected2.put("TYPE", null);
+        msgExpected2.put("A", "VALUE-A");
+
+        assertEquals(msgExpected2, result2.value);
+
+        streamBuilder2.close();
     }
 
     @AfterClass
