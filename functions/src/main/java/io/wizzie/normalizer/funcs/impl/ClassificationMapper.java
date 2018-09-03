@@ -36,7 +36,7 @@ public class ClassificationMapper extends MapperFunction {
                 Number data = (Number) value.get(dimension);
                 String classificationName = "not_classified";
 
-                if (data.doubleValue() == unknownValue.doubleValue()) {
+                if (data == null || data.doubleValue() == unknownValue.doubleValue()) {
                     classificationName = "unknown";
                 } else {
                     int i;

@@ -153,6 +153,26 @@ public class ClassificationMapperUnitTest {
     }
 
     @Test
+    public void processNullValueToClassify() {
+        Map<String, Function> functions = streamBuilder.getFunctions("myStream");
+
+        Function myFuncKey = functions.get("myClassificationMapper");
+
+        assertNotNull(myFuncKey);
+        assertTrue(myFuncKey instanceof MapperFunction);
+        ClassificationMapper myClassificationMapper = (ClassificationMapper) myFuncKey;
+
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("DIM-C", null);
+
+        Map<String, Object> msgExpected= new HashMap<>();
+        msgExpected.put("DIM-C", null);
+        msgExpected.put("NEW-DIM", "unknown");
+
+        assertEquals(msgExpected, myClassificationMapper.process("KEY", msg).value);
+    }
+
+    @Test
     public void processNullKeyAndValue() {
         Map<String, Function> functions = streamBuilder.getFunctions("myStream");
 
