@@ -3,7 +3,7 @@
     <parent>
         <artifactId>normalizer</artifactId>
         <groupId>io.wizzie</groupId>
-        <version>0.6.1.2</version>
+        <version>0.6.1.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
