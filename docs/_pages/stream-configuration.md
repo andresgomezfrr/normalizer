@@ -1,1 +1,0 @@
-../_posts/2017-02-14-stream-configuration.md

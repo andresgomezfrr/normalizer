@@ -1,0 +1,45 @@
+docs:
+  - title: Home
+    url: /
+  - title: Getting Started
+    children:
+      - title: Base Tutorial
+        url: /getting_started/base_tutorial
+
+  - title: Configuration
+    children:
+      - title: Base Configuration
+        url: /configuration/base_configuration
+      - title: Stream Configuration
+        url: /configuration/stream_configuration
+      - title: Bootstrapper
+        url: /configuration/bootstrapper
+      - title: Metrics
+        url: /configuration/metrics
+      - title: Multi Tenant
+        url: /configuration/multi_tenant
+
+  - title: Functions
+    children:
+      - title: Mapper Functions
+        url: /functions/mapper_functions
+      - title: FlatMapper Functions
+        url: /functions/flatmapper_functions
+      - title: Store Mapper Functions
+        url: /functions/store_mapper_functions
+      - title: Filter Functions
+        url: /functions/filter_functions
+
+  - title: Docker
+    children:
+      - title: Docker Configuration
+        url: /docker/docker_configuration
+      - title: Docker Example
+        url: /docker/docker_example
+
+  - title: Development
+    children:
+      - title: Custom Functions
+        url: /development/custom_functions
+      - title: Debug Functions
+        url: /development/debug_functions
