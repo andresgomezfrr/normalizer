@@ -482,7 +482,7 @@ This mapper has some properties:
 
 Both `fromFormat` and `toFormat` must be: "ISO", "millis", "secs" or "pattern: ...".
 
-If you choose "pattern: ..." as fromFormat or toFormat you have to specify a valid format. A valid format is a JDK date format (you can read more at: https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html and at JDK docs).
+If you choose "pattern: ..." as fromFormat or toFormat you have to specify a valid format. A valid format is a JDK date format (you can read more at: [Formats](https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html) and at JDK docs).
 
 ##### Example 1: millis -> secs
 

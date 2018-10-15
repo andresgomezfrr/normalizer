@@ -12,11 +12,12 @@ You can add store to a function using the key `stores`, this key is a JSON Array
 The DiffCounterStoreMapper allows us to compute the difference on one or more values based on specific group of keys.
 
 This mapper has 4 properties:
-    * `counters`: The dimensions where you want to compute the difference.
-    * `timestamp`: The dimension that contains the time of the message, this is used to save the timestamp and put on the message the current timestamp and the old timestamp (the timestamp when the last event arrived). Default: `timestamp`
-    * `keys`: The group of dimensions that is used to compute the difference beetween the values.
-    * `firsttimeview`: Discard or not the first event. Default: `true`
-    * `sendIfZero`: Send or not a message if the difference is zero. Default `true`
+
+* `counters`: The dimensions where you want to compute the difference.
+* `timestamp`: The dimension that contains the time of the message, this is used to save the timestamp and put on the message the current timestamp and the old timestamp (the timestamp when the last event arrived). Default: `timestamp`
+* `keys`: The group of dimensions that is used to compute the difference between the values.
+* `firsttimeview`: Discard or not the first event. Default: `true`
+* `sendIfZero`: Send or not a message if the difference is zero. Default `true`
 
 Also, you must add the `"stores":["counter-store"]` because this store is used by DiffCounterStoreMapper function to compute the differences.
 
