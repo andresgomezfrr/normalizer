@@ -56,4 +56,4 @@ This bootstrapper read the stream config from local file system, and build a KS 
 | `file.bootstrapper.path`      | Stream config file path      |
 
 
-Library: https://github.com/wizzie-io/config-bootstrapper
+Library: [config-bootstrapper](https://github.com/wizzie-io/config-bootstrapper)

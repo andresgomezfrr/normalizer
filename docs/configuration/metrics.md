@@ -4,7 +4,7 @@ layout: single
 toc: true
 ---
 
-The Normalizer service uses the [Dropwizard Metrics](http://metrics.dropwizard.io/) to build his metrics, by default it sends JVM metrics but you can register new metrics that will be exported too.
+The Normalizer service uses the [Wizzie Metrics Library](https://github.com/wizzie-io/metrics-library) to build his metrics, by default it sends JVM metrics but you can register new metrics that will be exported too.
 
 ## Properties
 
