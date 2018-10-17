@@ -20,6 +20,14 @@
             "dimension":"__KEY",
             "value":"FILTER-kEY"
           }
+        },
+        {
+          "name":"myFilterNullAsValue",
+          "className":"io.wizzie.normalizer.funcs.impl.FieldFilter",
+          "properties": {
+            "dimension":"FILTER-DIMENSION",
+            "value": null
+          }
         }
       ],
       "sinks":[

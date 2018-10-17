@@ -1,13 +1,9 @@
 package io.wizzie.normalizer.funcs.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wizzie.normalizer.builder.StreamBuilder;
 import io.wizzie.bootstrapper.builder.Config;
-import io.wizzie.normalizer.exceptions.PlanBuilderException;
-import io.wizzie.normalizer.funcs.FilterFunc;
-import io.wizzie.normalizer.funcs.Function;
-import io.wizzie.normalizer.model.PlanModel;
 import io.wizzie.normalizer.base.utils.Constants;
+import io.wizzie.normalizer.builder.StreamBuilder;
 import io.wizzie.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.normalizer.funcs.FilterFunc;
 import io.wizzie.normalizer.funcs.Function;
@@ -22,7 +18,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.wizzie.normalizer.base.utils.Constants.__KEY;
 import static org.junit.Assert.*;
 
 public class FieldFilterUnitTest {
@@ -149,8 +144,27 @@ public class FieldFilterUnitTest {
         assertFalse(myFilter.process("NOT-kEY", message));
     }
 
+    @Test
+    public void processNullAsFilterValue() {
+        Map<String, Function> functions = streamBuilder.getFunctions("stream1");
+        Function myFunc = functions.get("myFilterNullAsValue");
+
+        assertNotNull(myFunc);
+        assertTrue(myFunc instanceof FilterFunc);
+        FieldFilter myFilter = (FieldFilter) myFunc;
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("FILTER-DIMENSION", null);
+
+        assertTrue(myFilter.process(null, message));
+
+        message.put("FILTER-DIMENSION", "NOT-NULL-VALUE");
+
+        assertFalse(myFilter.process(null, message));
+    }
+
     @AfterClass
-    public static void stop(){
+    public static void stop() {
         streamBuilder.close();
     }
 }
