@@ -29,6 +29,8 @@ docs:
         url: /functions/store_mapper_functions
       - title: Filter Functions
         url: /functions/filter_functions
+      - title: Functions Repository
+        url: https://wizzie-io.github.io/normalizer-functions/
 
   - title: Docker
     children:
