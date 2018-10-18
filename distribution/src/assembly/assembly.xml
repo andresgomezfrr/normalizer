@@ -42,7 +42,7 @@
     <files>
 
         <file>
-            <source>${project.parent.basedir}/service/target/${project.parent.artifactId}-service-${project.version}.jar</source>
+            <source>${project.parent.basedir}/service/target/service-${project.version}.jar</source>
             <outputDirectory>lib</outputDirectory>
             <destName>${project.parent.artifactId}-service-${project.version}.jar</destName>
         </file>
