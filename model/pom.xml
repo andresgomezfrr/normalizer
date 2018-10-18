@@ -24,8 +24,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.wizzie</groupId>
-            <artifactId>normalizer-base</artifactId>
+            <groupId>io.wizzie.normalizer</groupId>
+            <artifactId>base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
