@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.wizzie</groupId>
+    <groupId>io.wizzie.normalizer</groupId>
     <artifactId>normalizer</artifactId>
-    <version>0.6.2-SNAPSHOT</version>
+    <version>0.6.1.3-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -49,14 +49,15 @@
     </scm>
 
     <properties>
-        <dropwizard.version>3.1.0</dropwizard.version>
+        <dropwizard.version>4.0.3</dropwizard.version>
         <joda.version>2.9.4</joda.version>
         <precondition.version>0.1.5</precondition.version>
         <jackson-jq.version>0.0.5</jackson-jq.version>
         <parsii.version>1.5</parsii.version>
         <kafka.version>1.1.0</kafka.version>
-        <metrics-library.version>0.0.4</metrics-library.version>
+        <metrics-library.version>0.0.5</metrics-library.version>
         <config-bootstrapper.version>0.0.7</config-bootstrapper.version>
+        <jackson.version>2.9.5</jackson.version>
     </properties>
 
     <modules>

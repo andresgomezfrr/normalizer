@@ -33,7 +33,7 @@ public class FieldFilter extends FilterFunc {
                 }
             } else {
                 Object currentValue = value.get(dimension);
-                return currentValue != null && currentValue.equals(dimensionValue);
+                return (dimensionValue == null && currentValue == dimensionValue) || (currentValue != null && currentValue.equals(dimensionValue));
             }
         } else {
             return false;

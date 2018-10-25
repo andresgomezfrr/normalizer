@@ -1,7 +1,7 @@
 
 
 <p align="center">
-    <img src="docs/assets/img/normalizer.logo.svg" alt="Normalizer" title="Normalizer" width="250%"/>
+    <img src="docs/assets/images/logo.svg" alt="Normalizer" title="Normalizer" width="250%"/>
 </p>
 
 [![CircleCI](https://circleci.com/gh/wizzie-io/normalizer/tree/master.svg?style=svg)](https://circleci.com/gh/wizzie-io/normalizer/tree/master)
