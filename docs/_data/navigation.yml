@@ -29,6 +29,8 @@ docs:
         url: /functions/store_mapper_functions
       - title: Filter Functions
         url: /functions/filter_functions
+      - title: Debug Functions
+        url: /functions/debug_functions
       - title: Functions Repository
         url: https://wizzie-io.github.io/normalizer-functions/
 
@@ -43,5 +45,3 @@ docs:
     children:
       - title: Custom Functions
         url: /development/custom_functions
-      - title: Debug Functions
-        url: /development/debug_functions
