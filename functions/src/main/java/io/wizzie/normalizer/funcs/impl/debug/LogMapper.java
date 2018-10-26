@@ -2,37 +2,20 @@ package io.wizzie.normalizer.funcs.impl.debug;
 
 import io.wizzie.normalizer.funcs.MapperFunction;
 import io.wizzie.metrics.MetricsManager;
-import io.wizzie.normalizer.funcs.MapperFunction;
 import org.apache.kafka.streams.KeyValue;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.Map;
 
 public class LogMapper extends MapperFunction {
 
-    Logger log;
+   private final Logger log = LoggerFactory.getLogger(getClass());
+
 
     @Override
     public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
-        String logName = (String) properties.getOrDefault("logname", "log");
-
-        log = Logger.getLogger(logName);
-
-        RollingFileAppender fileAppender = new RollingFileAppender();
-        fileAppender.setMaxFileSize((String) properties.getOrDefault("maxfilesize", "5MB"));
-        fileAppender.setMaxBackupIndex((Integer) properties.getOrDefault("maxbackupindex", 10));
-        fileAppender.setFile((String) properties.getOrDefault("filepath", String.format("/var/log/ks-normalizer/debug/%s.log", logName)));
-
-        PatternLayout patternLayout = new PatternLayout();
-        patternLayout.setConversionPattern((String) properties.getOrDefault("conversionpattern", "%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"));
-
-        fileAppender.setLayout(patternLayout);
-
-        log.addAppender(fileAppender);
-        log.setLevel(Level.INFO);
     }
 
     @Override
@@ -43,6 +26,5 @@ public class LogMapper extends MapperFunction {
 
     @Override
     public void stop() {
-
     }
 }

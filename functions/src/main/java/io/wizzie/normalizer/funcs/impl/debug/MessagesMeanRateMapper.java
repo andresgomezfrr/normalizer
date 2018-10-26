@@ -20,7 +20,7 @@ public class MessagesMeanRateMapper extends MapperFunction {
     @Override
     public void prepare(Map<String, Object> properties, MetricsManager metricsManager) {
         messages = new Meter();
-        forEach = (int) properties.getOrDefault("foreach", 100000);
+        forEach = (int) properties.getOrDefault("print_foreach", 100000);
     }
 
     @Override
