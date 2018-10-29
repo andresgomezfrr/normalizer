@@ -19,7 +19,7 @@ ENV METRIC_INTERVAL 60000
 ENV MULTI_ID false
 ENV NUM_STREAM_THREADS 1
 ENV MAX_OUTPUT_KAFKA_TOPICS 500
-ENV BOOTSTRAP_CLASSNAME io.wizzie.normalizer.builder.bootstrap.KafkaBootstrapper
+ENV BOOTSTRAP_CLASSNAME io.wizzie.bootstrapper.bootstrappers.impl.KafkaBootstrapper
 ENV BOOTSTRAP_KAFKA_TOPICS [\"__normalizer_bootstrap\"]
 ENV METRIC_KAFKA_TOPIC __metrics
 
