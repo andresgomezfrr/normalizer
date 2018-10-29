@@ -1,0 +1,21 @@
+{
+  "inputs":{
+    "input1":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myLowerStringMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.LowerCaseStringMapper",
+          "properties": {
+            "dimension": "mac"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output1"}
+      ]
+    }
+  }
+}

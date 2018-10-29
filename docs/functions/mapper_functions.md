@@ -1011,3 +1011,79 @@ If we use this message using the RegexMapper that is defined on the above exampl
   "dim3":"hello3"
 }
 ```
+
+###  UpperCaseStringMapper
+
+The UpperCaseStringMapper is a function that allow us to apply a upperCase over a string dimension.
+
+```json
+{
+  "name":"myUpperCaseStringMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.UpperCaseStringMapper",
+  "properties": {
+    "dimension": "dim1"
+  }
+}
+```
+
+The UpperCaseStringMapper have one property named `dimension`:
+
+* `dimension`: Dimension to upper case.
+
+I we have next json message:
+
+```json
+{
+  "type": "measures",
+  "timestamp": 123456789,
+  "dim1": "1213aaBBcc"
+}
+```
+
+If we use this message using the UpperCaseStringMapper that is defined on the above example, we get next output:
+
+```json
+{
+  "type": "measures",
+  "timestamp": 123456789,
+  "dim1": "1213AABBCC"
+}
+```
+
+###  LowerCaseStringMapper
+
+The UpperCaseStringMapper is a function that allow us to apply a upperCase over a string dimension.
+
+```json
+{
+  "name":"myLowerCaseStringMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.LowerCaseStringMapper",
+  "properties": {
+    "dimension": "dim1"
+  }
+}
+```
+
+The UpperCaseStringMapper have one property named `dimension`:
+
+* `dimension`: Dimension to lower case
+
+I we have next json message:
+
+```json
+{
+  "type": "measures",
+  "timestamp": 123456789,
+  "dim1": "1213aaBBcc"
+}
+```
+
+If we use this message using the UpperCaseStringMapper that is defined on the above example, we get next output:
+
+```json
+{
+  "type": "measures",
+  "timestamp": 123456789,
+  "dim1": "1213aabbcc"
+}
+```
