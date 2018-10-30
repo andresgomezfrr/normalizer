@@ -1,0 +1,32 @@
+{
+  "inputs":{
+    "input":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[],
+      "sinks":[
+        {"topic": "stream2", "type":"stream"},
+        {"topic": "stream3", "type":"stream"}
+      ]
+    },
+    "stream2":{
+      "funcs":[],
+      "sinks":[
+        {"topic": "stream4", "type":"stream"}
+      ]
+    },
+    "stream3":{
+      "funcs":[],
+      "sinks":[
+        {"topic": "stream4", "type":"stream"}
+      ]
+    },
+    "stream4": {
+      "funcs":[],
+      "sinks": [
+        {"topic": "output", "type": "kafka"}
+      ]
+    }
+  }
+}

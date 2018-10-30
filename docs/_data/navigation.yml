@@ -6,6 +6,11 @@ docs:
       - title: Base Tutorial
         url: /getting_started/base_tutorial
 
+  - title: Architecture
+    children:
+     - title: Topology Path
+       url: /architecture/topology_path
+
   - title: Configuration
     children:
       - title: Base Configuration
