@@ -1,0 +1,76 @@
+{
+  "inputs":{
+    "input":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+        {
+          "name": "myFieldMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.FieldMapper",
+          "properties": {
+            "dimensions": [
+              {
+                "dimension": "dim1",
+                "value": "stream1"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks":[
+        {
+          "topic": "stream2",
+          "type": "stream",
+          "filter": {
+            "name": "checkDimStream2",
+            "className": "io.wizzie.normalizer.funcs.impl.FieldFilter",
+            "properties": {
+              "dimension": "dim2",
+              "value": null
+            }
+          }
+        },
+        {
+          "topic": "stream3",
+          "type": "stream",
+          "filter": {
+            "name": "checkDimStream3",
+            "className": "io.wizzie.normalizer.funcs.impl.FieldFilter",
+            "properties": {
+              "dimension": "dim2",
+              "value": null,
+              "__MATCH": false
+            }
+          }
+        }
+      ]
+    },
+    "stream2":{
+      "funcs": [
+        {
+          "name": "myFieldMapper",
+          "className": "io.wizzie.normalizer.funcs.impl.FieldMapper",
+          "properties": {
+            "dimensions": [
+              {
+                "dimension": "dim2",
+                "value": "stream2"
+              }
+            ]
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"stream3", "type":"stream"}
+      ]
+    },
+    "stream3": {
+      "funcs": [
+      ],
+      "sinks": [
+        {"topic": "output", "type": "kafka"}
+      ]
+    }
+  }
+}
