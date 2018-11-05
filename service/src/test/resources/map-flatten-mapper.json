@@ -1,0 +1,23 @@
+{
+  "inputs":{
+    "input1":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myMapFlattenMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.MapFlattenMapper",
+          "properties": {
+            "key_dimension": "key_dim",
+            "flat_dimension": "data",
+            "output_dimension": "array_data"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output1"}
+      ]
+    }
+  }
+}

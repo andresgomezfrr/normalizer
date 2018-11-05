@@ -28,10 +28,11 @@ public class MapFlattenMapper extends MapperFunction {
         // DATA: {"A":{"dim":"AA"}, "C":{"dim":"BB"}}
         // OUT: [{key:A, dim: AAA},{key:C, dim: BB}]
 
-        Map<String, Object> newValue = new HashMap<>(value);
         if (value != null && flatDimension != null) {
+            Map<String, Object> newValue = new HashMap<>(value);
+
             if (value.containsKey(flatDimension)) {
-                Map<String, Map<String, Object>> map = (Map<String, Map<String, Object>>) value.remove(flatDimension);
+                Map<String, Map<String, Object>> map = (Map<String, Map<String, Object>>) newValue.remove(flatDimension);
 
                 if (map != null) {
                     List<Map<String, Object>> results = map.entrySet().stream().map(val -> {
@@ -48,8 +49,10 @@ public class MapFlattenMapper extends MapperFunction {
                 }
 
             }
+            return new KeyValue<>(key, newValue);
+        } else {
+            return new KeyValue<>(key, value);
         }
-        return new KeyValue<>(key, newValue);
     }
 
     @Override
