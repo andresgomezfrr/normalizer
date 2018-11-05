@@ -1087,3 +1087,48 @@ If we use this message using the UpperCaseStringMapper that is defined on the ab
   "dim1": "1213aabbcc"
 }
 ```
+
+###  MapFlattenMapper
+
+The MapFlattenMapper is a function that allow us to apply a transform `Map<String, Map<String, Object>>` into an `Array<Map<String, Object>>`
+
+```json
+{
+  "name":"myMapFlattenMapper",
+  "className":"io.wizzie.normalizer.funcs.impl.MapFlattenMapper",
+  "properties": {
+    "key_dimension": "key_dim",
+    "flat_dimension": "data",
+    "output_dimension": "array_data"
+  }
+}
+```
+
+The MapFlattenMapper have 3 properties:
+
+* `flat_dimension`: The `Map<String, Map<String, Object>>` to transform.
+* `key_dimension`: The new key dimension name to store the key value.
+* `output_dimension`: The new output dimension to store the `Array<Map<String, Object>>`
+
+I we have next json message:
+
+```json
+{
+    "data":{
+        "A":{"dim":"AA"},
+        "C":{"dim":"BB"}
+    }
+}
+```
+
+If we use this message using the MapFlattenMapper that is defined on the above example, we get next output:
+
+```json
+{
+    "array_data":[
+      {"key_dim":"A", "dim": "AAA"},
+      {"key_dim":"C", "dim": "BB"}
+    ]
+}
+
+```
