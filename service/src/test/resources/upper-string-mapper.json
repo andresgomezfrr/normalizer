@@ -1,0 +1,21 @@
+{
+  "inputs":{
+    "input1":["myStream"]
+  },
+  "streams":{
+    "myStream":{
+      "funcs":[
+        {
+          "name":"myUpperStringMapper",
+          "className":"io.wizzie.normalizer.funcs.impl.UpperCaseStringMapper",
+          "properties": {
+            "dimension": "mac"
+          }
+        }
+      ],
+      "sinks":[
+        {"topic":"output1"}
+      ]
+    }
+  }
+}

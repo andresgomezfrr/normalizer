@@ -1,0 +1,13 @@
+{
+  "inputs":{
+    "input":["stream1"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[],
+      "sinks":[
+        {"topic":"stream1", "type":"stream"}
+      ]
+    }
+  }
+}

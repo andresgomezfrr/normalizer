@@ -6,6 +6,11 @@ docs:
       - title: Base Tutorial
         url: /getting_started/base_tutorial
 
+  - title: Architecture
+    children:
+     - title: Topology Path
+       url: /architecture/topology_path
+
   - title: Configuration
     children:
       - title: Base Configuration
@@ -29,6 +34,8 @@ docs:
         url: /functions/store_mapper_functions
       - title: Filter Functions
         url: /functions/filter_functions
+      - title: Debug Functions
+        url: /functions/debug_functions
       - title: Functions Repository
         url: https://wizzie-io.github.io/normalizer-functions/
 
@@ -43,5 +50,3 @@ docs:
     children:
       - title: Custom Functions
         url: /development/custom_functions
-      - title: Debug Functions
-        url: /development/debug_functions

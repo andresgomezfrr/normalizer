@@ -11,16 +11,7 @@ import io.wizzie.normalizer.model.SinkModel;
 import io.wizzie.normalizer.model.StreamModel;
 import io.wizzie.normalizer.serializers.JsonSerde;
 import io.wizzie.metrics.MetricsManager;
-import io.wizzie.normalizer.base.builder.config.ConfigProperties;
 import io.wizzie.normalizer.base.utils.Constants;
-import io.wizzie.normalizer.exceptions.PlanBuilderException;
-import io.wizzie.normalizer.exceptions.TryToDoLoopException;
-import io.wizzie.normalizer.funcs.*;
-import io.wizzie.normalizer.model.FunctionModel;
-import io.wizzie.normalizer.model.PlanModel;
-import io.wizzie.normalizer.model.SinkModel;
-import io.wizzie.normalizer.model.StreamModel;
-import io.wizzie.normalizer.serializers.JsonSerde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
@@ -32,8 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.wizzie.normalizer.base.utils.Constants.__APP_ID;
-import static io.wizzie.normalizer.base.utils.Constants.__STORES;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 
 public class StreamBuilder {
@@ -52,6 +41,8 @@ public class StreamBuilder {
     private Map<String, KStream<String, Map<String, Object>>> kStreams = new HashMap<>();
     private Map<String, Map<String, Function>> streamFunctions = new HashMap<>();
     private Map<String, Map<String, FilterFunc>> streamFilters = new HashMap<>();
+    private Map<String, Integer> streamIterationCreation = new HashMap<>();
+    private Set<String> streamEdges = new HashSet<>();
     private Set<String> usedStores = new HashSet<>();
     private Set<String> addedFuncsToStreams = new HashSet<>();
     private Set<String> addedSinksToStreams = new HashSet<>();
@@ -68,8 +59,8 @@ public class StreamBuilder {
         for (int iteration = 0; addedNewStream; iteration++) {
             log.info("*** Iteration [{}]", iteration);
             addedNewStream = false;
-            addFuncsToStreams(builder, model);
-            addSinksToStreams(model);
+            addFuncsToStreams(builder, model, iteration);
+            addSinksToStreams(model, iteration);
         }
 
         return builder;
@@ -108,17 +99,19 @@ public class StreamBuilder {
             for (String stream : inputs.getValue()) {
                 log.info("Creating stream [{}]", stream);
                 kStreams.put(stream, kstream.filter((key, value) -> key != null || value != null));
+                streamIterationCreation.put(stream, 0);
+                streamEdges.add(String.format("%s->%s", topic, stream));
             }
         }
     }
 
-    private void addFuncsToStreams(StreamsBuilder builder, PlanModel model) {
-        for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
-            if (!addedFuncsToStreams.contains(streams.getKey()) && kStreams.containsKey(streams.getKey())) {
-                List<FunctionModel> funcModels = streams.getValue().getFuncs();
+    private void addFuncsToStreams(StreamsBuilder builder, PlanModel model, Integer iteration) {
+        for (Map.Entry<String, StreamModel> stream : model.getStreams().entrySet()) {
+            if (!addedFuncsToStreams.contains(stream.getKey()) && kStreams.containsKey(stream.getKey())) {
+                List<FunctionModel> funcModels = stream.getValue().getFuncs();
                 if (funcModels != null) {
                     for (FunctionModel funcModel : funcModels) {
-                        KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
+                        KStream<String, Map<String, Object>> kStream = kStreams.get(stream.getKey());
                         String name = funcModel.getName();
                         String className = funcModel.getClassName();
                         Map<String, Object> properties = funcModel.getProperties();
@@ -147,7 +140,7 @@ public class StreamBuilder {
                         }
 
                         try {
-                            log.info("Add function [{}] to stream [{}]", name, streams.getKey());
+                            log.info("Add function [{}] to stream [{}]", name, stream.getKey());
                             Function func = makeFunction(className, properties);
                             if (func instanceof MapperFunction) {
                                 kStream = kStream.map((MapperFunction) func);
@@ -167,12 +160,16 @@ public class StreamBuilder {
 
                             }
 
-                            Map<String, Function> functions = streamFunctions.get(streams.getKey());
+                            Map<String, Function> functions = streamFunctions.get(stream.getKey());
                             if (functions == null) functions = new HashMap<>();
                             functions.put(name, func);
 
-                            streamFunctions.put(streams.getKey(), functions);
-                            kStreams.put(streams.getKey(), kStream);
+                            streamFunctions.put(stream.getKey(), functions);
+                            kStreams.put(stream.getKey(), kStream);
+
+                            if (!streamIterationCreation.containsKey(stream.getKey())) {
+                                streamIterationCreation.put(stream.getKey(), iteration);
+                            }
                         } catch (ClassNotFoundException e) {
                             log.error("Couldn't find the class associated with the function {}", className);
                         } catch (InstantiationException | IllegalAccessException e) {
@@ -181,23 +178,23 @@ public class StreamBuilder {
                     }
                 }
 
-                addedFuncsToStreams.add(streams.getKey());
+                addedFuncsToStreams.add(stream.getKey());
             } else {
-                if (!kStreams.containsKey(streams.getKey())) {
-                    log.debug("Stream {} is to later iteration.", streams.getKey());
+                if (!kStreams.containsKey(stream.getKey())) {
+                    log.debug("Stream {} is to later iteration.", stream.getKey());
                 }
             }
         }
     }
 
-    private void addSinksToStreams(PlanModel model) throws TryToDoLoopException {
+    private void addSinksToStreams(PlanModel model, Integer iteration) throws TryToDoLoopException {
         List<String> generatedStreams = new ArrayList<>();
-        for (Map.Entry<String, StreamModel> streams : model.getStreams().entrySet()) {
+        for (Map.Entry<String, StreamModel> stream : model.getStreams().entrySet()) {
             Map<String, FilterFunc> filters = new HashMap<>();
-            if (!addedSinksToStreams.contains(streams.getKey()) && !generatedStreams.contains(streams.getKey())) {
-                List<SinkModel> sinks = streams.getValue().getSinks();
+            if (!addedSinksToStreams.contains(stream.getKey()) && !generatedStreams.contains(stream.getKey())) {
+                List<SinkModel> sinks = stream.getValue().getSinks();
                 for (SinkModel sink : sinks) {
-                    KStream<String, Map<String, Object>> kStream = kStreams.get(streams.getKey());
+                    KStream<String, Map<String, Object>> kStream = kStreams.get(stream.getKey());
                     if (kStream != null) {
                         kStream = kStream.filter((key, value) -> key != null || value != null);
                         log.info("Send to {} [{}]", sink.getType(), sink.getTopic());
@@ -242,23 +239,52 @@ public class StreamBuilder {
                                 topic = String.format("%s_%s", appId, topic);
                             }
 
+                            streamIterationCreation.put(stream.getKey(), iteration);
+                            streamEdges.add(String.format("%s->%s", stream.getKey(), topic));
+
                             kStream.to(topic);
                         } else if (sink.getType().equals(SinkModel.STREAM_TYPE)) {
                             String newStreamName = sink.getTopic();
+
+                            if (newStreamName.equals(stream.getKey())) {
+                                throw new TryToDoLoopException(
+                                        "Loop from [" + stream.getKey() + "] to [" + newStreamName + "]"
+                                );
+                            }
+
                             if (!kStreams.containsKey(newStreamName)) {
                                 addedNewStream = true;
                                 KStream<String, Map<String, Object>> newBranch = kStream.branch((key, value) -> true)[0];
                                 kStreams.put(newStreamName, newBranch);
+
+                                if (!streamIterationCreation.containsKey(newStreamName)) {
+                                    streamIterationCreation.put(newStreamName, iteration);
+                                }
+
+                                streamEdges.add(String.format("%s->%s", stream.getKey(), sink.getTopic()));
                                 log.info("Creating stream [{}]", sink.getTopic());
                                 generatedStreams.add(sink.getTopic());
                             } else {
-                                throw new TryToDoLoopException(
-                                        "Loop from [" + streams.getKey() + "] to [" + newStreamName + "]"
-                                );
+                                int sinkStreamIteration = streamIterationCreation.get(newStreamName);
+
+                                if (
+                                        ((sinkStreamIteration + 1) == iteration) && !streamEdges.contains(String.format("%s->%s", newStreamName, stream.getKey()))
+                                        ||
+                                        ((sinkStreamIteration == iteration))
+                                ) {
+                                    KStream<String, Map<String, Object>> mergeKStream = kStreams.get(newStreamName).merge(kStream);
+                                    kStreams.put(newStreamName, mergeKStream);
+                                    streamEdges.add(String.format("%s->%s", stream.getKey(), newStreamName));
+                                } else {
+                                    throw new TryToDoLoopException(
+                                            "Loop from [" + stream.getKey() + "] to [" + newStreamName + "]"
+                                    );
+                                }
+
                             }
                         }
-                        streamFilters.put(streams.getKey(), filters);
-                        addedSinksToStreams.add(streams.getKey());
+                        streamFilters.put(stream.getKey(), filters);
+                        addedSinksToStreams.add(stream.getKey());
                     }
                 }
             }
