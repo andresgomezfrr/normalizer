@@ -1090,7 +1090,7 @@ If we use this message using the UpperCaseStringMapper that is defined on the ab
 
 ###  MapFlattenMapper
 
-The MapFlattenMapper is a function that allow us to apply a transform `Map<String, Map<String, Object>>` into an `Array<Map<String, Object>>`
+The MapFlattenMapper is a function that allows us to transform `Map<String, Map<String, Object>>` into an `Array<Map<String, Object>>`
 
 ```json
 {
