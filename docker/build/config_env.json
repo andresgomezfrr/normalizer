@@ -2,7 +2,7 @@
   "application.id": "${APPLICATION_ID}",
   "bootstrap.servers": "${KAFKA_BOOTSTRAP_SERVER}",
   "num.stream.threads": ${NUM_STREAM_THREADS},
-  "bootstraper.classname": "${BOOTSTRAP_CLASSNAME}",
+  "bootstrapper.classname": "${BOOTSTRAP_CLASSNAME}",
   "file.bootstrapper.path": "${BOOTSTRAP_FILEPATH}",
   "metric.enable": ${METRIC_ENABLE},
   "metric.kafka.topic": "${METRIC_KAFKA_TOPIC}",

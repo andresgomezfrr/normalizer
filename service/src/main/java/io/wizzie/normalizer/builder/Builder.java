@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import static io.wizzie.normalizer.base.builder.config.ConfigProperties.BOOTSTRAPER_CLASSNAME;
+import static io.wizzie.normalizer.base.builder.config.ConfigProperties.BOOTSTRAPPER_CLASSNAME;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.CLIENT_ID_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.NUM_STREAM_THREADS_CONFIG;
@@ -64,7 +64,7 @@ public class Builder implements Listener {
         streamBuilder = new StreamBuilder(config.clone(), metricsManager);
 
         bootstrapper = BootstrapperBuilder.makeBuilder()
-                .boostrapperClass(config.get(ConfigProperties.BOOTSTRAPER_CLASSNAME))
+                .boostrapperClass(config.get(ConfigProperties.BOOTSTRAPPER_CLASSNAME))
                 .listener(this)
                 .withConfigInstance(config)
                 .build();

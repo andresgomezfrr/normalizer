@@ -12,7 +12,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.integration.utils.EmbeddedKafkaCluster;
@@ -28,11 +27,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-import static io.wizzie.bootstrapper.bootstrappers.impl.KafkaBootstrapper.BOOTSTRAP_TOPICS_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.junit.Assert.assertEquals;
 
-public class KafkaBootstraperGetConfigIntegrationTest {
+public class FileBootstrapperIntegrationTest {
     private final static int NUM_BROKERS = 1;
 
     @ClassRule
@@ -76,10 +74,7 @@ public class KafkaBootstraperGetConfigIntegrationTest {
     }
 
     @Test
-    public void kafkaBootstraperGetConfigAndShouldWork() throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("kafka-bootstraper-integration-test-1.json").getFile());
-
+    public void fileBootstrapperShouldWork() throws Exception {
         Map<String, Object> streamsConfiguration = new HashMap<>();
 
         String appId = UUID.randomUUID().toString();
@@ -90,26 +85,14 @@ public class KafkaBootstraperGetConfigIntegrationTest {
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
 
+        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+
         Config configuration = new Config(streamsConfiguration);
-        configuration.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.KafkaBootstrapper");
-        configuration.put(BOOTSTRAP_TOPICS_CONFIG, Arrays.asList(BOOTSTRAP_TOPIC));
+        configuration.put("file.bootstrapper.path", Thread.currentThread().getContextClassLoader().getResource("kafka-bootstrapper-integration-test-1.json").getFile());
+        configuration.put(ConfigProperties.BOOTSTRAPPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
 
         Builder builder = new Builder(configuration);
-
-        String jsonConfig = getFileContent(file);
-
-        KeyValue<String, String> jsonConfigKv = new KeyValue<>(appId, jsonConfig);
-
-
-        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
-        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfigKv), producerConfig, MOCK_TIME);
-
-        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-
-        List<KeyValue<String, String>> receivedMessagesFromConfig = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
-
-        assertEquals(Collections.singletonList(jsonConfig), receivedMessagesFromConfig);
 
         Map<String, Object> b1 = new HashMap<>();
         b1.put("C", 6000L);
@@ -137,8 +120,6 @@ public class KafkaBootstraperGetConfigIntegrationTest {
 
         KeyValue<String, Map<String, Object>> kvStream2 = new KeyValue<>("KEY_A", message2);
 
-        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
         IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Arrays.asList(kvStream1, kvStream2), producerConfig, MOCK_TIME);
 
         Map<String, Object> expectedData = new HashMap<>();
@@ -148,11 +129,10 @@ public class KafkaBootstraperGetConfigIntegrationTest {
 
         KeyValue<String, Map<String, Object>> expectedDataKv = new KeyValue<>("KEY_A", expectedData);
 
-        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput1 = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
+        assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput1);
 
-        assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput);
     }
 
     public static String getFileContent(File file) throws IOException {

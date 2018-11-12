@@ -29,15 +29,15 @@ import java.io.IOException;
 import java.util.*;
 
 import static io.wizzie.bootstrapper.bootstrappers.impl.KafkaBootstrapper.BOOTSTRAP_TOPICS_CONFIG;
-import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.junit.Assert.assertEquals;
 
-public class KafkaBootstraperIntegrationTest {
+public class KafkaBootstrapperChangeConfigIntegrationTest {
     private final static int NUM_BROKERS = 1;
 
     @ClassRule
     public static EmbeddedKafkaCluster CLUSTER = new EmbeddedKafkaCluster(NUM_BROKERS);
     private final static MockTime MOCK_TIME = CLUSTER.time;
+    private long waitTime = 60000;
 
     private static final int REPLICATION_FACTOR = 1;
 
@@ -76,14 +76,15 @@ public class KafkaBootstraperIntegrationTest {
     }
 
     @Test
-    public void kafkaBootstraperShouldWork() throws Exception {
+    public void kafkaBoostraperShouldWorkAfterChangeConfiguration() throws Exception {
+
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource("kafka-bootstraper-integration-test-1.json").getFile());
+        File file = new File(classLoader.getResource("kafka-bootstrapper-integration-test-1.json").getFile());
 
         Map<String, Object> streamsConfiguration = new HashMap<>();
 
         String appId = UUID.randomUUID().toString();
-        streamsConfiguration.put(APPLICATION_ID_CONFIG, appId);
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, appId);
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, CLUSTER.bootstrapServers());
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde.class.getName());
@@ -91,25 +92,24 @@ public class KafkaBootstraperIntegrationTest {
         streamsConfiguration.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
 
         Config configuration = new Config(streamsConfiguration);
-        configuration.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.KafkaBootstrapper");
+        configuration.put(ConfigProperties.BOOTSTRAPPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.KafkaBootstrapper");
         configuration.put(BOOTSTRAP_TOPICS_CONFIG, Arrays.asList(BOOTSTRAP_TOPIC));
-
-        String jsonConfig = getFileContent(file);
-
-        KeyValue<String, String> jsonConfigKv = new KeyValue<>(appId, jsonConfig);
-
-        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
-        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfigKv), producerConfig, MOCK_TIME);
-
-        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-
-        List<KeyValue<String, String>> receivedMessagesFromConfig = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1);
-
-        assertEquals(Collections.singletonList(jsonConfig), receivedMessagesFromConfig);
 
         Builder builder = new Builder(configuration);
 
+        String jsonConfig1 = getFileContent(file);
+
+        KeyValue<String, String> jsonConfig1Kv = new KeyValue<>(appId, jsonConfig1);
+
+        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfig1Kv), producerConfig, MOCK_TIME);
+
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+
+        List<KeyValue<String, String>> receivedMessagesFromConfig1 = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, BOOTSTRAP_TOPIC, 1, waitTime);
+
+        assertEquals(Collections.singletonList(jsonConfig1), receivedMessagesFromConfig1);
 
         Map<String, Object> b1 = new HashMap<>();
         b1.put("C", 6000L);
@@ -150,9 +150,79 @@ public class KafkaBootstraperIntegrationTest {
 
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        List<KeyValue<String, Map>> receivedMessagesFromOutput = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1);
+        List<KeyValue<String, Map>> receivedMessagesFromOutput = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 1, waitTime);
 
         assertEquals(Collections.singletonList(expectedDataKv), receivedMessagesFromOutput);
+
+        // Second configuration
+
+        file = new File(classLoader.getResource("kafka-bootstrapper-integration-test-2.json").getFile());
+
+        String jsonConfig2 = getFileContent(file);
+
+        KeyValue<String, String> jsonConfig2Kv = new KeyValue<>(appId, jsonConfig2);
+
+        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+        IntegrationTestUtils.produceKeyValuesSynchronously(BOOTSTRAP_TOPIC, Collections.singletonList(jsonConfig2Kv), producerConfig, MOCK_TIME);
+
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+
+        Map<String, Object> message3 = new HashMap<>();
+        message3.put("B", "VALUE-B");
+        message3.put("timestamp", 1122334455);
+
+        KeyValue<String, Map<String, Object>> kvStream3 = new KeyValue<>("KEY_B", message3);
+
+        Map<String, Object> message4 = new HashMap<>();
+        message4.put("A", 1000);
+        message4.put("timestamp", 1122334555);
+        message4.put("last_timestamp", 1122334355);
+
+        KeyValue<String, Map<String, Object>> kvStream4 = new KeyValue<>("KEY_A", message4);
+
+        producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        Thread.sleep(5000); // Wait to load the new stream config
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Collections.singletonList(kvStream3), producerConfig, MOCK_TIME);
+
+        consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+
+        List<KeyValue<String, Object>> receivedFilteredMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC2, 1, waitTime);
+
+        assertEquals(Collections.singletonList(kvStream3), receivedFilteredMessage);
+
+        IntegrationTestUtils.produceKeyValuesSynchronously(INPUT_TOPIC, Collections.singletonList(kvStream4), producerConfig, MOCK_TIME);
+
+        List<KeyValue<String, Object>> receivedSplitterMessage = IntegrationTestUtils.waitUntilMinKeyValueRecordsReceived(consumerConfig, OUTPUT_TOPIC1, 4, waitTime);
+
+        List<KeyValue<String, Map<String, Object>>> expectedSplitterArray = new ArrayList<>();
+
+        Map<String, Object> expectedMap = new HashMap<>();
+        expectedMap.put("A", 125);
+        expectedMap.put("timestamp", 1122334355);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        expectedMap = new HashMap<>();
+        expectedMap.put("A", 300);
+        expectedMap.put("timestamp", 1122334380);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        expectedMap = new HashMap<>();
+        expectedMap.put("A", 300);
+        expectedMap.put("timestamp", 1122334440);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        expectedMap = new HashMap<>();
+        expectedMap.put("A", 275);
+        expectedMap.put("timestamp", 1122334500);
+
+        expectedSplitterArray.add(new KeyValue<>("KEY_A", expectedMap));
+
+        assertEquals(expectedSplitterArray, receivedSplitterMessage);
+
     }
 
     public static String getFileContent(File file) throws IOException {

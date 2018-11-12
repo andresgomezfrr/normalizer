@@ -91,8 +91,8 @@ public class MultiIdIntegrationTest {
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
         Config config_A = new Config(streamsConfiguration);
-        config_A.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("multi-id-integration-test.json").getFile());
-        config_A.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
+        config_A.put("file.bootstrapper.path", Thread.currentThread().getContextClassLoader().getResource("multi-id-integration-test.json").getFile());
+        config_A.put(ConfigProperties.BOOTSTRAPPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
         config_A.put("metric.enabled", false);
         config_A.put("multi.id", true);
         config_A.put("application.id", "myapp_A");

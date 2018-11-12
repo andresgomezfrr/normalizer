@@ -60,9 +60,9 @@ public class KafkaMetricListenerIntegrationTest {
         config.put("metric.interval", 2000);
         config.put("metric.listeners", Collections.singletonList("io.wizzie.metrics.listeners.KafkaMetricListener"));
         config.put("metric.enable", true);
-        config.put("file.bootstraper.path", Thread.currentThread().getContextClassLoader().getResource("dummy-stream.json").getFile());
+        config.put("file.bootstrapper.path", Thread.currentThread().getContextClassLoader().getResource("dummy-stream.json").getFile());
         config.put("metric.kafka.topic", "__normalizer_metrics");
-        config.put(ConfigProperties.BOOTSTRAPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
+        config.put(ConfigProperties.BOOTSTRAPPER_CLASSNAME, "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper");
 
         Builder builder = new Builder(config);
 

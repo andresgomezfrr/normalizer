@@ -118,15 +118,15 @@ We need to modify the config file that is inside the folder `config/sample_confi
   "application.id": "my-first-normalizer-app",
   "bootstrap.servers": "localhost:9092",
   "num.stream.threads": 1,
-  "bootstraper.classname": "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper",
-  "file.bootstraper.path": "/etc/normalizer/my-stream-tutorial.json",
+  "bootstrapper.classname": "io.wizzie.bootstrapper.bootstrappers.impl.FileBootstrapper",
+  "file.bootstrapper.path": "/etc/normalizer/my-stream-tutorial.json",
   "metric.enable": true,
   "metric.listeners": ["io.wizzie.metrics.ConsoleMetricListener"],
   "metric.interval": 60000
 }
 ```
 
-On this config file we indicate the `application.id` that will identify our instances group and some Kafka Broker. On the example we are going to use the `FileBootstraper` so we read the config using a local file. We also need to set the property `file.bootstraper.path` to the path where we have the stream config file.
+On this config file we indicate the `application.id` that will identify our instances group and some Kafka Broker. On the example we are going to use the `FileBootstrapper` so we read the config using a local file. We also need to set the property `file.bootstrapper.path` to the path where we have the stream config file.
 
 Now we can start the normalizer service to do that we can uses the init script that is inside the folder bin:
 
