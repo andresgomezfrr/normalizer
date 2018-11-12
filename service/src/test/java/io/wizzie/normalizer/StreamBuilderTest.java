@@ -81,4 +81,21 @@ public class StreamBuilderTest {
 
         streamBuilder.close();
     }
+
+    @Test(expected = TryToDoLoopException.class)
+    public void tryToDoLoopBetweenStreamsExceptionTest() throws IOException, PlanBuilderException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classLoader.getResource("loop-between-streams-in-same-iteration.json").getFile());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PlanModel model = objectMapper.readValue(file, PlanModel.class);
+
+        Config config = new Config();
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "APP-ID-1");
+
+        StreamBuilder streamBuilder = new StreamBuilder(config, null);
+        streamBuilder.builder(model);
+
+        streamBuilder.close();
+    }
 }

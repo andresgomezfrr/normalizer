@@ -1,0 +1,44 @@
+{
+  "inputs": {
+    "input": [
+      "stream1"
+    ]
+  },
+  "streams": {
+    "stream1": {
+      "funcs":[],
+      "sinks":[
+        {
+          "topic": "stream2",
+          "type": "stream"
+        },
+        {
+          "topic": "stream2Relay",
+          "type": "stream"
+        }
+      ]
+    },
+    "stream2": {
+      "funcs": [],
+      "sinks": [
+        {
+          "topic": "output",
+          "type": "kafka"
+        },
+        {
+          "topic": "stream2Relay",
+          "type": "stream"
+        }
+      ]
+    },
+    "stream2Relay": {
+      "funcs": [],
+      "sinks": [
+        {
+          "topic": "stream2",
+          "type": "stream"
+        }
+      ]
+    }
+  }
+}

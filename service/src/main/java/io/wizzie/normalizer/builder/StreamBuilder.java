@@ -268,10 +268,7 @@ public class StreamBuilder {
                                 int sinkStreamIteration = streamIterationCreation.get(newStreamName);
 
                                 if (
-                                        ((sinkStreamIteration + 1) == iteration) && !streamEdges.contains(String.format("%s->%s", newStreamName, stream.getKey()))
-                                        ||
-                                        ((sinkStreamIteration == iteration))
-                                ) {
+                                        (((sinkStreamIteration + 1) == iteration) || (sinkStreamIteration == iteration)) && !streamEdges.contains(String.format("%s->%s", newStreamName, stream.getKey()))) {
                                     KStream<String, Map<String, Object>> mergeKStream = kStreams.get(newStreamName).merge(kStream);
                                     kStreams.put(newStreamName, mergeKStream);
                                     streamEdges.add(String.format("%s->%s", stream.getKey(), newStreamName));
