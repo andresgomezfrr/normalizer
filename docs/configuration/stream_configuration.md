@@ -20,13 +20,14 @@ This section is used to define the mapper between streams and Kafka topic.
       "stream2"
     ],
     "topic2": [
-      "stream3"
+      "stream3",
+      "stream1"
     ]
   }
 }
 ```
 
-This example defines a three streams `stream1` and `stream2` is reading Kafka topic `topic1`, and `stream3` that is reading Kafka topic `topic2`. Later, you can use the defined streams inside the stream section.
+This example defines three streams `stream1` is reading both Kafka topic `topic1` and `topic2`, `stream2` is reading Kafka topic `topic1`, and `stream3` that is reading Kafka topic `topic2`. Later, you can use the defined streams inside the stream section.
 
 ### streams
 

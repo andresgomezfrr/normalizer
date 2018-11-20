@@ -9,10 +9,7 @@ import io.wizzie.normalizer.base.builder.config.ConfigProperties;
 import io.wizzie.normalizer.exceptions.MaxOutputKafkaTopics;
 import io.wizzie.normalizer.exceptions.PlanBuilderException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PlanModel {
@@ -145,13 +142,10 @@ public class PlanModel {
         validateFilterSinks();
     }
 
-    private void validateInputs() throws PlanBuilderException {
+    private void validateInputs() {
         for (List<String> streams : inputs.values()) {
             for (String stream : streams) {
-                if (definedStreams.contains(stream)) {
-                    definedStreams.clear();
-                    throw new PlanBuilderException(String.format("Stream[%s]: Duplicated", stream));
-                } else {
+                if (!definedStreams.contains(stream)) {
                     definedStreams.add(stream);
                 }
             }

@@ -1,0 +1,16 @@
+{
+  "inputs": {
+    "input2":["stream1"],
+    "input1":["stream1", "stream2"]
+  },
+  "streams":{
+    "stream1":{
+      "funcs":[
+      ],
+      "sinks":[
+        {"topic":"output", "type":"kafka"}
+      ]
+    }
+  }
+
+}

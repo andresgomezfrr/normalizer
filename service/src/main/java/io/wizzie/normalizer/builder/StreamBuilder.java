@@ -96,10 +96,16 @@ public class StreamBuilder {
             }
 
             KStream<String, Map<String, Object>> kstream = builder.stream(topic);
+
             for (String stream : inputs.getValue()) {
-                log.info("Creating stream [{}]", stream);
-                kStreams.put(stream, kstream.filter((key, value) -> key != null || value != null));
-                streamIterationCreation.put(stream, 0);
+                if (!kStreams.containsKey(stream)) {
+                    log.info("Creating stream [{}]", stream);
+                    kStreams.put(stream, kstream.filter((key, value) -> key != null || value != null));
+                    streamIterationCreation.put(stream, 0);
+                } else {
+                    kStreams.put(stream, kStreams.get(stream).merge(kstream));
+                }
+
                 streamEdges.add(String.format("%s->%s", topic, stream));
             }
         }
