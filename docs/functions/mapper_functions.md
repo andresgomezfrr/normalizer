@@ -222,19 +222,19 @@ The JoinMapper is a function that allows us to join as many values as we want an
      {"fromDimension":"dimension2", "orDefault":"defaultValue2", "delete": true},
      {"fromDimension":"dimension3", "orDefault":"defaultValue3"}
     ],
-    "delimitier": "-"
+    "delimiter": "-"
   }
 }
 ```
 
-The JoinMapper has three properties that are called `dimensionName`, `values` and `delimitier`:
+The JoinMapper has three properties that are called `dimensionName`, `values` and `delimiter`:
 
 * `dimensionName`: Name of new dimension where all join values will be assign. This parameter can't be null.
 * `values`: Array of values, contains a sequence of items with two parameters `fromDimension` and `orDefault`.
  * `fromDimension`: Dimension where we get the value to join. This parameter can't be null.
  * `orDefault`: Default value if value of `fromDimension` doesn't exists. This parameter can't be null.
  * `delete`: Delete dimension defined in `fromDimension` parameter. Default value is `false`.
-* `delimitier`: Separator for each dimension. By default is `-`.
+* `delimiter`: Separator for each dimension. By default is `-`.
 
 If we have this JSON message:
 
@@ -395,7 +395,7 @@ The StringSplitterMapper allows us to split one dimension into multiple dimensio
           "className":"io.wizzie.normalizer.funcs.impl.StringSplitterMapper",
           "properties": {
             "dimension": "DIM-H",
-            "delimitier": ">",
+            "delimiter": ">",
             "fields": ["country", "province", "city"]
           }
         }
@@ -404,7 +404,7 @@ The StringSplitterMapper allows us to split one dimension into multiple dimensio
 This mapper has some properties:
 
 * `dimension`: The dimension field that you want to split.
-* `delimitier`:  The character that the mapper uses to split.
+* `delimiter`:  The character that the mapper uses to split.
 * `fields`: The new fields to the splitter dimensions. This is a JSON Array.
 * `delete_dimension`: This is a boolean to indicate if you want to delete the original dimension. Default: false
 

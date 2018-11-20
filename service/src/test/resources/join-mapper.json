@@ -9,7 +9,7 @@
           "name":"myJoinMapper",
           "className":"io.wizzie.normalizer.funcs.impl.JoinMapper",
           "properties": {
-            "delimitier": "-",
+            "delimiter": "-",
             "values": [
               {"fromDimension": "A", "orDefault": "1", "delete": false},
               {"fromDimension": "B", "orDefault": "2", "delete": true},

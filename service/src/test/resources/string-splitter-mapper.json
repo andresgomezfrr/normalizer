@@ -10,7 +10,7 @@
           "className":"io.wizzie.normalizer.funcs.impl.StringSplitterMapper",
           "properties": {
             "dimension": "DIM-H",
-            "delimitier": ">",
+            "delimiter": ">",
             "fields": ["country", "province", "city"]
           }
         }

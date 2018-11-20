@@ -7,10 +7,6 @@ import io.wizzie.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.normalizer.funcs.Function;
 import io.wizzie.normalizer.funcs.MapperFunction;
 import io.wizzie.normalizer.model.PlanModel;
-import io.wizzie.normalizer.exceptions.PlanBuilderException;
-import io.wizzie.normalizer.funcs.Function;
-import io.wizzie.normalizer.funcs.MapperFunction;
-import io.wizzie.normalizer.model.PlanModel;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.junit.AfterClass;
@@ -55,7 +51,7 @@ public class JoinMapperUnitTest {
         assertTrue(myFunc instanceof MapperFunction);
         JoinMapper myJoinFunc = (JoinMapper) myFunc;
 
-        assertEquals("-", myJoinFunc.delimitier);
+        assertEquals("-", myJoinFunc.delimiter);
 
         List<Map<String, Object>> values = new ArrayList<>();
 

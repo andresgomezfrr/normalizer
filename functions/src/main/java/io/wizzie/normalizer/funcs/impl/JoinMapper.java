@@ -15,12 +15,12 @@ public class JoinMapper extends MapperFunction {
     public static final String OR_DEFAULT = "orDefault";
     public static final String FROM_DIMENSION = "fromDimension";
     public static final String VALUES = "values";
-    public static final String DELIMITIER = "delimitier";
+    public static final String DELIMITER = "delimiter";
     public static final String DELETE = "delete";
 
     private final String ERROR_MESSAGE_PATTERN = "%s cannot be null";
 
-    String delimitier;
+    String delimiter;
     List<Map<String, Object>> dimensionsToJoin;
     String newDimension;
 
@@ -33,7 +33,7 @@ public class JoinMapper extends MapperFunction {
             checkNotNull(map.get(FROM_DIMENSION), String.format(ERROR_MESSAGE_PATTERN, FROM_DIMENSION));
         });
 
-        delimitier = (String) properties.getOrDefault(DELIMITIER, "-");
+        delimiter = (String) properties.getOrDefault(DELIMITER, "-");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class JoinMapper extends MapperFunction {
                         return (objectValue != null ? objectValue : (String) m.get(OR_DEFAULT));
                     })
                     .filter(Objects::nonNull)
-                    .collect(Collectors.joining(delimitier));
+                    .collect(Collectors.joining(delimiter));
 
             value.put(newDimension, joined);
             returnedValue = new KeyValue<>(key, value);

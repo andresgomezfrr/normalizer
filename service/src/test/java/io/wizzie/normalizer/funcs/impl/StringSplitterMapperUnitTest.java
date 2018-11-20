@@ -6,9 +6,6 @@ import io.wizzie.bootstrapper.builder.Config;
 import io.wizzie.normalizer.exceptions.PlanBuilderException;
 import io.wizzie.normalizer.funcs.Function;
 import io.wizzie.normalizer.model.PlanModel;
-import io.wizzie.normalizer.exceptions.PlanBuilderException;
-import io.wizzie.normalizer.funcs.Function;
-import io.wizzie.normalizer.model.PlanModel;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.junit.BeforeClass;
@@ -52,7 +49,7 @@ public class StringSplitterMapperUnitTest {
         StringSplitterMapper myStringReplaceMapper = (StringSplitterMapper) myFunc;
 
         assertEquals("DIM-H", myStringReplaceMapper.dimension);
-        assertEquals(">", myStringReplaceMapper.delimitier);
+        assertEquals(">", myStringReplaceMapper.delimiter);
         assertEquals(Arrays.asList("country", "province", "city"), myStringReplaceMapper.fieldNames);
     }
 
